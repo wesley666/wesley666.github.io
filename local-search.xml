@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>adb logcat无法清除日志</title>
+    <link href="/2020/10/08/adb-logcat%E6%97%A0%E6%B3%95%E6%B8%85%E9%99%A4%E6%97%A5%E5%BF%97/"/>
+    <url>/2020/10/08/adb-logcat%E6%97%A0%E6%B3%95%E6%B8%85%E9%99%A4%E6%97%A5%E5%BF%97/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    <categories>
+      
+      <category>Android常见问题</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Android</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hello World</title>
     <link href="/2020/10/08/hello-world/"/>
     <url>/2020/10/08/hello-world/</url>
