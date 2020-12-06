@@ -181,6 +181,57 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2020/12/06/Linux%E7%BD%91%E7%BB%9C%E5%87%BD%E6%95%B0send-%E5%87%BA%E9%94%99%E5%AF%BC%E8%87%B4%E8%BF%9B%E7%A8%8B%E9%80%80%E5%87%BA/">Linux网络函数send()出错导致进程退出</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2020/12/06/Linux%E7%BD%91%E7%BB%9C%E5%87%BD%E6%95%B0send-%E5%87%BA%E9%94%99%E5%AF%BC%E8%87%B4%E8%BF%9B%E7%A8%8B%E9%80%80%E5%87%BA/">
+          
+          
+            
+          
+          在Linux系统编写socket网络通信程序的时候，如果程序执行send函数，遇到了一个关闭的socket，系统就会抛出一个SIGPIPE信号。这个信号的缺省处理方法是退出当前进程，重新定义这个信号的处理方式可以避免这个情况。
+12345//定义一个空函数void signal_send()&#123;  &#125; //注册信号处理方式signal(SIGPIPE, signal_send);
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-12-06 20:01" pubdate>
+              2020-12-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Linux/">Linux</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">Linux</a>
+            
+              <a href="/tags/socket/">socket</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2020/10/08/adb-logcat%E6%97%A0%E6%B3%95%E6%B8%85%E9%99%A4%E6%97%A5%E5%BF%97/">adb logcat无法清除日志</a>
       </h1>
 
