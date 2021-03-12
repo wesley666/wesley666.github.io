@@ -5,8 +5,8 @@
   
   <entry>
     <title>安卓系统应用比data分区应用版本号新怎么办</title>
-    <link href="/2021/03/07/%E5%AE%89%E5%8D%93%E7%B3%BB%E7%BB%9F%E5%BA%94%E7%94%A8%E6%AF%94data%E5%88%86%E5%8C%BA%E5%BA%94%E7%94%A8%E7%89%88%E6%9C%AC%E5%8F%B7%E6%96%B0%E6%80%8E%E4%B9%88%E5%8A%9E/"/>
-    <url>/2021/03/07/%E5%AE%89%E5%8D%93%E7%B3%BB%E7%BB%9F%E5%BA%94%E7%94%A8%E6%AF%94data%E5%88%86%E5%8C%BA%E5%BA%94%E7%94%A8%E7%89%88%E6%9C%AC%E5%8F%B7%E6%96%B0%E6%80%8E%E4%B9%88%E5%8A%9E/</url>
+    <link href="/article/feebec60/"/>
+    <url>/article/feebec60/</url>
     
     <content type="html"><![CDATA[<p>安卓9代码：</p><p><a href="https://android.googlesource.com/platform/frameworks/base/+/master/services/core/java/com/android/server/pm/PackageManagerService.java">PackageManagerService</a></p><blockquote><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Adds a new package to the internal data structures during platform initialization.</span><br><span class="hljs-comment">     * &lt;p&gt;After adding, the package is known to the system and available for querying.</span><br><span class="hljs-comment">     * &lt;p&gt;For packages located on the device ROM [eg. packages located in /system, /vendor,</span><br><span class="hljs-comment">     * etc...], additional checks are performed. Basic verification [such as ensuring</span><br><span class="hljs-comment">     * matching signatures, checking version codes, etc...] occurs if the package is</span><br><span class="hljs-comment">     * identical to a previously known package. If the package fails a signature check,</span><br><span class="hljs-comment">     * the version installed on /data will be removed. If the version of the new package</span><br><span class="hljs-comment">     * is less than or equal than the version on /data, it will be ignored.</span><br><span class="hljs-comment">     * &lt;p&gt;Regardless of the package location, the results are applied to the internal</span><br><span class="hljs-comment">     * structures and the package is made available to the rest of the system.</span><br><span class="hljs-comment">     * &lt;p&gt;<span class="hljs-doctag">NOTE:</span> The return value should be removed. It&#x27;s the passed in package object.</span><br><span class="hljs-comment">     */</span><br></code></pre></td></tr></table></figure></blockquote><p><strong>If the package fails a signature check,the version installed on /data will be removed. If the version of the new package is less than or equal than the version on /data, it will be ignored.</strong></p><p>意味着系统分区应用版本号小于或者等于data分区的应用，则data应用会被保留。（这里是指那些系统应用通过更新方式安装到data分区的）</p>]]></content>
     
@@ -32,8 +32,8 @@
   
   <entry>
     <title>Linux网络函数send()出错导致进程退出</title>
-    <link href="/2020/12/06/Linux%E7%BD%91%E7%BB%9C%E5%87%BD%E6%95%B0send-%E5%87%BA%E9%94%99%E5%AF%BC%E8%87%B4%E8%BF%9B%E7%A8%8B%E9%80%80%E5%87%BA/"/>
-    <url>/2020/12/06/Linux%E7%BD%91%E7%BB%9C%E5%87%BD%E6%95%B0send-%E5%87%BA%E9%94%99%E5%AF%BC%E8%87%B4%E8%BF%9B%E7%A8%8B%E9%80%80%E5%87%BA/</url>
+    <link href="/article/f453e195/"/>
+    <url>/article/f453e195/</url>
     
     <content type="html"><![CDATA[<p>在Linux系统编写socket网络通信程序的时候，如果程序执行send函数，遇到了一个关闭的socket，系统就会抛出一个SIGPIPE信号。这个信号的缺省处理方法是退出当前进程，重新定义这个信号的处理方式可以避免这个情况。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-comment">//定义一个空函数</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">signal_send</span><span class="hljs-params">()</span></span>&#123;  &#125; <br><br><span class="hljs-comment">//注册信号处理方式</span><br>signal(SIGPIPE, signal_send);<br></code></pre></td></tr></table></figure>]]></content>
     
@@ -59,8 +59,8 @@
   
   <entry>
     <title>adb logcat无法清除日志</title>
-    <link href="/2020/10/08/adb-logcat%E6%97%A0%E6%B3%95%E6%B8%85%E9%99%A4%E6%97%A5%E5%BF%97/"/>
-    <url>/2020/10/08/adb-logcat%E6%97%A0%E6%B3%95%E6%B8%85%E9%99%A4%E6%97%A5%E5%BF%97/</url>
+    <link href="/article/63c66dd5/"/>
+    <url>/article/63c66dd5/</url>
     
     <content type="html"><![CDATA[<p>您可能已经打开Android Studio，请关闭它并再次运行清除日志命令。</p>]]></content>
     
@@ -84,8 +84,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="/2020/10/08/hello-world/"/>
-    <url>/2020/10/08/hello-world/</url>
+    <link href="/article/4a17b156/"/>
+    <url>/article/4a17b156/</url>
     
     <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
     
