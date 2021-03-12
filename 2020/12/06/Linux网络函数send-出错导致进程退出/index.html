@@ -172,6 +172,11 @@
             
               <div class="mt-3">
   
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      Wesley
+    </span>
+  
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
@@ -204,6 +209,14 @@
 
   
   
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
 </div>
 
             
@@ -228,6 +241,12 @@
           <article class="post-content mx-auto">
             <!-- SEO header -->
             <h1 style="display: none">Linux网络函数send()出错导致进程退出</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2020年12月6日 晚上
+                
+              </p>
             
             <div class="markdown-body">
               <p>在Linux系统编写socket网络通信程序的时候，如果程序执行send函数，遇到了一个关闭的socket，系统就会抛出一个SIGPIPE信号。这个信号的缺省处理方法是退出当前进程，重新定义这个信号的处理方式可以避免这个情况。</p>
