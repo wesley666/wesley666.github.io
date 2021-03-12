@@ -46,13 +46,6 @@
 
   
   <url>
-    <loc>https://wesley666.github.io/tags/Android/</loc>
-    <lastmod>2021-03-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://wesley666.github.io/tags/Linux/</loc>
     <lastmod>2021-03-12</lastmod>
     <changefreq>daily</changefreq>
@@ -61,6 +54,13 @@
   
   <url>
     <loc>https://wesley666.github.io/tags/socket/</loc>
+    <lastmod>2021-03-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://wesley666.github.io/tags/Android/</loc>
     <lastmod>2021-03-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -76,14 +76,14 @@
 
   
   <url>
-    <loc>https://wesley666.github.io/categories/Android%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</loc>
+    <loc>https://wesley666.github.io/categories/Linux/</loc>
     <lastmod>2021-03-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/categories/Linux/</loc>
+    <loc>https://wesley666.github.io/categories/Android%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2021-03-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
