@@ -2,35 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://wesley666.github.io/about/index.html</loc>
+    <loc>https://iwesley.top/about/index.html</loc>
     
     <lastmod>2021-03-13</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/article/feebec60/</loc>
+    <loc>https://iwesley.top/article/feebec60/</loc>
     
     <lastmod>2021-03-12</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/article/4a17b156/</loc>
+    <loc>https://iwesley.top/article/4a17b156/</loc>
     
     <lastmod>2021-03-12</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/article/f453e195/</loc>
+    <loc>https://iwesley.top/article/f453e195/</loc>
     
     <lastmod>2021-03-12</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/article/63c66dd5/</loc>
+    <loc>https://iwesley.top/article/63c66dd5/</loc>
     
     <lastmod>2021-03-12</lastmod>
     
@@ -38,7 +38,7 @@
   
 
   <url>
-    <loc>https://wesley666.github.io/</loc>
+    <loc>https://iwesley.top/</loc>
     <lastmod>2021-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -46,28 +46,28 @@
 
   
   <url>
-    <loc>https://wesley666.github.io/tags/Linux/</loc>
+    <loc>https://iwesley.top/tags/Android/</loc>
     <lastmod>2021-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/tags/socket/</loc>
+    <loc>https://iwesley.top/tags/Linux/</loc>
     <lastmod>2021-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/tags/Android/</loc>
+    <loc>https://iwesley.top/tags/socket/</loc>
     <lastmod>2021-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/tags/PackageManagerService/</loc>
+    <loc>https://iwesley.top/tags/PackageManagerService/</loc>
     <lastmod>2021-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -76,21 +76,21 @@
 
   
   <url>
-    <loc>https://wesley666.github.io/categories/Linux/</loc>
+    <loc>https://iwesley.top/categories/Android%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2021-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/categories/Android-Framework-PackageManagerService/</loc>
+    <loc>https://iwesley.top/categories/Linux/</loc>
     <lastmod>2021-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://wesley666.github.io/categories/Android%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</loc>
+    <loc>https://iwesley.top/categories/Android-Framework-PackageManagerService/</loc>
     <lastmod>2021-03-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
