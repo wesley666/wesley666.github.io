@@ -35,7 +35,7 @@
     margin-top: -1rem !important;
   }
 }
-@media (max-width: 89.99vh) {
+@media (max-width: 79.99vh) {
   .scroll-down-bar {
     display: none;
   }
@@ -327,7 +327,7 @@ body a:hover {
   transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 code {
-  color: var(--text-color);
+  color: inherit;
 }
 img[srcset] {
   object-fit: cover;
@@ -914,9 +914,6 @@ img[srcset] {
 }
 .markdown-body a {
   color: var(--post-link-color);
-}
-.markdown-body code {
-  color: var(--post-text-color);
 }
 .markdown-body hr {
   height: 0.2em;
