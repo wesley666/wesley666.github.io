@@ -20,9 +20,25 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-  <title>标签 - Linux - Wesley&#39;s Blog</title>
+  <title>Hexo优化访问速度 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -50,7 +66,7 @@
 
 
 <body>
-  <header style="height: 80vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -161,17 +177,63 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="标签 - Linux">
+            <span class="h2" id="subtitle" title="Hexo优化访问速度">
               
             </span>
 
             
+              <div class="mt-3">
+  
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-author" aria-hidden="true"></i>
+      Wesley
+    </span>
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-03-14 14:07" pubdate>
+        2021年3月14日 下午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      215 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      2
+       分钟
+    </span>
+  
+
+  
+  
+    
+      <!-- LeanCloud 统计文章PV -->
+      <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+        <i class="iconfont icon-eye" aria-hidden="true"></i>
+        <span id="leancloud-page-views"></span> 次
+      </span>
+    
+  
+</div>
+
+            
           </div>
 
-          
-            <div class="scroll-down-bar">
-              <i class="iconfont icon-arrowdown"></i>
-            </div>
           
         </div>
       </div>
@@ -180,40 +242,151 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 1 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2020</p>
-    
-    <a href="/article/f453e195/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Linux网络函数send()出错导致进程退出</span>
-      <time style="float: right;">12-06</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Hexo优化访问速度</h1>
+            
+              <p class="note note-info">
+                
+                  本文最后更新于：2021年3月14日 下午
+                
+              </p>
+            
+            <div class="markdown-body">
+              <h1 id="Hexo优化访问速度"><a href="#Hexo优化访问速度" class="headerlink" title="Hexo优化访问速度"></a>Hexo优化访问速度</h1><p>更多详细内容请参考：<a target="_blank" rel="noopener" href="https://akilar.top/posts/7c16c4bb/">Hexo 博客访问优化日记</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210314162303.png" srcset="/img/loading.gif" alt="img"></p>
+<p>本站目前使用工具：</p>
+<p> 用<a target="_blank" rel="noopener" href="https://vercel.com/">Vercel</a>来静态托管，github每次有代码更新，它都会自动拉取并部署。<a target="_blank" rel="noopener" href="https://akilar.top/posts/812734f8/">使用Vercel来加速Hexo</a></p>
+<blockquote>
+<p>注：如果github更新后Vercel没有自动部署，需要到Vercel的Git设置那里改成main分支。（2020年10月后github新建仓库默认分支改为main，注意更改。）</p>
+</blockquote>
+<p>用<a target="_blank" rel="noopener" href="https://www.jsdelivr.com/?docs=gh">jsdelivr</a>来为页面静态资源提供加速。<a target="_blank" rel="noopener" href="https://www.itrhx.com/2019/08/01/A27-image-hosting/">Github+jsDelivr+PicGo 打造稳定快速、高效免费图床</a>。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://akilar.top/posts/7c16c4bb/">Hexo 博客访问优化日记</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.julydate.com/post/60859300/">hexo博客访问优化-CDN选用</a></p>
+<p><a target="_blank" rel="noopener" href="https://sspai.com/post/63028">Vercel ，开箱即用的网站管理小工具</a></p>
+<p><a target="_blank" rel="noopener" href="https://erenship.com/posts/db37.html">Hexo 博客站点加速不完全指南</a></p>
+<p><a target="_blank" rel="noopener" href="https://forever97.top/2020/12/11/vercel/">使用Vercel加速博客访问</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.antmoe.com/posts/e33d1c55/index.html">小康大佬的教程-优雅使用JsDeliver加速文件</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.itrhx.com/2019/02/10/A18-free-cdn/">免费CDN：jsDelivr + Github</a></p>
 
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Hexo%E7%9B%B8%E5%85%B3/">Hexo相关</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/hexo/">hexo</a>
+                    
+                      <a class="hover-with-bg" href="/tags/hexo%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/">hexo速度优化</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/feebec60/">
+                        <span class="hidden-mobile">安卓系统应用比data分区应用版本号新怎么办</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
+                
+  <div id="vcomments"></div>
+  <script type="text/javascript">
+    Fluid.utils.waitElementVisible('vcomments', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js', function () {
+        new Valine({
+          el: "#vcomments",
+          app_id: "nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI",
+          app_key: "Ci9VrgOcbts1HQqhQg6jpT4b",
+          placeholder: "欢迎交流",
+          path: window.location.pathname,
+          avatar: "retro",
+          meta: ["nick","mail","link"],
+          pageSize: "10",
+          lang: "zh-CN",
+          highlight: false,
+          recordIP: false,
+          serverURLs: "",
+        });
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the
+    <a target="_blank" href="https://valine.js.org" rel="nofollow noopener noopener">comments powered by Valine.</a>
+  </noscript>
+
+
+              </article>
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+  <div class="col-lg-7 mx-auto nopadding-x-md">
+    <div class="container custom post-custom mx-auto">
+      <img src="/img/wechat.jpg" srcset="/img/loading.gif" class="rounded mx-auto d-block mt-5" style="width:150px; height:150px;">
+    </div>
+  </div>
+
+
     
 
     
@@ -318,9 +491,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
 
 
 

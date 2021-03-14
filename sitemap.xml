@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://iwesley.top/article/2da0019a/</loc>
+    
+    <lastmod>2021-03-14</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://iwesley.top/about/index.html</loc>
     
     <lastmod>2021-03-13</lastmod>
@@ -39,36 +46,50 @@
 
   <url>
     <loc>https://iwesley.top/</loc>
-    <lastmod>2021-03-13</lastmod>
+    <lastmod>2021-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
   <url>
+    <loc>https://iwesley.top/tags/hexo/</loc>
+    <lastmod>2021-03-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/hexo%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/</loc>
+    <lastmod>2021-03-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://iwesley.top/tags/Android/</loc>
-    <lastmod>2021-03-13</lastmod>
+    <lastmod>2021-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://iwesley.top/tags/PackageManagerService/</loc>
-    <lastmod>2021-03-13</lastmod>
+    <lastmod>2021-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://iwesley.top/tags/Linux/</loc>
-    <lastmod>2021-03-13</lastmod>
+    <lastmod>2021-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://iwesley.top/tags/socket/</loc>
-    <lastmod>2021-03-13</lastmod>
+    <lastmod>2021-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -76,22 +97,29 @@
 
   
   <url>
-    <loc>https://iwesley.top/categories/Android-Framework-PackageManagerService/</loc>
-    <lastmod>2021-03-13</lastmod>
+    <loc>https://iwesley.top/categories/Hexo%E7%9B%B8%E5%85%B3/</loc>
+    <lastmod>2021-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://iwesley.top/categories/Android%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</loc>
-    <lastmod>2021-03-13</lastmod>
+    <lastmod>2021-03-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/categories/Android-Framework-PackageManagerService/</loc>
+    <lastmod>2021-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://iwesley.top/categories/Linux/</loc>
-    <lastmod>2021-03-13</lastmod>
+    <lastmod>2021-03-14</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>

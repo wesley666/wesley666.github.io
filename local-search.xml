@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Hexo优化访问速度</title>
+    <link href="/article/2da0019a/"/>
+    <url>/article/2da0019a/</url>
+    
+    <content type="html"><![CDATA[<h1 id="Hexo优化访问速度"><a href="#Hexo优化访问速度" class="headerlink" title="Hexo优化访问速度"></a>Hexo优化访问速度</h1><p>更多详细内容请参考：<a href="https://akilar.top/posts/7c16c4bb/">Hexo 博客访问优化日记</a></p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210314162303.png" alt="img"></p><p>本站目前使用工具：</p><p> 用<a href="https://vercel.com/">Vercel</a>来静态托管，github每次有代码更新，它都会自动拉取并部署。<a href="https://akilar.top/posts/812734f8/">使用Vercel来加速Hexo</a></p><blockquote><p>注：如果github更新后Vercel没有自动部署，需要到Vercel的Git设置那里改成main分支。（2020年10月后github新建仓库默认分支改为main，注意更改。）</p></blockquote><p>用<a href="https://www.jsdelivr.com/?docs=gh">jsdelivr</a>来为页面静态资源提供加速。<a href="https://www.itrhx.com/2019/08/01/A27-image-hosting/">Github+jsDelivr+PicGo 打造稳定快速、高效免费图床</a>。</p><h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://akilar.top/posts/7c16c4bb/">Hexo 博客访问优化日记</a></p><p><a href="https://www.julydate.com/post/60859300/">hexo博客访问优化-CDN选用</a></p><p><a href="https://sspai.com/post/63028">Vercel ，开箱即用的网站管理小工具</a></p><p><a href="https://erenship.com/posts/db37.html">Hexo 博客站点加速不完全指南</a></p><p><a href="https://forever97.top/2020/12/11/vercel/">使用Vercel加速博客访问</a></p><p><a href="https://www.antmoe.com/posts/e33d1c55/index.html">小康大佬的教程-优雅使用JsDeliver加速文件</a></p><p><a href="https://www.itrhx.com/2019/02/10/A18-free-cdn/">免费CDN：jsDelivr + Github</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Hexo相关</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>hexo</tag>
+      
+      <tag>hexo速度优化</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>安卓系统应用比data分区应用版本号新怎么办</title>
     <link href="/article/feebec60/"/>
     <url>/article/feebec60/</url>
