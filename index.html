@@ -196,6 +196,60 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/article/350fc249/">安卓SystemProperties.set()方法权限问题</a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/article/350fc249/">
+          
+          
+            
+          
+          对于系统中的每个进程来说：
+读取属性值对任何进程都是没有限制的，直接由本进程从共享区域中读取。
+修改属性值则必须通过Init进程完成，同时Init进程还需要检查发起请求的进程是否具有相应的权限。
+安卓5.0之前安卓4.4 system/core/init/property_service.c源代码:
+1234567891011121314151617181920212223242526272829
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-03-27 18:26" pubdate>
+              2021-03-27
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/Android-System/">Android System</a>
+            
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Android/">Android</a>
+            
+              <a href="/tags/%E5%B1%9E%E6%80%A7%E6%9C%8D%E5%8A%A1/">属性服务</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/article/2da0019a/">Hexo优化访问速度</a>
       </h1>
 
