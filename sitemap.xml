@@ -109,7 +109,14 @@
 
   
   <url>
-    <loc>https://iwesley.top/tags/Android/</loc>
+    <loc>https://iwesley.top/tags/hexo/</loc>
+    <lastmod>2021-12-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/hexo%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/</loc>
     <lastmod>2021-12-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -130,21 +137,14 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/hexo/</loc>
-    <lastmod>2021-12-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://iwesley.top/tags/hexo%E9%80%9F%E5%BA%A6%E4%BC%98%E5%8C%96/</loc>
-    <lastmod>2021-12-12</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://iwesley.top/tags/fluid/</loc>
+    <lastmod>2021-12-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/Android/</loc>
     <lastmod>2021-12-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -195,7 +195,7 @@
 
   
   <url>
-    <loc>https://iwesley.top/categories/Android%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</loc>
+    <loc>https://iwesley.top/categories/Hexo%E7%9B%B8%E5%85%B3/</loc>
     <lastmod>2021-12-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -209,7 +209,7 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/categories/Hexo%E7%9B%B8%E5%85%B3/</loc>
+    <loc>https://iwesley.top/categories/Android%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2021-12-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
