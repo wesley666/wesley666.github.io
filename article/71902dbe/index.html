@@ -13,10 +13,10 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="安卓系统开发工程师">
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
-  <meta name="description" content="安卓记事本系统设计和模块实现友情提示记事本是我学习安卓后编写的第一个软件，也是我的毕业设计。它存在着许多不完善的地方，如果你有想法可以进一步去完善它。 我当时看的是郭霖《第一行代码》第2版入门的，现在已经出到第3版了，编程语言由Java改成了Kotlin，如果你有时间，也可以把我的项目从Java改成Kotlin编写。目前这两本书都可以在微信读书上面找到。 代码链接 视频演示 用到的关键技术语音识别">
+  
+    <meta name="description" content="安卓记事本系统设计和模块实现友情提示记事本是我学习安卓后编写的第一个软件，也是我的毕业设计。它存在着许多不完善的地方，如果你有想法可以进一步去完善它。 我当时看的是郭霖《第一行代码》第2版入门的，现在已经出到第3版了，编程语言由Java改成了Kotlin，如果你有时间，也可以把我的项目从Java改成Kotlin编写。目前这两本书都可以在微信读书上面找到。 代码链接 视频演示 用到的关键技术语音识别">
 <meta property="og:type" content="article">
 <meta property="og:title" content="安卓记事本系统设计和模块实现">
 <meta property="og:url" content="https://iwesley.top/article/71902dbe/index.html">
@@ -58,6 +58,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619193435.png">
   
+  
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
   <title>安卓记事本系统设计和模块实现 - Wesley&#39;s Blog</title>
@@ -66,7 +67,7 @@
 
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
   
     
@@ -102,11 +103,11 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":"UA-192032167-1","gtag":265368827,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":"UA-192032167-1","gtag":265368827,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
@@ -326,13 +327,12 @@
 <h3 id="Material-Design"><a href="#Material-Design" class="headerlink" title="Material Design"></a>Material Design</h3><p>安卓刚刚发展的那几年，UI设计并不美观，远远不如当时的iOS系统美观。而且，由于安卓是一个开源系统，各个手机厂商在UI设计的规范并不相同，所以很多开发者干脆就把iOS上的设计搬到安卓上面来。后来，谷歌意识到了这个问题并在2014年的开发者大会上发布了一套全新的UI设计语言：Material Design，它是由Google的设计工程师们基于传统优秀的设计原则，结合丰富的创意和科学技术所开发的一套全新的界面设计语言，包含了视觉、运动、互动效果等特性。这种结合卡片化设计风格的语言，给用户带来了良好、美观和一致性的体验，从而统一了谷歌在UI设计上面的表达。目前，Material Design的支持库非常完善了，多功能记事本APP也将采用这一设计语言。</p>
 <h3 id="富文本技术"><a href="#富文本技术" class="headerlink" title="富文本技术"></a>富文本技术</h3><p>富文本技术的实现可以让记事本的内容不仅仅是一种单调的样式，还可以有其他丰富的样式，比如可以突出标题的显示，可以让重点的文字内容变红，可以显示图片等等。所以，富文本技术对多功能记事本APP至关重要。目前有几种方法来实现富文本：</p>
 <ul>
-<li>通过使用Html.fromHtml()来解析文本内容，然后显示在TextView中，但安卓原生的Html支持的样式较少，图片显示需要单独处理等等。</li>
-</ul>
-<ul>
-<li>通过ScrollView、多个EditText、多个ImageView等组件来拆分内容显示，由于是原生布局所以能实现的效果有很多，但是实现起来非常困难，需要处理输入焦点、组件之间的关系怎么安排等问题。</li>
-</ul>
-<ul>
-<li>通过使用安卓SpannableString类来实现，通过它的public void setSpan(Object what, int start, int end, int flags)方法可以设置多种样式，参数what代表所要设置的样式，参数start和end代表样式设置范围，参数flags是对新插入字符的处理方式。结合ClickableSpan类和ImageSpan类就可以实现点击事件和图片显示，使用非常方便，基本满足了多功能记事本APP对富文本的要求。</li>
+<li><p>通过使用Html.fromHtml()来解析文本内容，然后显示在TextView中，但安卓原生的Html支持的样式较少，图片显示需要单独处理等等。</p>
+</li>
+<li><p>通过ScrollView、多个EditText、多个ImageView等组件来拆分内容显示，由于是原生布局所以能实现的效果有很多，但是实现起来非常困难，需要处理输入焦点、组件之间的关系怎么安排等问题。</p>
+</li>
+<li><p>通过使用安卓SpannableString类来实现，通过它的public void setSpan(Object what, int start, int end, int flags)方法可以设置多种样式，参数what代表所要设置的样式，参数start和end代表样式设置范围，参数flags是对新插入字符的处理方式。结合ClickableSpan类和ImageSpan类就可以实现点击事件和图片显示，使用非常方便，基本满足了多功能记事本APP对富文本的要求。</p>
+</li>
 </ul>
 <h3 id="持久化技术"><a href="#持久化技术" class="headerlink" title="持久化技术"></a>持久化技术</h3><p>数据持久化技术作为软件的压舱石，是非常重要的，它可以在用户退出软件后保存用户所需要的数据。文件存储、数据库存储和SharedPreferences存储是安卓系统提供的三种数据持久化方法。文件存储可以直接把数据完全保存到文件里面去，适合存储一些简单的文本数据和二进制数据。所以，在多功能记事本APP中主要用来保存图片和语音资源。数据库存储在安卓系统中使用的主要是SQLite数据库，它作为平台系统的关系型数据库，具有占用内存、资源小等方面的优势，在平台APP开发中能够发挥重大作用。它完全内置于安卓操作系统，对存储结构性复杂的数据非常友好，运行速度也非常快。虽然安卓提供了SQLiteOpenHelper帮助类来实现数据库的增删改查各种操作，但是用起来还是没有那么方便。所以在记事本工程里引入LitePal这个开源的数据库框架，它采用的对象关系映射模式可以让创建数据表变得异常简单，并且封装了很多常用的数据库功能接口，让开发流程变得更加便捷和快速。SQLite数据库主要用来保存笔记和待办事项相关内容。SharedPreferences存储采用的是key-value的方式来存储数据，适合保存一些简单数据，操作起来非常方便。此外，SharedPreferences对象与SQLite数据库相比，免去了创建数据库、创建表、写SQL语句等诸多操作，相对而言更加方便，简洁。因此，在APP中主要用来保存用户偏好数据和账号密码。</p>
 <h2 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h2><h3 id="系统总体设计"><a href="#系统总体设计" class="headerlink" title="系统总体设计"></a>系统总体设计</h3><h4 id="系统层次结构"><a href="#系统层次结构" class="headerlink" title="系统层次结构"></a>系统层次结构</h4><p>多功能记事本APP基于安卓手机操作系统开发，系统总体架构按照APP客户端-服务器端模式设计，架构设计如图所示。</p>
@@ -357,19 +357,16 @@
 <p>（9） 权限申请模块：安卓6.0系统开始引入了运行时权限功能，对于一些危险的权限，例如录音，读取数据等等，需要得到用户的授权。对于普通权限，比如读取网络信息，由系统自动完成授权。</p>
 <h3 id="系统各功能模块设计"><a href="#系统各功能模块设计" class="headerlink" title="系统各功能模块设计"></a>系统各功能模块设计</h3><h4 id="用户界面"><a href="#用户界面" class="headerlink" title="用户界面"></a>用户界面</h4><p>软件采用Material Design语言进行界面设计。用户界面主要分为五大部分。</p>
 <ul>
-<li>用户主界面：采用<strong>DrawerLayout</strong>为总体布局框架。为了让待办事项这个功能更加高效地提供给用户使用，将其单独独立成一个功能模块，不和笔记编辑器结合在一起，给用户提供更加便捷和快速的记录。利用<strong>ViewPager</strong>和<strong>TabLayout</strong>实现笔记主界面和待办事项主界面的平滑切换。信息的滚动页面结合<strong>RecycleView</strong>。同时，结合<strong>FloatingActionButton</strong>，提供语音输入和键盘输入的入口。</li>
-</ul>
-<ul>
-<li>侧边栏：采用<strong>NavigationView</strong>为布局框架，和主界面的<strong>DrawerLayout</strong>框架配合使用。提供的是笔记的分组功能和坚果云的登录界面。用户登录坚果云账号后，才能将数据同步到云端。账号和密码保存在<strong>SharedPreferences</strong>里面。</li>
-</ul>
-<ul>
-<li>笔记的编辑界面：主要采用<strong>EditText</strong>和<strong>ScrollView</strong>组件，前者是为了输入笔记内容，后者是为了更流畅地查看编辑内容，便于修改。此外，编辑界面下侧会提供多个<strong>ImageButton</strong>按钮，当输入法唤醒时，<strong>ImageButton</strong>也会弹出来，给用户提供语音输入、图片插入、加标题、给文字加粗和修改文字的颜色以突出重点的功能。</li>
-</ul>
-<ul>
-<li>笔记的浏览界面：主要采用<strong>ScrollView</strong>和<strong>TextView</strong>组件，前者为流畅滚动笔记内容提供保证，后者用来显示笔记内容。采用<strong>ContentLoadingProgressBar</strong>组件来表示笔记加载过程，因为当加载云端笔记时，本地没有相应的多媒体资源时，需要从坚果云下载，存在缓冲时间。浏览界面的右上角是菜单栏，提供删除笔记、分享笔记、提醒等功能。</li>
-</ul>
-<ul>
-<li>待办事项的编辑和浏览界面：由于待办事项功能只是服务于简短的文字记录，所以编辑和浏览界面合二为一，统一采用<strong>PopupWindow</strong>组件，里面也包含了<strong>EditText</strong>组件，用于文字输入和显示。同时，还有提醒按钮，用于事件提醒。</li>
+<li><p>用户主界面：采用<strong>DrawerLayout</strong>为总体布局框架。为了让待办事项这个功能更加高效地提供给用户使用，将其单独独立成一个功能模块，不和笔记编辑器结合在一起，给用户提供更加便捷和快速的记录。利用<strong>ViewPager</strong>和<strong>TabLayout</strong>实现笔记主界面和待办事项主界面的平滑切换。信息的滚动页面结合<strong>RecycleView</strong>。同时，结合<strong>FloatingActionButton</strong>，提供语音输入和键盘输入的入口。</p>
+</li>
+<li><p>侧边栏：采用<strong>NavigationView</strong>为布局框架，和主界面的<strong>DrawerLayout</strong>框架配合使用。提供的是笔记的分组功能和坚果云的登录界面。用户登录坚果云账号后，才能将数据同步到云端。账号和密码保存在<strong>SharedPreferences</strong>里面。</p>
+</li>
+<li><p>笔记的编辑界面：主要采用<strong>EditText</strong>和<strong>ScrollView</strong>组件，前者是为了输入笔记内容，后者是为了更流畅地查看编辑内容，便于修改。此外，编辑界面下侧会提供多个<strong>ImageButton</strong>按钮，当输入法唤醒时，<strong>ImageButton</strong>也会弹出来，给用户提供语音输入、图片插入、加标题、给文字加粗和修改文字的颜色以突出重点的功能。</p>
+</li>
+<li><p>笔记的浏览界面：主要采用<strong>ScrollView</strong>和<strong>TextView</strong>组件，前者为流畅滚动笔记内容提供保证，后者用来显示笔记内容。采用<strong>ContentLoadingProgressBar</strong>组件来表示笔记加载过程，因为当加载云端笔记时，本地没有相应的多媒体资源时，需要从坚果云下载，存在缓冲时间。浏览界面的右上角是菜单栏，提供删除笔记、分享笔记、提醒等功能。</p>
+</li>
+<li><p>待办事项的编辑和浏览界面：由于待办事项功能只是服务于简短的文字记录，所以编辑和浏览界面合二为一，统一采用<strong>PopupWindow</strong>组件，里面也包含了<strong>EditText</strong>组件，用于文字输入和显示。同时，还有提醒按钮，用于事件提醒。</p>
+</li>
 </ul>
 <h4 id="输入模块"><a href="#输入模块" class="headerlink" title="输入模块"></a>输入模块</h4><p>笔记编辑器采用<strong>EditText</strong>组件，结合<strong>SpannableString</strong>类实现富文本功能，比如添加标题和加粗文字等等。结合<strong>ImageSpan</strong>类实现图片显示。文本和多媒体数据分别保存到SQLite数据库和本地文件夹。语音输入采用讯飞识别引擎，实现实时语音识别转换成文字，同时把语音文件保存到本地，结合<strong>MediaPlayer</strong>类可以实现语音播放。插入图片采用知乎的开源框架<strong>matisse</strong>，结合开源框架<strong>Glide</strong>实现图片加载。图片压缩采用鲁班压缩框架。图片预览采用<strong>MNImageBrowser</strong>开源框架，这里也采用Glide作为图片加载引擎，其支持单击和长按监听，可以在这里面实现分享和保存图片到本地的功能。语音和图片的点击事件使用<strong>ClickableSpan</strong>类。具体的语音输入流程和图片插入流程如下图所示。</p>
 <p>待办事项的输入只支持纯文本输入，采用EditText组件即可，可以通过语音或者键盘输入，当语音输入时，语音文件不会被保存。</p>
@@ -588,7 +585,7 @@
 <p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200317.png" srcset="/img/loading.gif" lazyload alt="image-20210619200316983"></p>
 <p>当输入完成后，通过<strong>addNote()</strong> 方法进行笔记保存，首先通过<strong>getSpans()</strong> 方法获取笔记内容的样式，然后通过<strong>Parcel</strong>类的相关方法把样式内容转换成二进制数据存储，接下来设置笔记的标题、副标题、创建时间等等，最后保存到数据库。</p>
 <p>待办事项的输入支持语音输入和纯文本输入，语音输入实现过程与笔记语音输入过程类似，只不过不需要保存语音录音文件。文字输入就是正常样式输入，不需要其他样式。保存过程类似笔记，但不需要处理样式、标题等内容。</p>
-<h4 id="显示模块-1"><a href="#显示模块-1" class="headerlink" title="显示模块"></a>显示模块</h4><p>笔记从数据库查询出来后，每一个笔记的content字段都要经过自定义<strong>ContentToSpannableString</strong>类的<strong>contentToSpanStr ()</strong> 方法处理，首先要通过正则表达式<strong>Pattern.compile(“&lt;voice src=’(.*?)’/&gt;”)</strong> 找出笔记内容里面的语音路径，然后通过路径找到本地语音资源，如果本地没有就要联网从坚果云下载，有了语音资源后就要把内容的语音路径替换成<strong>ImageSpan</strong>和<strong>ClickableSpan</strong>，这样就可以显示一个语音图标同时可以实现点击播放音频，音频播放是通过<strong>MediaPlayer</strong>类来完成的。接下来，就是通过正则表达式<strong>Pattern.compile(“&lt;img src=’(.*?)’/&gt;”)</strong> 来查找笔记的图片资源路径，然后也是优先从本地查找图片，本地没有再从坚果云下载，接着把笔记内容的图片路径替换成<strong>ImageSpan</strong>和<strong>ClickableSpan</strong>，那么<strong>ImageSpan</strong>就是具体要显示的图片，而<strong>ClickableSpan</strong>监听图片的点击事件，在点击事件里面通过开源框架<strong>MNImageBrowser</strong>的<strong>MNImageBrowser</strong>类来实现图片的查看、单击分享图片和长按图片保存到本地的功能，图片加载引擎要用到开源框架<strong>Glide</strong>，保存图片到本地要通过<strong>MediaStore.Images.Media.insertImage()</strong> 方法把图片插入到图库，然后发广播通知图库刷新显示。最后，就是恢复富文本显示，先判断Note的<strong>restoreSpans</strong>字段是否为空，如果为空，设置好字体后直接返回转换成<strong>SpannableStringBuilder</strong>的数据。如果不为空，那么就需要通过<strong>Parcel</strong>反序列化来恢复数据。使用<strong>Parcel</strong>的<strong>unmarshall</strong>方法来把二进制数据恢复成原始数据，然后通过<strong>readParcelable</strong>方法得出自定义的<strong>SaveTextAppearanceSpan</strong>数据，最后继续通过<strong>unmarshall</strong>方法获取富文本<strong>Parcel</strong>数据，然后把实例化<strong>TextAppearanceSpan</strong>的对象依次设置到<strong>SpannableStringBuilder</strong>对象中去，完成后返回数据供<strong>Edittext</strong>显示。</p>
+<h4 id="显示模块-1"><a href="#显示模块-1" class="headerlink" title="显示模块"></a>显示模块</h4><p>笔记从数据库查询出来后，每一个笔记的content字段都要经过自定义<strong>ContentToSpannableString</strong>类的<strong>contentToSpanStr ()</strong> 方法处理，首先要通过正则表达式<strong>Pattern.compile(“&lt;voice src&#x3D;’(.*?)’&#x2F;&gt;”)</strong> 找出笔记内容里面的语音路径，然后通过路径找到本地语音资源，如果本地没有就要联网从坚果云下载，有了语音资源后就要把内容的语音路径替换成<strong>ImageSpan</strong>和<strong>ClickableSpan</strong>，这样就可以显示一个语音图标同时可以实现点击播放音频，音频播放是通过<strong>MediaPlayer</strong>类来完成的。接下来，就是通过正则表达式<strong>Pattern.compile(“&lt;img src&#x3D;’(.*?)’&#x2F;&gt;”)</strong> 来查找笔记的图片资源路径，然后也是优先从本地查找图片，本地没有再从坚果云下载，接着把笔记内容的图片路径替换成<strong>ImageSpan</strong>和<strong>ClickableSpan</strong>，那么<strong>ImageSpan</strong>就是具体要显示的图片，而<strong>ClickableSpan</strong>监听图片的点击事件，在点击事件里面通过开源框架<strong>MNImageBrowser</strong>的<strong>MNImageBrowser</strong>类来实现图片的查看、单击分享图片和长按图片保存到本地的功能，图片加载引擎要用到开源框架<strong>Glide</strong>，保存图片到本地要通过<strong>MediaStore.Images.Media.insertImage()</strong> 方法把图片插入到图库，然后发广播通知图库刷新显示。最后，就是恢复富文本显示，先判断Note的<strong>restoreSpans</strong>字段是否为空，如果为空，设置好字体后直接返回转换成<strong>SpannableStringBuilder</strong>的数据。如果不为空，那么就需要通过<strong>Parcel</strong>反序列化来恢复数据。使用<strong>Parcel</strong>的<strong>unmarshall</strong>方法来把二进制数据恢复成原始数据，然后通过<strong>readParcelable</strong>方法得出自定义的<strong>SaveTextAppearanceSpan</strong>数据，最后继续通过<strong>unmarshall</strong>方法获取富文本<strong>Parcel</strong>数据，然后把实例化<strong>TextAppearanceSpan</strong>的对象依次设置到<strong>SpannableStringBuilder</strong>对象中去，完成后返回数据供<strong>Edittext</strong>显示。</p>
 <p>待办事项的数据直接把原始<strong>String</strong>内容送到<strong>Edittext</strong>显示即可。</p>
 <h4 id="提醒模块-1"><a href="#提醒模块-1" class="headerlink" title="提醒模块"></a>提醒模块</h4><p>应用内提醒：通过<strong>AlarmManager</strong>创建定时任务来实现。首先，系统要获取提醒时间，这里通过<strong>Android-PickerView</strong>开源库来实现。如图1所示，选择好提醒时间后点击确定，然后<strong>TimePickerView</strong>类的监听器就会执行<strong>onTimeSelect()</strong> 方法，在这个方法里面，首先要判断设置的提醒时间是否早于现在，如果是，则抛出提示：”设置的提醒时间不能早于现在”。如果不是，则打开一个服务<strong>AlarmService</strong>去创建定时任务，在打开服务之前，要传递三个重要意图，第一个是提醒时间，第二个是数据的唯一标识，第三个是种类，区分笔记和待办事项。打开<strong>AlarmService</strong>后，首先初始化<strong>TextToSpeech</strong>，为之后的语音提醒作准备。然后，实例化<strong>AlarmManager</strong>类，配置好定时到点后的触发任务<strong>AlarmIntentService</strong>，并传递数据唯一标识和种类。设置定时时间要用到<strong>PendingIntent</strong>类，并按照笔记和待办事项设置好唯一标识符，这个标识符对于取消提醒至关重要。最后调用<strong>AlarmManager</strong>的<strong>setExactAndAllowWhileIdle ()</strong> 方法，设置好定时任务。当提醒时间到了，<strong>AlarmIntentService</strong>服务会被系统唤醒，在这里面的功能就是在通知栏显示通知并且语音播报提醒内容。通知显示后，可以通过通知栏进入笔记页面或者关闭语音播报。特别注意的是，当软件重新启动时，会开启一个线程重新设置没有过期的笔记定时任务。</p>
 <p>日历提醒：通过系统提供的<strong>Calendar</strong>日历服务类打开日历，并传递提醒内容和时间，其他设置由系统的日历来提供。如图2所示。</p>
@@ -609,11 +606,11 @@
 <p>（1） 新增信息，由于笔记和待办事项类都扩展了<strong>LitePalSupport</strong>，所以当需要新增一条信息时，只需要调用 <strong>save()</strong> 方法。</p>
 <p>（2） 删除信息，首先要获取所要操作的数据表，然后设置信息的约束项，比如信息的唯一标识字段，最后设置约束项的具体值。函数原型为<strong>public static int deleteAll(Class&lt;?&gt; modelClass, String… conditions)</strong> 。</p>
 <p>（3） 更改信息，有两种方法，第一种就是对已经储存到数据库的对象调用<strong>save()</strong> 方法，符合这种情况的有两种，一种是已经调用过<strong>save()</strong> 方法的对象，另外一种情况是通过<strong>LitePal</strong>提供的方法查询出来的对象。另外一种方法就是先新建一个数据实例，然后设置想更改的字段，最后调用<strong>public int updateAll(String… conditions)</strong> 方法来执行更新操作，这里也可以指定对应的约束条件，不设置的话，默认更新所有数据。</p>
-<p>（4） 查询信息，通过<strong>LitePal</strong>各种查询方法可以搜索到所需要的信息，当需要查询数据表的所有信息时，只需要传入对应的数据类，比如<strong>LitePal.findAll(Note.class)<strong>，会返回一个</strong>Note</strong>类型的<strong>List</strong>集合。当需要添加约束条件时，需要结合<strong>find</strong>方法和<strong>where</strong>方法，例如查询同步标志位时，只需要调用<strong>LitePal.where(“status = ?”</strong>,<strong>Integer.toString(status)).find(Note.class)</strong> 方法，就会返回符合条件的<strong>List</strong>集合。当需要对所获取的数据时排序时，需要用到<strong>order</strong>方法，其中<strong>desc</strong>表示降序排列，<strong>asc</strong>或者不写代表升序排列。比如对获取的笔记数据按更新时间降序排序，则调用<strong>LitePal.order(“updatedTime desc”).find(Note.class)</strong> 方法。</p>
+<p>（4） 查询信息，通过<strong>LitePal</strong>各种查询方法可以搜索到所需要的信息，当需要查询数据表的所有信息时，只需要传入对应的数据类，比如<strong>LitePal.findAll(Note.class)<strong>，会返回一个</strong>Note</strong>类型的<strong>List</strong>集合。当需要添加约束条件时，需要结合<strong>find</strong>方法和<strong>where</strong>方法，例如查询同步标志位时，只需要调用<strong>LitePal.where(“status &#x3D; ?”</strong>,<strong>Integer.toString(status)).find(Note.class)</strong> 方法，就会返回符合条件的<strong>List</strong>集合。当需要对所获取的数据时排序时，需要用到<strong>order</strong>方法，其中<strong>desc</strong>表示降序排列，<strong>asc</strong>或者不写代表升序排列。比如对获取的笔记数据按更新时间降序排序，则调用<strong>LitePal.order(“updatedTime desc”).find(Note.class)</strong> 方法。</p>
 <p>以上就是对数据库的增删改查，接下来就是笔记的分组功能，如图1所示，依靠的是<strong>Note</strong>类里面的<strong>groupName</strong>字段，有四个取值，分别是“未分组”、“生活”、“工作”和“回收站”，只要在侧边栏选择对应的选项，控制层就会依靠<strong>groupName</strong>这个约束条件在数据库查找符合条件的信息，那么视图层就可以查看对应的组内内容了。由于一般不必要在回收站新建内容，所以切换到回收站时，输入按钮会隐藏起来。此外，“全部”不包括“回收站”，查询时要设置好约束条件。移入回收站可以通过长按笔记条目选择，如图2所示。更改分组可以在笔记浏览界面完成，如图3所示。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200602.png" srcset="/img/loading.gif" lazyload alt="image-20210619200602150"></p>
-<h4 id="分享模块-1"><a href="#分享模块-1" class="headerlink" title="分享模块"></a>分享模块</h4><p>发送文本内容：创建一个<strong>Intent</strong>并将其操作行为设置成<strong>Intent.ACTION_SEND</strong>，然后设置分享的数据类型为<strong>text/plain</strong>，调用<strong>putExtra()</strong> 方法把名为<strong>Intent.EXTRA_TEXT</strong> 的笔记内容放到<strong>Intent</strong>对象里面去，接着调用<strong>Intent.createChooser()</strong> 创建一个分享<strong>Intent</strong>，并向其传递前面那个<strong>Intent</strong>对象，最后调用<strong>startActivity()</strong> 方法完成分享动作，如图1所示。</p>
-<p>发送图片：在浏览图片框架<strong>MNImageBrowser</strong>里面设置图片的单击事件，之后的步骤基本和发送文本内容相同，但有两个地方不同，发送图片要设置分享的数据类型为<strong>image/jpeg</strong>，通过<strong>putExtra()</strong> 方法放到<strong>Intent</strong>里面去的是名字为<strong>Intent.EXTRA_STREAM</strong>的图片<strong>Uri</strong>数据，如图2所示。</p>
+<h4 id="分享模块-1"><a href="#分享模块-1" class="headerlink" title="分享模块"></a>分享模块</h4><p>发送文本内容：创建一个<strong>Intent</strong>并将其操作行为设置成<strong>Intent.ACTION_SEND</strong>，然后设置分享的数据类型为<strong>text&#x2F;plain</strong>，调用<strong>putExtra()</strong> 方法把名为<strong>Intent.EXTRA_TEXT</strong> 的笔记内容放到<strong>Intent</strong>对象里面去，接着调用<strong>Intent.createChooser()</strong> 创建一个分享<strong>Intent</strong>，并向其传递前面那个<strong>Intent</strong>对象，最后调用<strong>startActivity()</strong> 方法完成分享动作，如图1所示。</p>
+<p>发送图片：在浏览图片框架<strong>MNImageBrowser</strong>里面设置图片的单击事件，之后的步骤基本和发送文本内容相同，但有两个地方不同，发送图片要设置分享的数据类型为<strong>image&#x2F;jpeg</strong>，通过<strong>putExtra()</strong> 方法放到<strong>Intent</strong>里面去的是名字为<strong>Intent.EXTRA_STREAM</strong>的图片<strong>Uri</strong>数据，如图2所示。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200633.png" srcset="/img/loading.gif" lazyload alt="image-20210619200633904"></p>
 <h4 id="权限申请模块-1"><a href="#权限申请模块-1" class="headerlink" title="权限申请模块"></a>权限申请模块</h4><p>普通权限：在<strong>AndroidManifest.xml</strong>文件添加权限声明。</p>
 <p>危险权限：首先创建一个包含录音、拍照、读取文件和写入文件权限的字符串数组， 然后通过<strong>ContextCompat.checkSelfPermission()</strong> 方法来逐条判断是否已经获得授权。接下来，对没有获得授权的权限通过<strong>ActivityCompat.requestPermissions()</strong> 方法一次性申请权限。最后，在<strong>onRequestPermissionsResult()</strong> 方法中处理授权结果，如果没有获得必要权限，程序将关闭并退出。授权过程如图所示。</p>
@@ -869,7 +866,7 @@
       var typing = Fluid.plugins.typing;
       var title = document.getElementById('subtitle').title;
       
-      typing(title)
+        typing(title);
       
     })(window, document);
   </script>

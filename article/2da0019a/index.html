@@ -13,10 +13,10 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="安卓系统开发工程师">
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
-  <meta name="description" content="Hexo优化访问速度更多详细内容请参考：Hexo 博客访问优化日记  本站目前使用工具：  用Vercel来静态托管，github每次有代码更新，它都会自动拉取并部署。使用Vercel来加速Hexo  注：如果github更新后Vercel没有自动部署，需要到Vercel的Git设置那里改成main分支。（2020年10月后github新建仓库默认分支改为main，注意更改。）  用jsdeliv">
+  
+    <meta name="description" content="Hexo优化访问速度更多详细内容请参考：Hexo 博客访问优化日记  本站目前使用工具：  用Vercel来静态托管，github每次有代码更新，它都会自动拉取并部署。使用Vercel来加速Hexo  注：如果github更新后Vercel没有自动部署，需要到Vercel的Git设置那里改成main分支。（2020年10月后github新建仓库默认分支改为main，注意更改。）  用jsdeliv">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hexo优化访问速度">
 <meta property="og:url" content="https://iwesley.top/article/2da0019a/index.html">
@@ -32,6 +32,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210314162303.png">
   
+  
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
   <title>Hexo优化访问速度 - Wesley&#39;s Blog</title>
@@ -40,7 +41,7 @@
 
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
   
     
@@ -76,11 +77,11 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":"UA-192032167-1","gtag":265368827,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":"UA-192032167-1","gtag":265368827,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
@@ -244,7 +245,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1 分钟
+      2 分钟
     </span>
   
 
@@ -551,7 +552,7 @@
       var typing = Fluid.plugins.typing;
       var title = document.getElementById('subtitle').title;
       
-      typing(title)
+        typing(title);
       
     })(window, document);
   </script>

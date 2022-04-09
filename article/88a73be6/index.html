@@ -13,10 +13,10 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="安卓系统开发工程师">
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
-  <meta name="description" content="fluid字体更换参考链接： 配置指南 | Hexo Fluid Hexo’s Fluid 主题私人定制（持续更新） - Eren の 宇宙船 博客网站字体设置：思源宋体 Browse Fonts - Google Fonts font-family - CSS（层叠样式表） | MDN 思源宋体，如何评价，以及如何正确使用 - 少数派  衬线体和无衬线体维基百科的解析： 衬线体（英语：Serif">
+  
+    <meta name="description" content="fluid字体更换参考链接： 配置指南 | Hexo Fluid Hexo’s Fluid 主题私人定制（持续更新） - Eren の 宇宙船 博客网站字体设置：思源宋体 Browse Fonts - Google Fonts font-family - CSS（层叠样式表） | MDN 思源宋体，如何评价，以及如何正确使用 - 少数派  衬线体和无衬线体维基百科的解析： 衬线体（英语：Serif">
 <meta property="og:type" content="article">
 <meta property="og:title" content="fluid字体更换">
 <meta property="og:url" content="https://iwesley.top/article/88a73be6/index.html">
@@ -36,6 +36,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614143120.png">
   
+  
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
   <title>fluid字体更换 - Wesley&#39;s Blog</title>
@@ -44,7 +45,7 @@
 
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
   
     
@@ -80,11 +81,11 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":"UA-192032167-1","gtag":265368827,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":"UA-192032167-1","gtag":265368827,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
@@ -248,7 +249,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      7 分钟
+      8 分钟
     </span>
   
 
@@ -312,9 +313,9 @@
 <h2 id="使用思源宋体"><a href="#使用思源宋体" class="headerlink" title="使用思源宋体"></a>使用思源宋体</h2><p>2018 年在 Google Fonts 上已经托管了思源宋体，所以我们可以直接通过托管引入到我们的博客中。打开 <a target="_blank" rel="noopener" href="https://fonts.google.com/">Google Fonts</a>，搜索思源宋体的英文名：<code>Noto Serif SC</code>，在列表中选择我们个人觉得合适的字体样式，点击右侧的 <code>Select this style</code>，注意此处可根据自己需要选择多个样式。记录下<code>link</code>链接。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614144419.png" srcset="/img/loading.gif" lazyload alt="image-20210614144406967"></p>
 <p>新建font.css,相对路径为source\css\font.css</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">html</span>, <span class="hljs-selector-tag">body</span>, <span class="hljs-selector-class">.markdown-body</span> &#123;<br>  <span class="hljs-attribute">font-family</span>: -apple-system, <span class="hljs-string">&#x27;Nimbus Roman No9 L&#x27;</span>, <span class="hljs-string">&#x27;PingFang SC&#x27;</span>, <span class="hljs-string">&#x27;Hiragino Sans GB&#x27;</span>, <span class="hljs-string">&#x27;Noto Serif SC&#x27;</span>, <span class="hljs-string">&#x27;Microsoft Yahei&#x27;</span>, <span class="hljs-string">&#x27;WenQuanYi Micro Hei&#x27;</span>, <span class="hljs-string">&#x27;ST Heiti&#x27;</span>, serif;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight css"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></div></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">html</span>, <span class="hljs-selector-tag">body</span>, <span class="hljs-selector-class">.markdown-body</span> &#123;<br>  <span class="hljs-attribute">font-family</span>: -apple-system, <span class="hljs-string">&#x27;Nimbus Roman No9 L&#x27;</span>, <span class="hljs-string">&#x27;PingFang SC&#x27;</span>, <span class="hljs-string">&#x27;Hiragino Sans GB&#x27;</span>, <span class="hljs-string">&#x27;Noto Serif SC&#x27;</span>, <span class="hljs-string">&#x27;Microsoft Yahei&#x27;</span>, <span class="hljs-string">&#x27;WenQuanYi Micro Hei&#x27;</span>, <span class="hljs-string">&#x27;ST Heiti&#x27;</span>, serif;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>其中 <code>-apple-system</code>、<code>Nimbus Roman No9 L</code> 分别对应 Windows、macOS/iOS、Linux 下三种系统内置英文字体，<code>PingFang SC</code>（苹方）、<code>Hiragino Sans GB</code>（冬青黑体）、<code>Microsoft Yahei</code>（微软雅黑）对应三种系统内置中文字体（按照上文说法，Apple 系列在前，Windows 在最后），<code>Josefin Sans</code> 和 <code>Noto Serif SC</code>（思源宋体）则是两套允许免费使用的第三方字体。</p>
+<p>其中 <code>-apple-system</code>、<code>Nimbus Roman No9 L</code> 分别对应 Windows、macOS&#x2F;iOS、Linux 下三种系统内置英文字体，<code>PingFang SC</code>（苹方）、<code>Hiragino Sans GB</code>（冬青黑体）、<code>Microsoft Yahei</code>（微软雅黑）对应三种系统内置中文字体（按照上文说法，Apple 系列在前，Windows 在最后），<code>Josefin Sans</code> 和 <code>Noto Serif SC</code>（思源宋体）则是两套允许免费使用的第三方字体。</p>
 <p>修改_config.yml里面的custom_css和custom_head：</p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-comment"># 主题字体配置</span><br><span class="hljs-comment"># Font</span><br><span class="hljs-attr">font:</span><br>  <span class="hljs-attr">font_size:</span> <span class="hljs-string">18px</span><br>  <span class="hljs-attr">font-family:</span><br>  <span class="hljs-comment">#font-family: Georgia, -apple-system, &#x27;Nimbus Roman No9 L&#x27;, &#x27;PingFang SC&#x27;, &#x27;Hiragino Sans GB&#x27;, &#x27;Noto Serif SC&#x27;, &#x27;Microsoft Yahei&#x27;, &#x27;WenQuanYi Micro Hei&#x27;, &#x27;ST Heiti&#x27;, sans-serif;</span><br>  <span class="hljs-comment">#font_family: KaiTi, &quot;Noto Serif SC&quot;, Georgia, sans, serif;</span><br>  <span class="hljs-attr">code_font_size:</span> <span class="hljs-number">90</span><span class="hljs-string">%</span><br><br><span class="hljs-comment"># 指定自定义 .js 文件路径，支持列表；路径是相对 source 目录，如 /js/custom.js 对应存放目录 source/js/custom.js</span><br><span class="hljs-comment"># Specify the path of your custom js file, support list. The path is relative to the source directory, such as `/js/custom.js` corresponding to the directory `source/js/custom.js`</span><br><span class="hljs-attr">custom_js:</span><br><br><span class="hljs-comment"># 指定自定义 .css 文件路径，用法和 custom_js 相同</span><br><span class="hljs-comment"># The usage is the same as custom_js</span><br><span class="hljs-attr">custom_css:</span> <span class="hljs-string">/css/font.css</span><br><br><span class="hljs-comment"># 自定义 &lt;head&gt; 节点中的 HTML 内容</span><br><span class="hljs-comment"># Customize &lt;head&gt; HTML content</span><br><span class="hljs-comment">#思源宋体</span><br><span class="hljs-attr">custom_head:</span> <span class="hljs-string">&#x27;&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Noto+Serif+SC&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;&#x27;</span><br><br><span class="hljs-comment"># 自定义底部 HTML 内容（位于 footer 上方），注意不要和 `post: custom` 配置冲突</span><br><span class="hljs-comment"># Customize the HTML content at the bottom (located above the footer), be careful not to conflict with `post: custom`</span><br><span class="hljs-attr">custom_html:</span> <span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
 
@@ -568,7 +569,7 @@
       var typing = Fluid.plugins.typing;
       var title = document.getElementById('subtitle').title;
       
-      typing(title)
+        typing(title);
       
     })(window, document);
   </script>

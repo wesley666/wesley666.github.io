@@ -13,10 +13,10 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
   <meta name="theme-color" content="#2f4154">
-  <meta name="description" content="安卓系统开发工程师">
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
-  <meta name="description" content="安卓9代码： PackageManagerService  12345678910111213&#x2F;**     * Adds a new package to the internal data structures during platform initialization.     * &lt;p&gt;After adding, the package is known to the sys">
+  
+    <meta name="description" content="安卓9代码： PackageManagerService  12345678910111213&#x2F;**     * Adds a new package to the internal data structures during platform initialization.     * &lt;p&gt;After adding, the package is known to the sys">
 <meta property="og:type" content="article">
 <meta property="og:title" content="安卓系统应用比data分区应用版本号新怎么办">
 <meta property="og:url" content="https://iwesley.top/article/feebec60/index.html">
@@ -30,6 +30,7 @@
 <meta property="article:tag" content="PackageManagerService">
 <meta name="twitter:card" content="summary_large_image">
   
+  
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
   <title>安卓系统应用比data分区应用版本号新怎么办 - Wesley&#39;s Blog</title>
@@ -38,7 +39,7 @@
 
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4/github-markdown.min.css" />
-  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hint.css@2/hint.min.css" />
 
   
     
@@ -74,11 +75,11 @@
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
-    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.8.12","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":"UA-192032167-1","gtag":265368827,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname"}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.8.14","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"right","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"copy_btn":true,"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"baidu":null,"google":"UA-192032167-1","gtag":265368827,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
   </script>
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 
 <body>
@@ -233,7 +234,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1k 字
+      1.1k 字
     </span>
   
 
@@ -242,7 +243,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      3 分钟
+      4 分钟
     </span>
   
 
@@ -291,9 +292,9 @@
               <p>安卓9代码：</p>
 <p><a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/frameworks/base/+/master/services/core/java/com/android/server/pm/PackageManagerService.java">PackageManagerService</a></p>
 <blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Adds a new package to the internal data structures during platform initialization.</span><br><span class="hljs-comment">     * &lt;p&gt;After adding, the package is known to the system and available for querying.</span><br><span class="hljs-comment">     * &lt;p&gt;For packages located on the device ROM [eg. packages located in /system, /vendor,</span><br><span class="hljs-comment">     * etc...], additional checks are performed. Basic verification [such as ensuring</span><br><span class="hljs-comment">     * matching signatures, checking version codes, etc...] occurs if the package is</span><br><span class="hljs-comment">     * identical to a previously known package. If the package fails a signature check,</span><br><span class="hljs-comment">     * the version installed on /data will be removed. If the version of the new package</span><br><span class="hljs-comment">     * is less than or equal than the version on /data, it will be ignored.</span><br><span class="hljs-comment">     * &lt;p&gt;Regardless of the package location, the results are applied to the internal</span><br><span class="hljs-comment">     * structures and the package is made available to the rest of the system.</span><br><span class="hljs-comment">     * &lt;p&gt;<span class="hljs-doctag">NOTE:</span> The return value should be removed. It&#x27;s the passed in package object.</span><br><span class="hljs-comment">     */</span><br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><div class="code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Adds a new package to the internal data structures during platform initialization.</span><br><span class="hljs-comment">     * &lt;p&gt;After adding, the package is known to the system and available for querying.</span><br><span class="hljs-comment">     * &lt;p&gt;For packages located on the device ROM [eg. packages located in /system, /vendor,</span><br><span class="hljs-comment">     * etc...], additional checks are performed. Basic verification [such as ensuring</span><br><span class="hljs-comment">     * matching signatures, checking version codes, etc...] occurs if the package is</span><br><span class="hljs-comment">     * identical to a previously known package. If the package fails a signature check,</span><br><span class="hljs-comment">     * the version installed on /data will be removed. If the version of the new package</span><br><span class="hljs-comment">     * is less than or equal than the version on /data, it will be ignored.</span><br><span class="hljs-comment">     * &lt;p&gt;Regardless of the package location, the results are applied to the internal</span><br><span class="hljs-comment">     * structures and the package is made available to the rest of the system.</span><br><span class="hljs-comment">     * &lt;p&gt;<span class="hljs-doctag">NOTE:</span> The return value should be removed. It&#x27;s the passed in package object.</span><br><span class="hljs-comment">     */</span><br></code></pre></td></tr></table></figure>
 </blockquote>
-<p><strong>If the package fails a signature check,the version installed on /data will be removed. If the version of the new package is less than or equal than the version on /data, it will be ignored.</strong></p>
+<p><strong>If the package fails a signature check,the version installed on &#x2F;data will be removed. If the version of the new package is less than or equal than the version on &#x2F;data, it will be ignored.</strong></p>
 <p>意味着系统分区应用版本号小于或者等于data分区的应用，则data应用会被保留。（这里是指那些系统应用通过更新方式安装到data分区的）</p>
 
             </div>
@@ -541,7 +542,7 @@
       var typing = Fluid.plugins.typing;
       var title = document.getElementById('subtitle').title;
       
-      typing(title)
+        typing(title);
       
     })(window, document);
   </script>
