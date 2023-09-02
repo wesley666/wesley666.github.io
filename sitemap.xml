@@ -205,20 +205,6 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/Linux/</loc>
-    <lastmod>2023-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://iwesley.top/tags/socket/</loc>
-    <lastmod>2023-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://iwesley.top/tags/Android/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -233,6 +219,13 @@
   </url>
   
   <url>
+    <loc>https://iwesley.top/tags/Java/</loc>
+    <lastmod>2023-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://iwesley.top/tags/fluid/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -240,7 +233,7 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/Android-Build/</loc>
+    <loc>https://iwesley.top/tags/UsageStatsService/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -254,7 +247,21 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/UsageStatsService/</loc>
+    <loc>https://iwesley.top/tags/Linux/</loc>
+    <lastmod>2023-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/socket/</loc>
+    <lastmod>2023-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/Android-Build/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -282,20 +289,6 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/%E5%AE%89%E5%8D%93%E8%AE%B0%E4%BA%8B%E6%9C%AC/</loc>
-    <lastmod>2023-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://iwesley.top/tags/%E5%AE%89%E5%8D%93%E4%BE%BF%E7%AD%BE/</loc>
-    <lastmod>2023-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://iwesley.top/tags/%E5%AE%B6%E4%B9%A1/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -304,6 +297,20 @@
   
   <url>
     <loc>https://iwesley.top/tags/collection/</loc>
+    <lastmod>2023-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/%E5%AE%89%E5%8D%93%E8%AE%B0%E4%BA%8B%E6%9C%AC/</loc>
+    <lastmod>2023-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/%E5%AE%89%E5%8D%93%E4%BE%BF%E7%AD%BE/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -319,7 +326,14 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/categories/Linux/</loc>
+    <loc>https://iwesley.top/categories/Android-Build-System/</loc>
+    <lastmod>2023-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/categories/Java%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -333,7 +347,14 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/categories/Android-Build-System/</loc>
+    <loc>https://iwesley.top/categories/Android-System/</loc>
+    <lastmod>2023-09-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/categories/Linux/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -341,13 +362,6 @@
   
   <url>
     <loc>https://iwesley.top/categories/Android-Build/</loc>
-    <lastmod>2023-09-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://iwesley.top/categories/Android-System/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -375,14 +389,14 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/categories/%E5%AE%89%E5%8D%93APP/</loc>
+    <loc>https://iwesley.top/categories/%E8%AF%BB%E4%B9%A6%E7%9C%8B%E6%8A%A5/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://iwesley.top/categories/%E8%AF%BB%E4%B9%A6%E7%9C%8B%E6%8A%A5/</loc>
+    <loc>https://iwesley.top/categories/%E5%AE%89%E5%8D%93APP/</loc>
     <lastmod>2023-09-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
