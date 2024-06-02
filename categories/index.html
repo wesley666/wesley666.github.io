@@ -70,7 +70,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":"UA-192032167-1","gtag":265368827,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -84,28 +84,16 @@
   
 
   
-    <!-- Google Analytics -->
+    <!-- Google tag (gtag.js) -->
     <script async>
       if (!Fluid.ctx.dnt) {
-        Fluid.utils.createScript('https://www.google-analytics.com/analytics.js', function() {
-          window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) };
-          ga.l = +new Date;
-          ga('create', 'UA-192032167-1', 'auto');
-          ga('send', 'pageview');
-        });
-      }
-    </script>
-  
-
-  
-    <!-- Google gtag.js -->
-    <script async>
-      if (!Fluid.ctx.dnt) {
-        Fluid.utils.createScript('https://www.googletagmanager.com/gtag/js?id=265368827', function() {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
           window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
+          function gtag() {
+            dataLayer.push(arguments);
+          }
           gtag('js', new Date());
-          gtag('config', '265368827');
+          gtag('config', 'G-7J4349MJJN');
         });
       }
     </script>
@@ -155,7 +143,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/" target="_self">
                 <i class="iconfont icon-home-fill"></i>
                 <span>首页</span>
               </a>
@@ -167,7 +155,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/artitalk/">
+              <a class="nav-link" href="/artitalk/" target="_self">
                 <i class="iconfont icon-notebook"></i>
                 <span>说说</span>
               </a>
@@ -179,7 +167,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/archives/" target="_self">
                 <i class="iconfont icon-archive-fill"></i>
                 <span>归档</span>
               </a>
@@ -191,7 +179,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/categories/" target="_self">
                 <i class="iconfont icon-category-fill"></i>
                 <span>分类</span>
               </a>
@@ -203,7 +191,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/tags/" target="_self">
                 <i class="iconfont icon-tags-fill"></i>
                 <span>标签</span>
               </a>
@@ -215,7 +203,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/about/" target="_self">
                 <i class="iconfont icon-user-fill"></i>
                 <span>关于</span>
               </a>
@@ -227,7 +215,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/links/">
+              <a class="nav-link" href="/links/" target="_self">
                 <i class="iconfont icon-link-fill"></i>
                 <span>友链</span>
               </a>
@@ -716,48 +704,6 @@
     
     <div class="category row nomargin-x">
       <a class="category-item collapsed
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Android Framework PackageManagerService"
-        id="heading-acd4a9f3bb4e000bcc00e45f683dff68" role="tab" data-toggle="collapse" href="#collapse-acd4a9f3bb4e000bcc00e45f683dff68"
-        aria-expanded="false"
-      >
-        Android Framework PackageManagerService
-        <span class="list-group-count"></span>
-        <i class="iconfont icon-arrowright"></i>
-      </a>
-      
-        <a href="/categories/Android-Framework-PackageManagerService/" class="category-count col-2 col-md-1 col-xm-1">
-          <i class="iconfont icon-articles"></i>
-          <span>1</span>
-        </a>
-      
-      <div class="category-collapse collapse " id="collapse-acd4a9f3bb4e000bcc00e45f683dff68"
-           role="tabpanel" aria-labelledby="heading-acd4a9f3bb4e000bcc00e45f683dff68">
-        
-        
-          
-  <div class="category-post-list">
-    
-    
-      
-      
-        <a href="/article/feebec60/" title="安卓系统应用比data分区应用版本号新怎么办"
-           class="list-group-item list-group-item-action
-           ">
-          <span class="category-post">安卓系统应用比data分区应用版本号新怎么办</span>
-        </a>
-      
-    
-  </div>
-
-        
-      </div>
-    </div>
-  
-    
-    
-    
-    <div class="category row nomargin-x">
-      <a class="category-item collapsed
           list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Android Display System"
         id="heading-7dbb00733a028f6ff683635f73e7844f" role="tab" data-toggle="collapse" href="#collapse-7dbb00733a028f6ff683635f73e7844f"
         aria-expanded="false"
@@ -800,22 +746,22 @@
     
     <div class="category row nomargin-x">
       <a class="category-item collapsed
-          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Android Framework"
-        id="heading-2dc7fcb3ba2d661978e00b10d4654c80" role="tab" data-toggle="collapse" href="#collapse-2dc7fcb3ba2d661978e00b10d4654c80"
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Android Framework PackageManagerService"
+        id="heading-acd4a9f3bb4e000bcc00e45f683dff68" role="tab" data-toggle="collapse" href="#collapse-acd4a9f3bb4e000bcc00e45f683dff68"
         aria-expanded="false"
       >
-        Android Framework
+        Android Framework PackageManagerService
         <span class="list-group-count"></span>
         <i class="iconfont icon-arrowright"></i>
       </a>
       
-        <a href="/categories/Android-Framework/" class="category-count col-2 col-md-1 col-xm-1">
+        <a href="/categories/Android-Framework-PackageManagerService/" class="category-count col-2 col-md-1 col-xm-1">
           <i class="iconfont icon-articles"></i>
           <span>1</span>
         </a>
       
-      <div class="category-collapse collapse " id="collapse-2dc7fcb3ba2d661978e00b10d4654c80"
-           role="tabpanel" aria-labelledby="heading-2dc7fcb3ba2d661978e00b10d4654c80">
+      <div class="category-collapse collapse " id="collapse-acd4a9f3bb4e000bcc00e45f683dff68"
+           role="tabpanel" aria-labelledby="heading-acd4a9f3bb4e000bcc00e45f683dff68">
         
         
           
@@ -824,10 +770,10 @@
     
       
       
-        <a href="/article/5867f171/" title="安卓系统应用的卸载和恢复(非data分区)"
+        <a href="/article/feebec60/" title="安卓系统应用比data分区应用版本号新怎么办"
            class="list-group-item list-group-item-action
            ">
-          <span class="category-post">安卓系统应用的卸载和恢复(非data分区)</span>
+          <span class="category-post">安卓系统应用比data分区应用版本号新怎么办</span>
         </a>
       
     
@@ -870,6 +816,48 @@
            class="list-group-item list-group-item-action
            ">
           <span class="category-post">安卓记事本系统设计和模块实现</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item collapsed
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="Android Framework"
+        id="heading-2dc7fcb3ba2d661978e00b10d4654c80" role="tab" data-toggle="collapse" href="#collapse-2dc7fcb3ba2d661978e00b10d4654c80"
+        aria-expanded="false"
+      >
+        Android Framework
+        <span class="list-group-count"></span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+        <a href="/categories/Android-Framework/" class="category-count col-2 col-md-1 col-xm-1">
+          <i class="iconfont icon-articles"></i>
+          <span>1</span>
+        </a>
+      
+      <div class="category-collapse collapse " id="collapse-2dc7fcb3ba2d661978e00b10d4654c80"
+           role="tabpanel" aria-labelledby="heading-2dc7fcb3ba2d661978e00b10d4654c80">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/article/5867f171/" title="安卓系统应用的卸载和恢复(非data分区)"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">安卓系统应用的卸载和恢复(非data分区)</span>
         </a>
       
     
@@ -974,7 +962,7 @@
   </script>
 
 
-<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
 <script  src="/js/events.js" ></script>
 <script  src="/js/plugins.js" ></script>
