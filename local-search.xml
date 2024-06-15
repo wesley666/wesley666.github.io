@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>ubuntu24.04启动黑屏</title>
+    <link href="/article/860ebe82/"/>
+    <url>/article/860ebe82/</url>
+    
+    <content type="html"><![CDATA[<p>在vmware安装完ubuntu24.04后，登录进去黑屏。</p><p>首先关闭虚拟机，然后在虚拟机设置-显示器-3D图形那里关闭加速3D图形。</p><p>这时候就可以重新登录进去了，但是没有了图形加速，画面就没有那么流畅了。</p><p>怎么办？</p><hr><h2 id="更新图形驱动"><a href="#更新图形驱动" class="headerlink" title="更新图形驱动"></a>更新图形驱动</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo add-apt-repository ppa:oibaf/graphics-drivers<br>sudo apt update &amp;&amp; sudo apt upgrade<br></code></pre></td></tr></table></figure><p>安装完后，关闭虚拟机，重新在虚拟机设置-显示器-3D图形那里打开加速3D图形。</p><p>这时候，再登录进去就可以正常使用了。有了图形加速，UI流畅度也更加好了。</p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://askubuntu.com/questions/1511670/problem-with-ubuntu-24-04-on-vmware">Problem with Ubuntu 24.04 on VMware - Ask Ubuntu</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Linux</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>Ubuntu</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>安卓不同gradle版本怎么发布sdk到Maven</title>
     <link href="/article/3d160ee3/"/>
     <url>/article/3d160ee3/</url>
