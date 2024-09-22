@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>jadx内存不足和反编译失败官方解决办法</title>
+    <link href="/article/5ee2a33b/"/>
+    <url>/article/5ee2a33b/</url>
+    
+    <content type="html"><![CDATA[<p>如果搜索引擎搜索了好久都解决不了问题，建议到官方文档看一下。</p><p><a href="https://github.com/skylot/jadx/wiki/Troubleshooting-Q&A#decompilation-issues">Troubleshooting Q&amp;A · skylot&#x2F;jadx Wiki</a></p><h3 id="内存不足问题"><a href="#内存不足问题" class="headerlink" title="内存不足问题"></a>内存不足问题</h3><h4 id="方法一：在反编译设置里减少处理线程数"><a href="#方法一：在反编译设置里减少处理线程数" class="headerlink" title="方法一：在反编译设置里减少处理线程数"></a>方法一：在反编译设置里减少处理线程数</h4><h4 id="方法二：在反编译设置里排除不需要的包"><a href="#方法二：在反编译设置里排除不需要的包" class="headerlink" title="方法二：在反编译设置里排除不需要的包"></a>方法二：在反编译设置里排除不需要的包</h4><h4 id="方法三：在设置中启用磁盘缓存"><a href="#方法三：在设置中启用磁盘缓存" class="headerlink" title="方法三：在设置中启用磁盘缓存"></a>方法三：在设置中启用磁盘缓存</h4><h4 id="方法四：为-Jadx-分配更多内存"><a href="#方法四：为-Jadx-分配更多内存" class="headerlink" title="方法四：为 Jadx 分配更多内存"></a>方法四：为 Jadx 分配更多内存</h4><p>方法一：编辑脚本<code>bin/jadx-gui</code>或<code>bin/jadx-gui.bat</code> (Windows) 并通过修改<code>DEFAULT_JVM_OPTS</code>的定义将最大堆内存从 4 ( <code>-Xmx4g</code> ) 更改为 8 GB ( <code>-Xmx8g</code> ) </p><p><code>DEFAULT_JVM_OPTS=&#39;&quot;-Xms128M&quot; &quot;-Xmx8g&quot; &quot;-Dawt.useSystemAAFontSettings=lcd&quot; &quot;-Dswing.aatext=true&quot; &quot;-XX:+UseG1GC&quot;&#39;</code></p><p>方法二：如果您使用的是 Windows 并使用<code>jadx-gui.exe</code>请在<code>jadx-gui.exe</code>所在的同一目录中创建一个文本文件<code>jadx-gui.l4j.ini</code> 。对于最大 8 GB 内存&#x2F;堆，请编辑该文本文件并将其内容设置为：</p><p><code>-Xmx8g</code></p><p>如果您使用的是不稳定版本或 Jadx 或者您已重命名<code>jadx-gui.exe</code> ，则还必须调整<code>.l4j.ini</code>文件名。</p><p>例子：</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini">Jadx file-name:        jadx-gui-1.1.0-b1279-2207cd7b.exe<br>Jadx config file name: jadx-gui-1.1.0-b1279-2207cd7b.l4j.ini.<br></code></pre></td></tr></table></figure><h3 id="反编译失败"><a href="#反编译失败" class="headerlink" title="反编译失败"></a>反编译失败</h3><p>勾选反编译-显示不一致的代码 <code>Show inconsistent code</code> (<code>--show-bad-code</code> in jadx-cli)</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> UnsupportedOperationException(<span class="hljs-string">&quot;Method not decompiled:xxxxxxxxxxx&quot;</span>)<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>反编译</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>jadx</tag>
+      
+      <tag>反编译</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>哔哩哔哩直播链接报403解决办法</title>
     <link href="/article/c0d037a/"/>
     <url>/article/c0d037a/</url>
