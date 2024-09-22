@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>哔哩哔哩直播链接报403解决办法</title>
+    <link href="/article/c0d037a/"/>
+    <url>/article/c0d037a/</url>
+    
+    <content type="html"><![CDATA[<p>最近投屏接到客诉说苹果哔哩哔哩客户端投直播会显示播放失败。</p><p>我测试发现安卓端哔哩哔哩是正常的，某投屏软件也能正常播放，我对此感到困惑。通过<code>tcpdump</code>分析，发现它的ijk播放器在访问链接时改变了User Agent。</p><p>然后我就开始测试了：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java">headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Mozilla/5.0.BiliTV/1.7.2&quot;</span>); <span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Bilibili Freedoooooom/MarkII&quot;</span>);<span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Linux Androi&quot;</span>);<span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Android&quot;</span>);<span class="hljs-comment">//403 forbidden</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;stagefright&quot;</span>);<span class="hljs-comment">//403 forbidden</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;a&quot;</span>);<span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Androi&quot;</span>);<span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;stagefrigh&quot;</span>);<span class="hljs-comment">//正常</span><br></code></pre></td></tr></table></figure><p>经测试发现含有Android或者stagefright都会导致访问403，其他都正常。</p><p>而安卓默认的User Agent就包含了Android和stagefright。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function">AString <span class="hljs-title">MakeUserAgent</span><span class="hljs-params">()</span> </span>&#123;<br>    AString ua;<br>    ua.append(<span class="hljs-string">&quot;stagefright/1.2 (Linux;Android &quot;</span>);<br>#<span class="hljs-keyword">if</span> (PROPERTY_VALUE_MAX &lt; <span class="hljs-number">8</span>)<br>#error <span class="hljs-string">&quot;PROPERTY_VALUE_MAX must be at least 8&quot;</span><br>#endif<br>    <span class="hljs-keyword">char</span> value[PROPERTY_VALUE_MAX];<br>    property_get(<span class="hljs-string">&quot;ro.build.version.release&quot;</span>, value, <span class="hljs-string">&quot;Unknown&quot;</span>);<br>    ua.append(value);<br>    ua.append(<span class="hljs-string">&quot;)&quot;</span>);<br>    <span class="hljs-keyword">return</span> ua;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>既然知道了问题原因，那么解决起来就很简单了，当判断是哔哩哔哩的直播链接时，改变播放器的user agent。</p><h3 id="ijk播放器"><a href="#ijk播放器" class="headerlink" title="ijk播放器"></a>ijk播放器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, <span class="hljs-string">&quot;user_agent&quot;</span>, <span class="hljs-string">&quot;Bilibili Freedoooooom/MarkII&quot;</span>);<br></code></pre></td></tr></table></figure><h3 id="MediaPlayer播放器"><a href="#MediaPlayer播放器" class="headerlink" title="MediaPlayer播放器"></a>MediaPlayer播放器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Bilibili Freedoooooom/MarkII&quot;</span>);<br>mPlayer.setDataSource(<span class="hljs-keyword">this</span>, Uri.parse(videoUrl), headers);<br></code></pre></td></tr></table></figure><p>注意，由于谷歌的bug，安卓5.0和5.1不支持该设置</p><p>[MediaPlayer ignores User-Agent header <a href="https://issuetracker.google.com/issues/37018604?pli=1">37018604] - Issue Tracker</a></p><p><a href="https://android-review.googlesource.com/c/platform/frameworks/av/+/124333/1/media/libstagefright/http/MediaHTTP.cpp#b53">…&#x2F;MediaHTTP.cpp · Gerrit Code Review</a></p><h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>当然也可以通过本地代理来解决，拦截播放请求就可以随意改变user agent了，这也可以解决安卓5.0以下MediaPlayer不支持某些tls版本的问题。</p><p>参考链接：</p><p><a href="https://blog.51cto.com/u_16213339/7466348">哔哩哔哩视频403Forbidden原因</a></p><p><a href="https://im.salty.fish/index.php/archives/revengr-bilibili-352.html">浅度剖析B站的新 -352 风控策略 - A Salty Blog</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>投屏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>网络</tag>
+      
+      <tag>投屏</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Android java.lang.IncompatibleClassChangeError</title>
     <link href="/article/a299c970/"/>
     <url>/article/a299c970/</url>
