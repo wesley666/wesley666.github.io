@@ -4,6 +4,59 @@
   
   
   <entry>
+    <title>安卓相关知识点网站</title>
+    <link href="/article/ed7f9345/"/>
+    <url>/article/ed7f9345/</url>
+    
+    <content type="html"><![CDATA[<p>OPPO 开放平台-OPPO开发者服务中心: <a href="https://open.oppomobile.com/new/wiki">https://open.oppomobile.com/new/wiki</a></p><p>OPPO 开放平台-安卓版本适配: <a href="https://open.oppomobile.com/new/developmentDoc/info?id=10960">https://open.oppomobile.com/new/developmentDoc/info?id=10960</a></p><p>简介 - Java教程 - 廖雪峰的官方网站: <a href="https://liaoxuefeng.com/books/java/introduction/index.html">https://liaoxuefeng.com/books/java/introduction/index.html</a></p><p>查询权限的定义 Manifest.permission ?|? Android Developers: <a href="https://developer.android.com/reference/android/Manifest.permission">https://developer.android.com/reference/android/Manifest.permission</a></p><p>Android 中的权限 ?|? Android Developers: <a href="https://developer.android.com/guide/topics/permissions/overview?hl=zh-cn#runtime">https://developer.android.com/guide/topics/permissions/overview?hl=zh-cn#runtime</a></p><p>guolindev&#x2F;PermissionX: An open source Android library that makes handling runtime permissions extremely easy.: <a href="https://github.com/guolindev/PermissionX?tab=readme-ov-file">https://github.com/guolindev/PermissionX?tab=readme-ov-file</a></p><p>Android FBE - 魅族内核团队: <a href="https://kernel.meizu.com/2018/07/12//android-p-fbe.html/">https://kernel.meizu.com/2018/07/12//android-p-fbe.html/</a></p><p>展讯平台AndroidP迁移指导文档——FBE-一牛网论坛: <a href="https://bbs.16rd.com/thread-586509-1-1.html">https://bbs.16rd.com/thread-586509-1-1.html</a></p><p>Support Direct Boot mode ?|? Security ?|? Android Developers: <a href="https://developer.android.com/privacy-and-security/direct-boot">https://developer.android.com/privacy-and-security/direct-boot</a></p><p>directBootAware 和 defaultToDeviceProtectedStorage - 亦幻 - 博客园: <a href="https://www.cnblogs.com/Bolia/p/18361343">https://www.cnblogs.com/Bolia/p/18361343</a></p><p>UserDataPrepare创建系统以及应用APP的ce和de目录的流程_prepareuserdatali-CSDN博客: <a href="https://blog.csdn.net/CHALLENG_EVERYTHING/article/details/84654184">https://blog.csdn.net/CHALLENG_EVERYTHING/article/details/84654184</a></p><p>查看各版本行为变更Android Releases ?|? Platform ?|? Android Developers: <a href="https://developer.android.com/about/versions">https://developer.android.com/about/versions</a></p><p>数据绑定库 ?|? Android Developers: <a href="https://developer.android.google.cn/topic/libraries/data-binding?hl=zh-cn">https://developer.android.google.cn/topic/libraries/data-binding?hl=zh-cn</a></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>一些有效的工作方法</title>
+    <link href="/article/b6e36186/"/>
+    <url>/article/b6e36186/</url>
+    
+    <content type="html"><![CDATA[<p>安卓第三方库选择：要考虑兼容性、可维护性、性能比较</p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>android IPC: 安卓进程间通讯的几种方式</title>
+    <link href="/article/7bbe7ac8/"/>
+    <url>/article/7bbe7ac8/</url>
+    
+    <content type="html"><![CDATA[<p>Android中目前存在多种IPC方式，分别为：</p><ul><li><p>Bundle</p></li><li><p>文件共享</p></li><li><p>Messenger</p></li><li><p>AIDL</p></li><li><p>ContentProvider</p></li><li><p>Socket</p></li><li><h3 id="IPC方式的优缺点和适用场景"><a href="#IPC方式的优缺点和适用场景" class="headerlink" title="IPC方式的优缺点和适用场景"></a>IPC方式的优缺点和适用场景</h3><table><thead><tr><th>方式</th><th>能力</th><th>特点</th><th>适用场景</th></tr></thead><tbody><tr><td>AIDL</td><td>支持一对多并发通信、支持实时通信、支持跨进程函数调用</td><td>需要独立定义.aidl规范、需要添加.aidl文件、使用较复杂</td><td>一对多即时通信，有RPC需求</td></tr><tr><td>Messenger</td><td>支持一对多串行通信、支持实时通信、支持Bundle传递</td><td>无需独立定义.aidl规范、无需添加.aidl文件、使用较简洁</td><td>低并发的一对多即时通信，无返回结果的RPC需求</td></tr></tbody></table></li></ul><p><a href="https://segmentfault.com/a/1190000040558520">「Android」基于轻量级Messenger的进程通信 - 个人文章 - SegmentFault 思否</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Android IPC</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>android ipc</tag>
+      
+      <tag>android rpc</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>安卓源码环境:Android.mk如何编译aar包?</title>
     <link href="/article/797e1cc1/"/>
     <url>/article/797e1cc1/</url>
