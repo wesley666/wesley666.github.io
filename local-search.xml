@@ -4,11 +4,246 @@
   
   
   <entry>
+    <title>Android.mk基础知识</title>
+    <link href="/article/eaba12cd/"/>
+    <url>/article/eaba12cd/</url>
+    
+    <content type="html"><![CDATA[<p>Android 浅度解析：mk预置AAR、SO文件、APP包和签名-阿里云开发者社区: <a href="https://developer.aliyun.com/article/1488469">https://developer.aliyun.com/article/1488469</a></p><p>android系统添加预置APP（so库自动释放) - 庚拓天下 - 博客园: <a href="https://www.cnblogs.com/genggeng/p/10563585.html">https://www.cnblogs.com/genggeng/p/10563585.html</a></p><p>使用@符号和不使用@符号的区别<br>在Android.mk中，使用@符号和不使用@符号有一些区别：<br>? 使用@符号可以提高性能，因为不需要解压和拷贝SO文件，也可以节省空间，因为不需要存储多余的SO文件。<br>? 不使用@符号可以提高兼容性，因为可以针对不同的平台提供相应的SO文件，而不需要考虑APK中是否有对应平台的SO文件。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Android Build System</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>安卓Makefile</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Android APP drawable不同文件夹的用法</title>
+    <link href="/article/b1dcee32/"/>
+    <url>/article/b1dcee32/</url>
+    
+    <content type="html"><![CDATA[<p>Screen compatibility: <a href="https://developer.android.com/guide/practices/screens_support.html">https://developer.android.com/guide/practices/screens_support.html</a></p><p>App resources: <a href="https://developer.android.com/guide/topics/resources/providing-resources.html#AlternativeResources">https://developer.android.com/guide/topics/resources/providing-resources.html#AlternativeResources</a></p><p>Support different pixel densities: <a href="https://developer.android.com/training/multiscreen/screendensities">https://developer.android.com/training/multiscreen/screendensities</a></p><p>Drawable resources : <a href="https://developer.android.com/guide/topics/resources/drawable-resource">https://developer.android.com/guide/topics/resources/drawable-resource</a></p><p>res&#x2F;drawable&#x2F; is a legacy synonym for res&#x2F;drawable-mdpi&#x2F;, indicating that the drawables in that directory are set for mdpi density. If the device is running another density, those images will be downsampled (to ldpi) or upsampled (to anything else) to match the device density.</p><p>res&#x2F;drawable-nodpi&#x2F; says “these drawables should not be resampled for any density, but instead should be used as-is on all densities”.</p><p>drawable-nodpi will bypass scaling and drawable will use the default scaling:</p><p>mdpi &#x3D; 1x<br>hdpi &#x3D; 1.5x<br>xhdpi &#x3D; 2x<br>xxhdpi &#x3D; 3x<br>xxxhdpi &#x3D; 4x<br>drawable-nodpi is efficient if your code will be doing its own scaling (or no scaling) and you don’t want the image pre-scaled by Android.</p><p>There is also drawable-anydpi, just to make things more confusing.</p><p>drawable with no specifications will be used if an exact match on density and screen specifications does not exist. drawable-nodpi will be used after drawable.</p><p>UPDATE If you have both drawable and drawble-nodpi, the select order is either a more complex rule not documented or Android is broken. Through experimentation I confirmed that devices with screen density &lt; xhdpi will correctly select the drawable image. Devices with screen density &gt;&#x3D; xhdpi will select the drawable-nodpi.</p><p>Selection rule: 1. Pick match to screen density, one of these:</p><p>drawable-ldpi<br>drawable-mdpi<br>drawable-hdpi<br>drawable-xhdpi<br>drawable-xxhdpi<br>drawable-xxxhdpi<br>If no match on density, then select one of these<br>drawable (automatic scaling mdpi&#x3D;none… xxxhdpi&#x3D;4x)<br>drawable-nodpi (no scaling)<br>drawable-tvdpi<br>drawable-anydpi (no scaling)</p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>android - Will a density qualified drawable folder or drawable-nodpi take precedence? - Stack Overflow: <a href="https://stackoverflow.com/questions/24682094/will-a-density-qualified-drawable-folder-or-drawable-nodpi-take-precedence">https://stackoverflow.com/questions/24682094/will-a-density-qualified-drawable-folder-or-drawable-nodpi-take-precedence</a></p><p>android - What is the difference between putting images in drawable and drawable-nodpi folder? - Stack Overflow: <a href="https://stackoverflow.com/questions/33631995/what-is-the-difference-between-putting-images-in-drawable-and-drawable-nodpi-fol">https://stackoverflow.com/questions/33631995/what-is-the-difference-between-putting-images-in-drawable-and-drawable-nodpi-fol</a></p><p>玩转Android drawable图片适配 - 漫思 - 博客园: <a href="https://www.cnblogs.com/sexintercourse/p/17020569.html">https://www.cnblogs.com/sexintercourse/p/17020569.html</a></p><p>Android 适配（drawable文件夹）图片适配（二） - 张亚楠 - 博客园: <a href="https://www.cnblogs.com/huihuizhang/p/9473698.html">https://www.cnblogs.com/huihuizhang/p/9473698.html</a></p><p>android（drawable文件夹）图片适配_drawable是什么文件-CSDN博客: <a href="https://blog.csdn.net/xuaho0907/article/details/72848520#:~:text=%E5%A6%82%E6%9E%9C%E5%9B%BE%E7%89%87%E6%89%80%E5%9C%A8%E7%9B%AE%E5%BD%95%E4%B8%BA,%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F%EF%BC%8C%E4%B8%8D%E8%BF%9B%E8%A1%8C%E7%BC%A9%E6%94%BE%E3%80%82&amp;text=drawable%2Dnodpi%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E8%BF%99%E4%B8%AA,%E5%B0%B1%E4%BC%9A%E5%AE%9E%E9%99%85%E5%B1%95%E7%A4%BA%E5%A4%9A%E5%A4%A7%E3%80%82">https://blog.csdn.net/xuaho0907/article/details/72848520#:~:text=%E5%A6%82%E6%9E%9C%E5%9B%BE%E7%89%87%E6%89%80%E5%9C%A8%E7%9B%AE%E5%BD%95%E4%B8%BA,%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F%EF%BC%8C%E4%B8%8D%E8%BF%9B%E8%A1%8C%E7%BC%A9%E6%94%BE%E3%80%82&amp;text=drawable%2Dnodpi%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E8%BF%99%E4%B8%AA,%E5%B0%B1%E4%BC%9A%E5%AE%9E%E9%99%85%E5%B1%95%E7%A4%BA%E5%A4%9A%E5%A4%A7%E3%80%82</a></p><p>Android知识体系之drawable文件夹顺序 - 作业部落 Cmd Markdown 编辑阅读器: <a href="https://www.zybuluo.com/TryLoveCatch/note/590965">https://www.zybuluo.com/TryLoveCatch/note/590965</a></p><p>Android drawable文件夹那些事_安卓drawable文件夹的作用-CSDN博客: <a href="https://blog.csdn.net/qq_34341338/article/details/86706751">https://blog.csdn.net/qq_34341338/article/details/86706751</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>AndroidAPPUI</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Android</tag>
+      
+      <tag>AndroidAPPUI</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Android ADB 常用命令</title>
+    <link href="/article/dfa112ac/"/>
+    <url>/article/dfa112ac/</url>
+    
+    <content type="html"><![CDATA[<p>am monitor  可以持续监控App的包名，当切换应用时，如果包名有变化，就会在终端输出</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>AndroidUtils</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Android</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Android APP组件化</title>
+    <link href="/article/69eef408/"/>
+    <url>/article/69eef408/</url>
+    
+    <content type="html"><![CDATA[<h2 id="前导知识"><a href="#前导知识" class="headerlink" title="前导知识"></a>前导知识</h2><p>配置 build 变体 ?|? Android Studio ?|? Android Developers: <a href="https://developer.android.com/build/build-variants?hl=zh-cn#groovy">https://developer.android.com/build/build-variants?hl=zh-cn#groovy</a></p><p>Android模块化之MicroModule（微信Pins工程）相信你看过微信关于模块化的分享《微信Android模块化 - 掘金: <a href="https://juejin.cn/post/6844903647956959246?from=search-suggest">https://juejin.cn/post/6844903647956959246?from=search-suggest</a></p><p>怎么实现微信Android Pins工程结构？Pins工程结构是什么？ 如何做代码边界检查？ - 掘金: <a href="https://juejin.cn/post/6844903602645893128">https://juejin.cn/post/6844903602645893128</a></p><p>微信Android模块化架构重构实践: <a href="https://mp.weixin.qq.com/s/6Q818XA5FaHd7jJMFBG60w">https://mp.weixin.qq.com/s/6Q818XA5FaHd7jJMFBG60w</a></p><p>美团外卖Android平台化架构演进实践 - 美团技术团队: <a href="https://tech.meituan.com/2018/03/16/meituan-food-delivery-android-architecture-evolution.html">https://tech.meituan.com/2018/03/16/meituan-food-delivery-android-architecture-evolution.html</a></p><p>Android消息总线的演进之路：用LiveDataBus替代RxBus、EventBus - 美团技术团队: <a href="https://tech.meituan.com/2018/07/26/android-livedatabus.html">https://tech.meituan.com/2018/07/26/android-livedatabus.html</a></p><p>Android组件化方案及组件消息总线modular-event实战 - 美团技术团队: <a href="https://tech.meituan.com/2018/12/20/modular-event.html">https://tech.meituan.com/2018/12/20/modular-event.html</a></p><p>创建 Android 库 ?|? Android Studio ?|? Android Developers: <a href="https://developer.android.com/studio/projects/android-library?hl=zh-cn">https://developer.android.com/studio/projects/android-library?hl=zh-cn</a></p><p>添加 build 依赖项 ?|? Android Studio ?|? Android Developers: <a href="https://developer.android.com/build/dependencies?hl=zh-cn">https://developer.android.com/build/dependencies?hl=zh-cn</a></p><p>高级测试设置 ?|? Android Studio ?|? Android Developers: <a href="https://developer.android.com/studio/test/advanced-test-setup?hl=zh-cn#create-instrumented-test-for-build-variant">https://developer.android.com/studio/test/advanced-test-setup?hl=zh-cn#create-instrumented-test-for-build-variant</a></p><h2 id="资源冲突"><a href="#资源冲突" class="headerlink" title="资源冲突"></a>资源冲突</h2><p>Android 组件资源覆盖冲突解决方案在 Android 的日常开发中，我们会使用到大量的第三方库或者自己编写的组件库 - 掘金: <a href="https://juejin.cn/post/6844903993894780942">https://juejin.cn/post/6844903993894780942</a></p><p><a href="https://github.com/hust201010701/CheckResourceConflict">https://github.com/hust201010701/CheckResourceConflict</a></p><p>Android Gradle Plugin 3.3 版本及其以上，提供了一个 API 可以获取编译所有的资源文件。</p><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs groovy">variants.forEach &#123; variant -&gt;<br>    variant <span class="hljs-keyword">as</span> BaseVariantImpl<br>    <span class="hljs-comment">// files 即对应所有的编译资源</span><br>    <span class="hljs-keyword">def</span> files = variant.allRawAndroidResources.files<br><br></code></pre></td></tr></table></figure><p>终于理解～Android 模块化里的资源冲突? 前言 作为 Android 开发者，我们常常需要去管理非常多不同的资源文 - 掘金: <a href="https://juejin.cn/post/7170562275374268447">https://juejin.cn/post/7170562275374268447</a></p><p>利用Android Gradle进行自动化设置资源名命名规则一、背景描述： ????公司再不断推进组件化，多个Modul - 掘金: <a href="https://juejin.cn/post/7065889116780494855">https://juejin.cn/post/7065889116780494855</a></p><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><code class="hljs groovy">android &#123;  <br>  <br>  flavorDimensions <span class="hljs-string">&quot;versionCode&quot;</span>  <br>  <br>  productFlavors &#123;  <br>      productFlavors.all &#123;<span class="hljs-comment">//遍历productFlavors多渠道，设置渠道号（xiaomi 、huawei）  </span><br>          flavor -&gt; flavor.manifestPlaceholders.put(<span class="hljs-string">&quot;CHANNEL&quot;</span>, name)  <br>      &#125;<br>  &#125;<br>  applicationVariants.all &#123; variant -&gt;  <br>      <span class="hljs-comment">// 打包完成后输出路径</span><br>      <span class="hljs-keyword">def</span> name = ((project.name != <span class="hljs-string">&quot;app&quot;</span>) ? project.name : rootProject.name.replace(<span class="hljs-string">&quot; &quot;</span>, <span class="hljs-string">&quot;&quot;</span>)) + <br>      <span class="hljs-string">&quot;_&quot;</span> + variant.flavorName + <br>      <span class="hljs-string">&quot;_&quot;</span> + variant.buildType.name + <br>      <span class="hljs-string">&quot;_&quot;</span> + variant.versionName + <br>      <span class="hljs-string">&quot;_&quot;</span> + <span class="hljs-keyword">new</span> Date().format(<span class="hljs-string">&#x27;yyyyMMddhhmm&#x27;</span>) + <span class="hljs-string">&quot;.apk&quot;</span>  <br>      <span class="hljs-comment">//相对路径app/build/outputs/apk/huawei/release/</span><br>      <span class="hljs-keyword">def</span> path = <span class="hljs-string">&quot;../../../../../apk/&quot;</span> <span class="hljs-comment">//相当于路径 app/apk/</span><br>      variant.outputs.each &#123; output -&gt;<br>          <span class="hljs-keyword">def</span> outputFile = output.outputFile<br>          <span class="hljs-keyword">if</span> (outputFile != <span class="hljs-literal">null</span> &amp;&amp; outputFile.name.endsWith(<span class="hljs-string">&#x27;.apk&#x27;</span>)) &#123;<br>               <span class="hljs-comment">//指定路径输出</span><br>               output.outputFileName = <span class="hljs-keyword">new</span> File(path, name)<br>          &#125;<br>      &#125; <br>      <span class="hljs-comment">// 在打包完成后还可以做一些别的操作，可以复制到指定目录，或者移动文件到指定目录</span><br>      variant.assemble.doLast &#123;  <br>          File out = <span class="hljs-keyword">new</span> File(“$&#123;project.rootDir&#125;/apk”)  <br>          variant.outputs.forEach &#123; file -&gt;  <br>            <span class="hljs-comment">//复制apk到指定文件夹</span><br>            <span class="hljs-comment">//copy &#123;  </span><br>            <span class="hljs-comment">//  from file.outputFile  </span><br>            <span class="hljs-comment">//  into out  </span><br>            <span class="hljs-comment">//&#125;</span><br>         <span class="hljs-comment">//把文件移动到指定文件夹  </span><br>          ant.move <span class="hljs-attr">file:</span> file.outputFile,  <br>                 <span class="hljs-symbol">todir:</span> <span class="hljs-string">&quot;$&#123;project.rootDir&#125;/apk&quot;</span><br>        &#125;  <br>      &#125; <br>  &#125;<br><span class="hljs-comment">//多渠道签名的配置</span><br>  signingConfigs &#123;<br>     test &#123;<br>        storeFile file(<span class="hljs-string">&quot;../test.keystore&quot;</span>)<br>        storePassword <span class="hljs-string">&#x27;test&#x27;</span><br>        keyAlias <span class="hljs-string">&#x27;test&#x27;</span><br>        keyPassword <span class="hljs-string">&#x27;test&#x27;</span><br>        v1SigningEnabled <span class="hljs-literal">true</span><br>        v2SigningEnabled <span class="hljs-literal">true</span><br>     &#125;<br>     xiaomi &#123;<br>        storeFile file(<span class="hljs-string">&quot;../xiaomi.keystore&quot;</span>)<br>        storePassword <span class="hljs-string">&#x27;xiaomi&#x27;</span><br>        keyAlias <span class="hljs-string">&#x27;xiaomi&#x27;</span><br>        keyPassword <span class="hljs-string">&#x27;xiaomi&#x27;</span><br>        v1SigningEnabled <span class="hljs-literal">true</span><br>        v2SigningEnabled <span class="hljs-literal">true</span><br>     &#125;<br>  &#125;<br>  buildTypes &#123;<br>       debug &#123;<br><span class="hljs-comment">//        debug这里设置不起作用，可能是编译器的问题？</span><br><span class="hljs-comment">//         productFlavors.xiaomi.signingConfig signingConfigs.test</span><br><span class="hljs-comment">//         productFlavors.huawei.signingConfig signingConfigs.test</span><br>       &#125;<br>       release &#123;<br>           productFlavors.xiaomi.signingConfig signingConfigs.xiaomi<br>           productFlavors.huawei.signingConfig signingConfigs.huawei<br>       &#125;<br>  &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs groovy">android &#123;<br>    variantFilter &#123; variant -&gt;<br>        <span class="hljs-keyword">if</span> (variant.buildType.name.equals(<span class="hljs-string">&#x27;debug&#x27;</span>)) &#123;<br>            variant.setIgnore(<span class="hljs-literal">true</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">//执行lint检查，有任何的错误或者警告提示，都会终止构建，我们可以将其关掉。</span><br>    lintOptions &#123;<br>        checkReleaseBuilds <span class="hljs-literal">false</span><br>        abortOnError <span class="hljs-literal">false</span><br>        <span class="hljs-comment">// 防止在发布的时候出现因MissingTranslation导致Build Failed!</span><br>        disable <span class="hljs-string">&#x27;MissingTranslation&#x27;</span><br>    &#125;<br> <br>    dexOptions &#123;<br>        incremental <span class="hljs-literal">true</span><br>        javaMaxHeapSize <span class="hljs-string">&quot;8g&quot;</span><br>        jumboMode = <span class="hljs-literal">true</span><br>        preDexLibraries = <span class="hljs-literal">false</span><br>        threadCount =<span class="hljs-string">&quot;8&quot;</span><br>    &#125;<br><br></code></pre></td></tr></table></figure><p>missingDimensionStrategy </p><p>配置产品变种productFlavors matchingFallbacks missingDimensionStrategy - 简书: <a href="https://www.jianshu.com/p/4b311bd9840d">https://www.jianshu.com/p/4b311bd9840d</a></p><p>gradle - Android buildTypes vs. productFlavors error - Stack Overflow: <a href="https://stackoverflow.com/questions/64758477/android-buildtypes-vs-productflavors-error">https://stackoverflow.com/questions/64758477/android-buildtypes-vs-productflavors-error</a></p><p>ProductFlavor多渠道的神器 - 简书: <a href="https://www.jianshu.com/p/00ceb35b090b">https://www.jianshu.com/p/00ceb35b090b</a></p><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>Android 多渠道打包多渠道配置（2 种方式） 1、可写在主模块（app）的 build.gradle 下 2、在项 - 掘金: <a href="https://juejin.cn/post/7023661293781385247">https://juejin.cn/post/7023661293781385247</a></p><p>Gradle多渠道打包(动态设定App名称，应用图标，替换常量，更改包名，变更渠道) - 简书: <a href="https://www.jianshu.com/p/533240d222d3">https://www.jianshu.com/p/533240d222d3</a></p><p>Android 官方模块化方案解读快速了解 Android 官方模块化方案。还有一些你可能不知道的实用小技巧。还有官方模 - 掘金: <a href="https://juejin.cn/post/7142884855091560479">https://juejin.cn/post/7142884855091560479</a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>AndroidAPP架构</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Android</tag>
+      
+      <tag>AndroidAPP</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Tencent mars Xlog编译及使用方法</title>
+    <link href="/article/ca471381/"/>
+    <url>/article/ca471381/</url>
+    
+    <content type="html"><![CDATA[<p>Window11编译</p><blockquote><p>如果已经安装了cygwin，不需要卸载重装，只需要再次运行安装文件setup-x86_64.exe就可以下载或者卸载包。</p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>AndroidThirdPartSDK</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Android</tag>
+      
+      <tag>AndroidThirdPartySDK</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>git常见问题</title>
+    <link href="/article/ca7dd2f8/"/>
+    <url>/article/ca7dd2f8/</url>
+    
+    <content type="html"><![CDATA[<p>gerrit draft and topic |: <a href="https://breezetemple.github.io/2019/08/30/gerrit-draft-and-topic/">https://breezetemple.github.io/2019/08/30/gerrit-draft-and-topic/</a></p><p>Gerrit相对Git提供了一个特有的命名空间refs&#x2F;for&#x2F;用来定义我们的提交上传到哪个branch，且可以用来区分我们的commit是提交到Gerrit进行审核还是直接提交到Git仓库，格式如下：</p><p>refs&#x2F;for&#x2F;<target-branch></p><p>Push 一个 Commit 到 Gerrit: git push origin HEAD:refs&#x2F;for&#x2F;master<br>直接 Push 一个 commit 到 Git 仓库：（默认配置成不允许） git push origin HEAD:master<br>当commit Push到Gerrit等待review时，Gerrit会将此commit保存在一个名为refs&#x2F;changes&#x2F;xx&#x2F;yy&#x2F;zz的一个暂存branch中。</p><p>zz为这个commit的patch set号<br>yy是change号<br>xx是change号的后两位</p><p>Draft<br>refs&#x2F;drafts&#x2F;<target branch></p><p>$ git push origin HEAD:refs&#x2F;drafts&#x2F;xxx<br>在Gerrit中点击Publish按钮转换为正式Change</p><p>Topic<br>refs&#x2F;for&#x2F;<target branch><br>refs&#x2F;for&#x2F;<target branch>&#x2F;<topic name></p><p>$ git push origin HEAD:refs&#x2F;for&#x2F;xxx%topic&#x3D;123<br>$ git push origin HEAD:refs&#x2F;for&#x2F;xxx&#x2F;123<br>Topic用于归类相关的提交，可以用上述的命令，同时可以在Gerrit中编辑Topic</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>git</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>git</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Android Activity常见问题</title>
+    <link href="/article/a218b21a/"/>
+    <url>/article/a218b21a/</url>
+    
+    <content type="html"><![CDATA[<p>android finishAffinity()-CSDN博客: <a href="https://blog.csdn.net/mr_orange_klj/article/details/43244603">https://blog.csdn.net/mr_orange_klj/article/details/43244603</a></p><p>调用activity对象的finishiAffinity()方法，可以关闭当前activity所属的activity栈中所有的activity。如果所有activity都保存在默认栈中，则使用该方法会直接退出程序。如果要回到程序的主界面，则可以在manifest文件中将主界面的activity设置为单独的栈保存。</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"> <span class="hljs-tag">&lt;<span class="hljs-name">activity</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.weishi.UserMain&quot;</span></span><br><span class="hljs-tag">            <span class="hljs-attr">android:taskAffinity</span>=<span class="hljs-string">&quot;:finish&quot;</span>//该句用来指定栈</span><br><span class="hljs-tag">            <span class="hljs-attr">android:label</span>=<span class="hljs-string">&quot;@string/title_activity_user_main&quot;</span> &gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">activity</span>&gt;</span><br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>AndroidActivity</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Android</tag>
+      
+      <tag>AndroidActivity</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>安卓常用工具方法</title>
+    <link href="/article/bf556c88/"/>
+    <url>/article/bf556c88/</url>
+    
+    <content type="html"><![CDATA[<p>获取进程名字</p><p>【Android】获取当前进程名的四种方法及效率对比_android获取当前进程名-CSDN博客: <a href="https://blog.csdn.net/qq_23049111/article/details/126097443">https://blog.csdn.net/qq_23049111/article/details/126097443</a></p><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getAppProcessName</span><span class="hljs-params">()</span></span>: String &#123;<br>    <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.P) &#123;<br>        <span class="hljs-keyword">return</span> Application.getProcessName()<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.JELLY_BEAN_MR2) &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-keyword">val</span> processName =<br>                Reflector.on(<span class="hljs-string">&quot;android.app.ActivityThread&quot;</span>).method(<span class="hljs-string">&quot;currentProcessName&quot;</span>)<br>                    .call&lt;String&gt;()<br>            Log.d(TAG, <span class="hljs-string">&quot;getAppProcessName: <span class="hljs-variable">$processName</span>&quot;</span>)<br>            <span class="hljs-keyword">return</span> processName<br>        &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>            Log.e(TAG, <span class="hljs-string">&quot;getAppProcessName error&quot;</span>, e)<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span><br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-comment">//安卓4.2的的currentPackageName实际上就是currentProcessName</span><br>            <span class="hljs-comment">//http://xrefandroid.com/android-4.2.2_r1/xref/frameworks/base/core/java/android/app/ActivityThread.java</span><br>            <span class="hljs-keyword">val</span> processName =<br>                Reflector.on(<span class="hljs-string">&quot;android.app.ActivityThread&quot;</span>).method(<span class="hljs-string">&quot;currentPackageName&quot;</span>)<br>                    .call&lt;String&gt;()<br>            Log.d(TAG, <span class="hljs-string">&quot;getAppProcessName: <span class="hljs-variable">$processName</span>&quot;</span>)<br>            <span class="hljs-keyword">return</span> processName<br>        &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>            Log.e(TAG, <span class="hljs-string">&quot;getAppProcessName error&quot;</span>, e)<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>获取应用名称</p><p>Android 获取应用的icon、名字、版本号_查看安卓app类名-CSDN博客: <a href="https://blog.csdn.net/LoveDou0816/article/details/78135201">https://blog.csdn.net/LoveDou0816/article/details/78135201</a></p><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-function"><span class="hljs-keyword">fun</span> Context.<span class="hljs-title">getAppName</span><span class="hljs-params">(pkgName: <span class="hljs-type">String</span>)</span></span>: String &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-keyword">val</span> info: PackageInfo = packageManager.getPackageInfo(pkgName, <span class="hljs-number">0</span>)<br>        <span class="hljs-comment">//resources.getString(info.applicationInfo.labelRes)</span><br>        info.applicationInfo.loadLabel(packageManager).toString() <span class="hljs-comment">//兼容android:label=&quot;$&#123;APP_NAME&#125;&quot;</span><br>    &#125; <span class="hljs-keyword">catch</span> (e: PackageManager.NameNotFoundException) &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;getAppName error&quot;</span>, e)<br>        <span class="hljs-string">&quot;&quot;</span><br>    &#125; <span class="hljs-keyword">catch</span> (e: Resources.NotFoundException) &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;getAppName error&quot;</span>, e)<br>        <span class="hljs-string">&quot;&quot;</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    <categories>
+      
+      <category>Android</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Android</tag>
+      
+      <tag>AndroidUtils</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>gradle常见问题</title>
+    <link href="/article/a7bee58f/"/>
+    <url>/article/a7bee58f/</url>
+    
+    <content type="html"><![CDATA[<h1 id="aar相关"><a href="#aar相关" class="headerlink" title="aar相关"></a>aar相关</h1><h2 id="添加aar包依赖"><a href="#添加aar包依赖" class="headerlink" title="添加aar包依赖"></a>添加aar包依赖</h2><p>gradle - How to include different .aar depending on the android build variant - Stack Overflow: <a href="https://stackoverflow.com/questions/41373333/how-to-include-different-aar-depending-on-the-android-build-variant">https://stackoverflow.com/questions/41373333/how-to-include-different-aar-depending-on-the-android-build-variant</a></p><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs groovy">configurations.maybeCreate(<span class="hljs-string">&quot;default&quot;</span>)<br>artifacts.add(<span class="hljs-string">&quot;default&quot;</span>, file(<span class="hljs-string">&#x27;xyz.aar&#x27;</span>))<br></code></pre></td></tr></table></figure><blockquote><p>包装本地 aar 的模块中禁止包含任何代码和资源文件，包括库或 AndroidManifest。即使包含，也无法生效；如果有多个本地的aar需要引用，需要分别创建工程目录及build.gradle文件。</p></blockquote><p>AndroidStudio根据环境打包不同的aar文件 - 简书: <a href="https://www.jianshu.com/p/bc61ed8dcce3">https://www.jianshu.com/p/bc61ed8dcce3</a></p><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs groovy">configurations.maybeCreate(<span class="hljs-string">&quot;default&quot;</span>)<br>artifacts.add(<span class="hljs-string">&quot;default&quot;</span>, file(<span class="hljs-string">&#x27;demolib_release.aar&#x27;</span>))<br>configurations.maybeCreate(<span class="hljs-string">&quot;debug&quot;</span>)<br>artifacts.add(<span class="hljs-string">&quot;debug&quot;</span>, file(<span class="hljs-string">&#x27;demolib_debug.aar&#x27;</span>))<br></code></pre></td></tr></table></figure><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs groovy">dependencies &#123;<br>    implementation project(<span class="hljs-string">&#x27;:demolib&#x27;</span>)<br>    debugImplementation project(<span class="hljs-attr">path:</span> <span class="hljs-string">&#x27;:demolib&#x27;</span>, <span class="hljs-attr">configuration:</span> <span class="hljs-string">&#x27;debug&#x27;</span>)<br>&#125;<br></code></pre></td></tr></table></figure><p>【Android】如何引入本地 aar？ 原生集成常见问题 - 开发指南 - 开发文档 - 飞书开放平台: <a href="https://open.feishu.cn/document/uAjLw4CM/ukzMukzMukzM/native-integration/native-integration-qa">https://open.feishu.cn/document/uAjLw4CM/ukzMukzMukzM/native-integration/native-integration-qa</a></p><h2 id="编译成app后aar里面的资源找不到，实际上aar里面有"><a href="#编译成app后aar里面的资源找不到，实际上aar里面有" class="headerlink" title="编译成app后aar里面的资源找不到，实际上aar里面有"></a>编译成app后aar里面的资源找不到，实际上aar里面有</h2><p>把apk放到android studio 查看里面的资源情况，一般是由于资源冲突被其他module资源替换了</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>gradle</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>gradle</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>安卓相关知识点网站</title>
     <link href="/article/ed7f9345/"/>
     <url>/article/ed7f9345/</url>
     
-    <content type="html"><![CDATA[<p>OPPO 开放平台-OPPO开发者服务中心: <a href="https://open.oppomobile.com/new/wiki">https://open.oppomobile.com/new/wiki</a></p><p>OPPO 开放平台-安卓版本适配: <a href="https://open.oppomobile.com/new/developmentDoc/info?id=10960">https://open.oppomobile.com/new/developmentDoc/info?id=10960</a></p><p>简介 - Java教程 - 廖雪峰的官方网站: <a href="https://liaoxuefeng.com/books/java/introduction/index.html">https://liaoxuefeng.com/books/java/introduction/index.html</a></p><p>查询权限的定义 Manifest.permission ?|? Android Developers: <a href="https://developer.android.com/reference/android/Manifest.permission">https://developer.android.com/reference/android/Manifest.permission</a></p><p>Android 中的权限 ?|? Android Developers: <a href="https://developer.android.com/guide/topics/permissions/overview?hl=zh-cn#runtime">https://developer.android.com/guide/topics/permissions/overview?hl=zh-cn#runtime</a></p><p>guolindev&#x2F;PermissionX: An open source Android library that makes handling runtime permissions extremely easy.: <a href="https://github.com/guolindev/PermissionX?tab=readme-ov-file">https://github.com/guolindev/PermissionX?tab=readme-ov-file</a></p><p>Android FBE - 魅族内核团队: <a href="https://kernel.meizu.com/2018/07/12//android-p-fbe.html/">https://kernel.meizu.com/2018/07/12//android-p-fbe.html/</a></p><p>展讯平台AndroidP迁移指导文档——FBE-一牛网论坛: <a href="https://bbs.16rd.com/thread-586509-1-1.html">https://bbs.16rd.com/thread-586509-1-1.html</a></p><p>Support Direct Boot mode ?|? Security ?|? Android Developers: <a href="https://developer.android.com/privacy-and-security/direct-boot">https://developer.android.com/privacy-and-security/direct-boot</a></p><p>directBootAware 和 defaultToDeviceProtectedStorage - 亦幻 - 博客园: <a href="https://www.cnblogs.com/Bolia/p/18361343">https://www.cnblogs.com/Bolia/p/18361343</a></p><p>UserDataPrepare创建系统以及应用APP的ce和de目录的流程_prepareuserdatali-CSDN博客: <a href="https://blog.csdn.net/CHALLENG_EVERYTHING/article/details/84654184">https://blog.csdn.net/CHALLENG_EVERYTHING/article/details/84654184</a></p><p>查看各版本行为变更Android Releases ?|? Platform ?|? Android Developers: <a href="https://developer.android.com/about/versions">https://developer.android.com/about/versions</a></p><p>数据绑定库 ?|? Android Developers: <a href="https://developer.android.google.cn/topic/libraries/data-binding?hl=zh-cn">https://developer.android.google.cn/topic/libraries/data-binding?hl=zh-cn</a></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="Gradle"><a href="#Gradle" class="headerlink" title="Gradle"></a>Gradle</h2><p>过往的 Android Gradle 插件版本 ?|? Android Studio ?|? Android Developers: <a href="https://developer.android.com/build/releases/past-releases?hl=zh-cn">https://developer.android.com/build/releases/past-releases?hl=zh-cn</a></p><p>美团外卖Android Lint代码检查实践 - 美团技术团队: <a href="https://tech.meituan.com/2018/04/13/waimai-android-lint.html">https://tech.meituan.com/2018/04/13/waimai-android-lint.html</a></p><p>OPPO 开放平台-OPPO开发者服务中心: <a href="https://open.oppomobile.com/new/wiki">https://open.oppomobile.com/new/wiki</a></p><p>OPPO 开放平台-安卓版本适配: <a href="https://open.oppomobile.com/new/developmentDoc/info?id=10960">https://open.oppomobile.com/new/developmentDoc/info?id=10960</a></p><p>简介 - Java教程 - 廖雪峰的官方网站: <a href="https://liaoxuefeng.com/books/java/introduction/index.html">https://liaoxuefeng.com/books/java/introduction/index.html</a></p><p>查询权限的定义 Manifest.permission ?|? Android Developers: <a href="https://developer.android.com/reference/android/Manifest.permission">https://developer.android.com/reference/android/Manifest.permission</a></p><p>Android 中的权限 ?|? Android Developers: <a href="https://developer.android.com/guide/topics/permissions/overview?hl=zh-cn#runtime">https://developer.android.com/guide/topics/permissions/overview?hl=zh-cn#runtime</a></p><p>guolindev&#x2F;PermissionX: An open source Android library that makes handling runtime permissions extremely easy.: <a href="https://github.com/guolindev/PermissionX?tab=readme-ov-file">https://github.com/guolindev/PermissionX?tab=readme-ov-file</a></p><p>Android FBE - 魅族内核团队: <a href="https://kernel.meizu.com/2018/07/12//android-p-fbe.html/">https://kernel.meizu.com/2018/07/12//android-p-fbe.html/</a></p><p>展讯平台AndroidP迁移指导文档——FBE-一牛网论坛: <a href="https://bbs.16rd.com/thread-586509-1-1.html">https://bbs.16rd.com/thread-586509-1-1.html</a></p><p>Support Direct Boot mode ?|? Security ?|? Android Developers: <a href="https://developer.android.com/privacy-and-security/direct-boot">https://developer.android.com/privacy-and-security/direct-boot</a></p><p>directBootAware 和 defaultToDeviceProtectedStorage - 亦幻 - 博客园: <a href="https://www.cnblogs.com/Bolia/p/18361343">https://www.cnblogs.com/Bolia/p/18361343</a></p><p>UserDataPrepare创建系统以及应用APP的ce和de目录的流程_prepareuserdatali-CSDN博客: <a href="https://blog.csdn.net/CHALLENG_EVERYTHING/article/details/84654184">https://blog.csdn.net/CHALLENG_EVERYTHING/article/details/84654184</a></p><p>查看各版本行为变更Android Releases ?|? Platform ?|? Android Developers: <a href="https://developer.android.com/about/versions">https://developer.android.com/about/versions</a></p><p>数据绑定库 ?|? Android Developers: <a href="https://developer.android.google.cn/topic/libraries/data-binding?hl=zh-cn">https://developer.android.google.cn/topic/libraries/data-binding?hl=zh-cn</a></p><h2 id="NDK开发"><a href="#NDK开发" class="headerlink" title="NDK开发"></a>NDK开发</h2><p>NDK 修订历史记录 ?|? Android NDK ?|? Android Developers: <a href="https://developer.android.com/ndk/downloads/revision_history?hl=zh-cn">https://developer.android.com/ndk/downloads/revision_history?hl=zh-cn</a> (每个NDK版本所支持API级别可以通过NDK解压缩包中platforms目录查看)</p><p>Android-NDK开发之概述 | 苍耳的博客: <a href="https://ljd1996.github.io/2021/06/01/Android-NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E6%A6%82%E8%BF%B0/">https://ljd1996.github.io/2021/06/01/Android-NDK%E5%BC%80%E5%8F%91%E4%B9%8B%E6%A6%82%E8%BF%B0/</a></p><p>Android-NDK开发之JNI | 苍耳的博客: <a href="https://ljd1996.github.io/2021/06/01/Android-NDK%E5%BC%80%E5%8F%91%E4%B9%8BJNI/">https://ljd1996.github.io/2021/06/01/Android-NDK%E5%BC%80%E5%8F%91%E4%B9%8BJNI/</a></p><p>Android JNI手册——Java&#x2F;Kotlin与Native层的相互调用_kotlin external fun-CSDN博客: <a href="https://blog.csdn.net/ma598214297/article/details/106456535">https://blog.csdn.net/ma598214297/article/details/106456535</a></p><p>Android Gradle 插件可以使用的原生依赖项 ?|? Android Studio ?|? Android Developers: <a href="https://developer.android.com/build/native-dependencies?hl=zh-cn&amp;agpversion=4.0">https://developer.android.com/build/native-dependencies?hl=zh-cn&amp;agpversion=4.0</a></p><p>Android Cmake 增加第三方库的依赖_libmarsxlog.so-CSDN博客: <a href="https://blog.csdn.net/ImTryCatchException/article/details/134306328">https://blog.csdn.net/ImTryCatchException/article/details/134306328</a></p><p>Kotlin 和 Java 中内部类中的 static native 方法（JNI 函数）-CSDN博客: <a href="https://blog.csdn.net/u013553529/article/details/124478522">https://blog.csdn.net/u013553529/article/details/124478522</a></p><p>JNI内存方面说明以及相关类型手动释放内存-阿里云开发者社区: <a href="https://developer.aliyun.com/article/1112357">https://developer.aliyun.com/article/1112357</a></p><p>7.JNI 内存泄漏 处理 方法总结_jni string 返回值会导致内存泄漏吗-CSDN博客: <a href="https://blog.csdn.net/a2241076850/article/details/81092211">https://blog.csdn.net/a2241076850/article/details/81092211</a></p><h2 id="Kotlin"><a href="#Kotlin" class="headerlink" title="Kotlin"></a>Kotlin</h2><p>Kotlin 官方文档 中文版: <a href="https://book.kotlincn.net/">https://book.kotlincn.net/</a></p>]]></content>
     
     
     
