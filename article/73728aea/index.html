@@ -16,18 +16,27 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="Android 浅度解析：mk预置AAR、SO文件、APP包和签名-阿里云开发者社区: https:&#x2F;&#x2F;developer.aliyun.com&#x2F;article&#x2F;1488469 android系统添加预置APP（so库自动释放) - 庚拓天下 - 博客园: https:&#x2F;&#x2F;www.cnblogs.com&#x2F;genggeng&#x2F;p&#x2F;10563585.html 使用@符号和不使用@符号的区别在Androi">
+    <meta name="description" content="QA在测试公司投屏应用时，发现咪咕视频DLNA投剧集时有时候会跳过一集直接播下一集的问题。 尝试自行分析解决不了后，我决定分析一下竞品应用：当贝投屏，结果发现它是正常的。由于当贝投屏是个黑盒子，所以决定抓包看一下。 Android tcpdump tcpdump tcp -i any -p -s 0 -w &#x2F;sdcard&#x2F;capture.pcap 当贝投屏抓包分析运行命令后开始投剧集到当贝投屏并通">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android.mk基础知识">
-<meta property="og:url" content="https://iwesley.top/article/eaba12cd/index.html">
+<meta property="og:title" content="咪咕视频DLNA投屏跳集问题分析">
+<meta property="og:url" content="https://iwesley.top/article/73728aea/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="Android 浅度解析：mk预置AAR、SO文件、APP包和签名-阿里云开发者社区: https:&#x2F;&#x2F;developer.aliyun.com&#x2F;article&#x2F;1488469 android系统添加预置APP（so库自动释放) - 庚拓天下 - 博客园: https:&#x2F;&#x2F;www.cnblogs.com&#x2F;genggeng&#x2F;p&#x2F;10563585.html 使用@符号和不使用@符号的区别在Androi">
+<meta property="og:description" content="QA在测试公司投屏应用时，发现咪咕视频DLNA投剧集时有时候会跳过一集直接播下一集的问题。 尝试自行分析解决不了后，我决定分析一下竞品应用：当贝投屏，结果发现它是正常的。由于当贝投屏是个黑盒子，所以决定抓包看一下。 Android tcpdump tcpdump tcp -i any -p -s 0 -w &#x2F;sdcard&#x2F;capture.pcap 当贝投屏抓包分析运行命令后开始投剧集到当贝投屏并通">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-11-17T11:11:07.000Z">
-<meta property="article:modified_time" content="2024-11-17T15:07:54.317Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082026499-wireshark.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082039758-wireshark.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082042875.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082041740.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082044535.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082045162.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082045275.jpg">
+<meta property="article:published_time" content="2024-12-08T12:08:50.000Z">
+<meta property="article:modified_time" content="2024-12-08T13:06:30.848Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="安卓Makefile">
+<meta property="article:tag" content="投屏">
+<meta property="article:tag" content="DLNA">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082026499-wireshark.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -35,7 +44,7 @@
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>Android.mk基础知识 - Wesley&#39;s Blog</title>
+  <title>咪咕视频DLNA投屏跳集问题分析 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -259,7 +268,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Android.mk基础知识"></span>
+            <span id="subtitle" data-typed-text="咪咕视频DLNA投屏跳集问题分析"></span>
           
         </div>
 
@@ -275,8 +284,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-11-17 19:11" pubdate>
-          2024年11月17日 晚上
+        <time datetime="2024-12-08 20:08" pubdate>
+          2024年12月8日 晚上
         </time>
       </span>
     
@@ -287,7 +296,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          181 字
+          467 字
         
       </span>
     
@@ -298,7 +307,7 @@
         
         
         
-          2 分钟
+          4 分钟
         
       </span>
     
@@ -343,12 +352,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Android.mk基础知识</h1>
+            <h1 id="seo-header">咪咕视频DLNA投屏跳集问题分析</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2024年11月17日 晚上
+                    本文最后更新于：2024年12月8日 晚上
                   
                 
               </p>
@@ -356,9 +365,30 @@
             
               <div class="markdown-body">
                 
-                <p>Android 浅度解析：mk预置AAR、SO文件、APP包和签名-阿里云开发者社区: <a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1488469">https://developer.aliyun.com/article/1488469</a></p>
-<p>android系统添加预置APP（so库自动释放) - 庚拓天下 - 博客园: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/genggeng/p/10563585.html">https://www.cnblogs.com/genggeng/p/10563585.html</a></p>
-<p>使用@符号和不使用@符号的区别<br>在Android.mk中，使用@符号和不使用@符号有一些区别：<br>? 使用@符号可以提高性能，因为不需要解压和拷贝SO文件，也可以节省空间，因为不需要存储多余的SO文件。<br>? 不使用@符号可以提高兼容性，因为可以针对不同的平台提供相应的SO文件，而不需要考虑APK中是否有对应平台的SO文件。</p>
+                <p>QA在测试公司投屏应用时，发现咪咕视频DLNA投剧集时有时候会跳过一集直接播下一集的问题。</p>
+<p>尝试自行分析解决不了后，我决定分析一下竞品应用：当贝投屏，结果发现它是正常的。由于当贝投屏是个黑盒子，所以决定抓包看一下。</p>
+<p><a target="_blank" rel="noopener" href="https://www.androidtcpdump.com/android-tcpdump/downloads">Android tcpdump</a></p>
+<p><code>tcpdump tcp -i any -p -s 0 -w /sdcard/capture.pcap</code></p>
+<h2 id="当贝投屏抓包分析"><a href="#当贝投屏抓包分析" class="headerlink" title="当贝投屏抓包分析"></a>当贝投屏抓包分析</h2><p>运行命令后开始投剧集到当贝投屏并通过进度条操作触发切集，把抓包文件adb pull出来放到WireShark去分析。</p>
+<p>由于DLNA建连后的命令交互是通过http的，所以这里只显示http协议，并通过搜索SetAVTransportURI定位到投屏时间点。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082026499-wireshark.jpg" srcset="/img/loading.gif" lazyload alt="img_v3_02h8_65bf3dab-7966-48b1-bdaa-8343bca7898g"></p>
+<p>首先看一下即将切集前手机端获取到的信息：</p>
+<p>可以看到影片的时长和进度都有值，快播完了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082039758-wireshark.jpg" srcset="/img/loading.gif" lazyload alt="img_v3_02h8_fe3604f0-5242-41b8-b950-fab2c62663dg"></p>
+<p>切集时：</p>
+<p>手机端获取到的播放状态是stopped，影片时长和进度都是0</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082042875.jpg" srcset="/img/loading.gif" lazyload alt="img_v3_02h8_954cb5c2-08c9-47ec-8d47-0c14b51b600g"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082041740.jpg" srcset="/img/loading.gif" lazyload alt="img_v3_02h8_613904b8-aa1e-4128-b904-164ff238ed3g"></p>
+<p>切集后：</p>
+<p>手机端获取的信息正常</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082044535.jpg" srcset="/img/loading.gif" lazyload alt="img_v3_02h8_f8a5dc01-ae9d-47d8-9abc-0a395a68bd8g"></p>
+<h2 id="我司投屏抓包分析"><a href="#我司投屏抓包分析" class="headerlink" title="我司投屏抓包分析"></a>我司投屏抓包分析</h2><p>切集前：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082045162.jpg" srcset="/img/loading.gif" lazyload alt="img_v3_02h8_ef543816-16f1-4e55-a74b-e703ef21e46g"></p>
+<p>切集后：</p>
+<p>获取到的影片进度和时长都是上个视频的信息，导致咪咕产生了误判断，认为这一集也播完了，造成跳集。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082045275.jpg" srcset="/img/loading.gif" lazyload alt="img_v3_02h8_dac2eede-52f2-4137-8b42-18b7081eaaeg"></p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>收到手机端的stop指令后，立即将播放状态置stopped，同时将影片时长和进度也置0。此外，还要拦截播放器到手机端的状态同步直到新的视频起播。</p>
+<p>另外还要注意处理线程调度延迟的问题，如果stop指令和setUri指令发送时间比较接近，虽然看起来是stop在前，setUri在后，但如果是在不同线程回调上来的，可能存在setUri先执行的情况，要注意处理这种情况，避免误退出。</p>
 
                 
               </div>
@@ -377,7 +407,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Android-Build-System/" class="category-chain-item">Android Build System</a>
+  <a href="/categories/%E6%8A%95%E5%B1%8F/" class="category-chain-item">投屏</a>
   
   
 
@@ -392,7 +422,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%AE%89%E5%8D%93Makefile/" class="print-no-link">#安卓Makefile</a>
+        <a href="/tags/%E6%8A%95%E5%B1%8F/" class="print-no-link">#投屏</a>
+      
+        <a href="/tags/DLNA/" class="print-no-link">#DLNA</a>
       
     </div>
   
@@ -404,8 +436,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Android.mk基础知识</div>
-      <div>https://iwesley.top/article/eaba12cd/</div>
+      <div>咪咕视频DLNA投屏跳集问题分析</div>
+      <div>https://iwesley.top/article/73728aea/</div>
     </div>
     <div class="license-meta">
       
@@ -417,7 +449,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年11月17日</div>
+          <div>2024年12月8日</div>
         </div>
       
       
@@ -449,18 +481,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/article/73728aea/" title="咪咕视频DLNA投屏跳集问题分析">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">咪咕视频DLNA投屏跳集问题分析</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/article/b1dcee32/" title="Android APP drawable不同文件夹的用法">
-                        <span class="hidden-mobile">Android APP drawable不同文件夹的用法</span>
+                      <a href="/article/eaba12cd/" title="Android.mk基础知识">
+                        <span class="hidden-mobile">Android.mk基础知识</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

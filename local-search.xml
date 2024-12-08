@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>咪咕视频DLNA投屏跳集问题分析</title>
+    <link href="/article/73728aea/"/>
+    <url>/article/73728aea/</url>
+    
+    <content type="html"><![CDATA[<p>QA在测试公司投屏应用时，发现咪咕视频DLNA投剧集时有时候会跳过一集直接播下一集的问题。</p><p>尝试自行分析解决不了后，我决定分析一下竞品应用：当贝投屏，结果发现它是正常的。由于当贝投屏是个黑盒子，所以决定抓包看一下。</p><p><a href="https://www.androidtcpdump.com/android-tcpdump/downloads">Android tcpdump</a></p><p><code>tcpdump tcp -i any -p -s 0 -w /sdcard/capture.pcap</code></p><h2 id="当贝投屏抓包分析"><a href="#当贝投屏抓包分析" class="headerlink" title="当贝投屏抓包分析"></a>当贝投屏抓包分析</h2><p>运行命令后开始投剧集到当贝投屏并通过进度条操作触发切集，把抓包文件adb pull出来放到WireShark去分析。</p><p>由于DLNA建连后的命令交互是通过http的，所以这里只显示http协议，并通过搜索SetAVTransportURI定位到投屏时间点。</p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082026499-wireshark.jpg" alt="img_v3_02h8_65bf3dab-7966-48b1-bdaa-8343bca7898g"></p><p>首先看一下即将切集前手机端获取到的信息：</p><p>可以看到影片的时长和进度都有值，快播完了。</p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082039758-wireshark.jpg" alt="img_v3_02h8_fe3604f0-5242-41b8-b950-fab2c62663dg"></p><p>切集时：</p><p>手机端获取到的播放状态是stopped，影片时长和进度都是0</p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082042875.jpg" alt="img_v3_02h8_954cb5c2-08c9-47ec-8d47-0c14b51b600g"></p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082041740.jpg" alt="img_v3_02h8_613904b8-aa1e-4128-b904-164ff238ed3g"></p><p>切集后：</p><p>手机端获取的信息正常</p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082044535.jpg" alt="img_v3_02h8_f8a5dc01-ae9d-47d8-9abc-0a395a68bd8g"></p><h2 id="我司投屏抓包分析"><a href="#我司投屏抓包分析" class="headerlink" title="我司投屏抓包分析"></a>我司投屏抓包分析</h2><p>切集前：</p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082045162.jpg" alt="img_v3_02h8_ef543816-16f1-4e55-a74b-e703ef21e46g"></p><p>切集后：</p><p>获取到的影片进度和时长都是上个视频的信息，导致咪咕产生了误判断，认为这一集也播完了，造成跳集。</p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412082045275.jpg" alt="img_v3_02h8_dac2eede-52f2-4137-8b42-18b7081eaaeg"></p><h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>收到手机端的stop指令后，立即将播放状态置stopped，同时将影片时长和进度也置0。此外，还要拦截播放器到手机端的状态同步直到新的视频起播。</p><p>另外还要注意处理线程调度延迟的问题，如果stop指令和setUri指令发送时间比较接近，虽然看起来是stop在前，setUri在后，但如果是在不同线程回调上来的，可能存在setUri先执行的情况，要注意处理这种情况，避免误退出。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>投屏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>投屏</tag>
+      
+      <tag>DLNA</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Android.mk基础知识</title>
     <link href="/article/eaba12cd/"/>
     <url>/article/eaba12cd/</url>
@@ -364,9 +391,9 @@
     
     <tags>
       
-      <tag>网络</tag>
-      
       <tag>投屏</tag>
+      
+      <tag>网络</tag>
       
     </tags>
     
