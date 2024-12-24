@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>安卓多渠道apk配置不同签名</title>
+    <link href="/article/611fb416/"/>
+    <url>/article/611fb416/</url>
+    
+    <content type="html"><![CDATA[<p>一般签名都是放在buildTypes里面：</p><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs groovy">...<br>android &#123;<br>    ...<br>    defaultConfig &#123;...&#125;<br>    signingConfigs &#123;<br>        release &#123;<br>            storeFile file(<span class="hljs-string">&quot;myreleasekey.keystore&quot;</span>)<br>            storePassword <span class="hljs-string">&quot;password&quot;</span><br>            keyAlias <span class="hljs-string">&quot;MyReleaseKey&quot;</span><br>            keyPassword <span class="hljs-string">&quot;password&quot;</span><br>        &#125;<br>    &#125;<br>    buildTypes &#123;<br>        release &#123;<br>            ...<br>            signingConfig signingConfigs.release<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>但是多渠道时，使用配置的优先级从高到低分别是buildTypes、productFlavor、defaultConfig，如果按上面配置的话，根本修改不了签名。所以修改成以下：</p><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs groovy">android &#123;<br>    ...<br>    signingConfigs &#123;<br>        release &#123;<br>            storeFile file(<span class="hljs-string">&quot;myreleasekey.keystore&quot;</span>)<br>            storePassword <span class="hljs-string">&quot;password&quot;</span><br>            keyAlias <span class="hljs-string">&quot;MyReleaseKey&quot;</span><br>            keyPassword <span class="hljs-string">&quot;password&quot;</span><br>        &#125;<br>        demo &#123;<br>            storeFile file(<span class="hljs-string">&quot;myreleasekey.keystore&quot;</span>)<br>            storePassword <span class="hljs-string">&quot;password&quot;</span><br>            keyAlias <span class="hljs-string">&quot;MyReleaseKey&quot;</span><br>            keyPassword <span class="hljs-string">&quot;password&quot;</span><br>        &#125;<br>    &#125;<br>    defaultConfig &#123;<br>        signingConfig signingConfigs.release <span class="hljs-comment">//默认签名</span><br>    &#125;<br>    buildTypes &#123;<br>        debug&#123;<br>            signingConfig <span class="hljs-literal">null</span> <span class="hljs-comment">//这里一定要置null，否则gralde会插入默认签名</span><br>        &#125;<br>        release&#123;...&#125;<br>    &#125;<br>    <span class="hljs-comment">// Specifies one flavor dimension.</span><br>    flavorDimensions <span class="hljs-string">&quot;version&quot;</span><br>    productFlavors &#123;<br>        demo &#123;<br>            dimension <span class="hljs-string">&quot;version&quot;</span><br>            applicationIdSuffix <span class="hljs-string">&quot;.demo&quot;</span><br>            versionNameSuffix <span class="hljs-string">&quot;-demo&quot;</span><br>            signingConfig signingConfigs.demo <span class="hljs-comment">//渠道签名</span><br>        &#125;<br>        full &#123;<br>            dimension <span class="hljs-string">&quot;version&quot;</span><br>            applicationIdSuffix <span class="hljs-string">&quot;.full&quot;</span><br>            versionNameSuffix <span class="hljs-string">&quot;-full&quot;</span><br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>按上面配置完后，渠道可以按照自己需求替换签名了。特别注意debug类型那里要置<code>signingConfig null</code>，否则编译debug版本时签名会不生效，因为gradle会插入默认签名，替换掉渠道的签名。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>AppBuild</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Android</tag>
+      
+      <tag>Android多渠道</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>安卓15预置第三方apk时签名报错问题解决</title>
     <link href="/article/133f2b7a/"/>
     <url>/article/133f2b7a/</url>
@@ -422,9 +449,9 @@
     
     <tags>
       
-      <tag>网络</tag>
-      
       <tag>投屏</tag>
+      
+      <tag>网络</tag>
       
     </tags>
     
