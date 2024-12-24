@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>安卓15预置第三方apk时签名报错问题解决</title>
+    <link href="/article/133f2b7a/"/>
+    <url>/article/133f2b7a/</url>
+    
+    <content type="html"><![CDATA[<p>有同事反馈集成apk时安装失败</p><blockquote><p>PackageManager: Failed to scan &#x2F;product&#x2F;app&#x2F;test: No APK Signature Scheme v2 signature in package &#x2F;product&#x2F;app&#x2F;test&#x2F;test.apk</p></blockquote><p>查看编译后的apk签名信息</p><blockquote><p>DOES NOT VERIFY</p><p>ERROR: JAR signer CERT.RSA: JAR signature META-INF&#x2F;CERT.SF indicates the APK is signed using APK Signature Scheme v2 but no such signature was found. Signature stripped?</p></blockquote><p>但是用命令查看我的apk是正常的<code>apksigner  verify -v  test.apk  | grep Verified</code></p><blockquote><p>Verified using v1 scheme (JAR signing): true</p><p>Verified using v2 scheme (APK Signature Scheme v2): true</p><p>Verified using v3 scheme (APK Signature Scheme v3): false</p><p>Verified using v3.1 scheme (APK Signature Scheme v3.1): false</p><p>Verified using v4 scheme (APK Signature Scheme v4): false</p><p>Verified for SourceStamp: false</p></blockquote><p>那么应该是编译过程做了某些变动。</p><h1 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h1><h2 id="通过预编译的方法"><a href="#通过预编译的方法" class="headerlink" title="通过预编译的方法"></a>通过预编译的方法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java">android_app_import &#123;<br>    name: <span class="hljs-string">&quot;test&quot;</span>,<br>    apk: <span class="hljs-string">&quot;test.apk&quot;</span>,<br>    <span class="hljs-comment">// 保留apk自己的签名</span><br>    presigned: <span class="hljs-keyword">true</span>,<br>    preprocessed: <span class="hljs-keyword">true</span>,<br>    <span class="hljs-comment">// 打开将放到对应分区目录的priv-app文件夹下</span><br>    <span class="hljs-comment">// privileged: true,</span><br>    <span class="hljs-comment">// 打开将放到system_ext分区</span><br>    <span class="hljs-comment">// system_ext_specific: true,</span><br>    <span class="hljs-comment">// 打开将放到product分区</span><br>    <span class="hljs-comment">// product_specific: true,</span><br>    <span class="hljs-comment">// 打开将放到vendor分区</span><br>    <span class="hljs-comment">// proprietary: true,</span><br>    <span class="hljs-comment">// odm分区</span><br>    <span class="hljs-comment">// device_specific: true</span><br>    <span class="hljs-comment">// apk优化，内置三方apk时建议关闭</span><br>    dex_preopt: &#123;<br>        enabled: <span class="hljs-keyword">false</span>,<br>    &#125;,<br>&#125;<br></code></pre></td></tr></table></figure><p>在安卓15上新增了<a href="http://xrefandroid.com/android-15.0.0_r1/xref/build/soong/java/app_import.go#376">app_import.go - OpenGrok cross reference for &#x2F;build&#x2F;soong&#x2F;java&#x2F;app_import.go</a></p><p>validatePresignedApk检测</p><p>如果加了presigned，但不加preprocessed，同时targetSdk大于等于30就会编译报错，更加方便开发者定位问题：</p><blockquote><p>[100% 5&#x2F;5 0s remaining] Check presigned apkFAILED: out&#x2F;soong&#x2F;.intermediates&#x2F;packages&#x2F;test&#x2F;test&#x2F;android_common&#x2F;validated-prebuilt&#x2F;check.stampbuild&#x2F;soong&#x2F;scripts&#x2F;check_prebuilt_presigned_apk.py –aapt2 out&#x2F;host&#x2F;linux-x86&#x2F;bin&#x2F;aapt2 –zipalign out&#x2F;host&#x2F;linux-x86&#x2F;bin&#x2F;zipalign packages&#x2F;test&#x2F;test.apk out&#x2F;soong&#x2F;.intermediates&#x2F;packages&#x2F;test&#x2F;test&#x2F;android_common&#x2F;validated-prebuilt&#x2F;check.stamppackages&#x2F;test&#x2F;test.apk: Prebuilt, presigned apks with targetSdkVersion &gt;&#x3D; 30 (or a codename targetSdkVersion) must set <strong>preprocessed: true</strong> in the Android.bp definition (because they must be signed with signature v2, and the build system would wreck that signature otherwise)</p></blockquote><p>另外apk里面的so不能压缩，否则会报错</p><blockquote><p>FAILED: out&#x2F;soong&#x2F;.intermediates&#x2F;packages&#x2F;test&#x2F;test&#x2F;android_common&#x2F;validated-prebuilt&#x2F;check.stamp</p><p>build&#x2F;soong&#x2F;scripts&#x2F;check_prebuilt_presigned_apk.py –aapt2 out&#x2F;host&#x2F;linux-x86&#x2F;bin&#x2F;aapt2 –zipalign out&#x2F;host&#x2F;linux-x86&#x2F;bin&#x2F;zipalign –preprocessed packages&#x2F;test&#x2F;test.apk out&#x2F;soong&#x2F;.intermediates&#x2F;packages&#x2F;test&#x2F;test&#x2F;android_common&#x2F;validated-prebuilt&#x2F;check.stamp</p><p>packages&#x2F;test&#x2F;test.apk: <strong>Contains compressed JNI libraries</strong></p></blockquote><p>因为安卓6开始支持直接加载apk里面的so，如果压缩的话，预编译会在apk内部进行解压，那么就会破坏apk签名。</p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2023/202412242117760.png" alt="img"></p><p>其实，如果apk的minSdkVersion &gt;&#x3D; 23 并且 Android Gradle plugin &gt;&#x3D; 3.6.0情况下，打包时android:extractNativeLibs&#x3D;false，apk的so默认是不压缩的。</p><p>在minSdkVersion &lt; 23 或 Android Gradle plugin &lt; 3.6.0情况下，打包时 android:extractNativeLibs&#x3D;true，apk的so默认是压缩的。</p><p>参考：<a href="https://juejin.cn/post/6943920550125420558">https://juejin.cn/post/6943920550125420558</a></p><p><a href="https://blog.csdn.net/yzyeilin/article/details/139968840">Android13解决android_app_import内置第三方APK安装失败问题_but no such signature was found. signature strippe-CSDN博客</a></p><p><a href="https://blog.csdn.net/chuyouyinghe/article/details/131001532">浅谈extractNativeLibs</a></p><h2 id="通过直接拷贝的方法"><a href="#通过直接拷贝的方法" class="headerlink" title="通过直接拷贝的方法"></a>通过直接拷贝的方法</h2><p>参考：<a href="https://blog.csdn.net/wangwei6227/article/details/123727372">https://blog.csdn.net/wangwei6227/article/details/123727372</a></p><p>同样要注意apk so的压缩问题，如果是压缩过的，必须提取出来，并拷贝到apk机器目录。</p><h2 id="可能遇到的selinux权限问题"><a href="#可能遇到的selinux权限问题" class="headerlink" title="可能遇到的selinux权限问题"></a>可能遇到的selinux权限问题</h2><blockquote><p>01-01 12:00:39.520000  5326  5326 W om.skype.raider: type&#x3D;1400 audit(0.0:64): avc: denied { read } for name&#x3D;”libSkypeAndroid.so” dev&#x3D;”mmcblk0p22” ino&#x3D;770074 scontext&#x3D;u:r:untrusted_app:s0:c512,c768 tcontext&#x3D;u:object_r:system_data_file:s0 tclass&#x3D;file permissive&#x3D;0</p></blockquote><p>#&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; untrusted_app.te &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p><p>allow untrusted_app system_data_file:file r_file_perms;</p><p>参考：<a href="https://www.codeleading.com/article/6471686269/">采用Signature Scheme v2签名方式的APK预置失败 </a></p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Android Build System</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Android</tag>
+      
+      <tag>aosp编译</tag>
+      
+      <tag>Android.mk</tag>
+      
+      <tag>Android.bp</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>咪咕视频DLNA投屏跳集问题分析</title>
     <link href="/article/73728aea/"/>
     <url>/article/73728aea/</url>
@@ -391,9 +422,9 @@
     
     <tags>
       
-      <tag>投屏</tag>
-      
       <tag>网络</tag>
+      
+      <tag>投屏</tag>
       
     </tags>
     
