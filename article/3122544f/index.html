@@ -7,8 +7,11 @@
 
 <head>
   <meta charset="UTF-8">
+
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
   <link rel="icon" href="/img/fluid.png">
+  
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -53,7 +56,7 @@
 <!-- 主题依赖的图标库，不要自行修改 -->
 <!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
 
@@ -79,7 +82,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -113,15 +116,13 @@
   
 
   
-
-  
     
   
 
 
 
   
-<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
 
 
 <body>
@@ -312,6 +313,7 @@
           <span id="busuanzi_value_page_pv"></span> 次
         </span>
         
+
       
     
   </div>
@@ -368,7 +370,7 @@
 <p>一般升级普通应用时，系统会清除该应用的进程，同时清理之前在ActivityManagerService记录的该应用的四大组件，在下次应用重新启动时，系统会重新创建进程并加载各种组件运行。</p>
 <p>但是，当升级的应用有persistent属性时，系统不会清除该应用。原因如下：</p>
 <p><a target="_blank" rel="noopener" href="http://aospxref.com/android-11.0.0_r21/s?refs=killPackageProcessesLocked&project=frameworks">killPackageProcessesLocked (reference) in projects: frameworks - OpenGrok search results</a></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">killPackageProcessesLocked</span><span class="hljs-params">(String packageName, <span class="hljs-keyword">int</span> appId,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-keyword">int</span> userId, <span class="hljs-keyword">int</span> minOomAdj, <span class="hljs-keyword">boolean</span> callerWillRestart, <span class="hljs-keyword">boolean</span> allowRestart,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-keyword">boolean</span> doit, <span class="hljs-keyword">boolean</span> evenPersistent, <span class="hljs-keyword">boolean</span> setRemoved, <span class="hljs-keyword">int</span> reasonCode,</span></span><br><span class="hljs-params"><span class="hljs-function">           <span class="hljs-keyword">int</span> subReason, String reason)</span> </span>&#123;<br>       ArrayList&lt;ProcessRecord&gt; procs = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();<br><br>       <span class="hljs-comment">// Remove all processes this package may have touched: all with the</span><br>       <span class="hljs-comment">// same UID (except for the system or root user), and all whose name</span><br>       <span class="hljs-comment">// matches the package name.</span><br>       <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> NP = mProcessNames.getMap().size();<br>       <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> ip = <span class="hljs-number">0</span>; ip &lt; NP; ip++) &#123;<br>           SparseArray&lt;ProcessRecord&gt; apps = mProcessNames.getMap().valueAt(ip);<br>           <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> NA = apps.size();<br>           <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> ia = <span class="hljs-number">0</span>; ia &lt; NA; ia++) &#123;<br>               ProcessRecord app = apps.valueAt(ia);<br>               <span class="hljs-keyword">if</span> (app.isPersistent() &amp;&amp; !evenPersistent) &#123;<br>                   <span class="hljs-comment">// we don&#x27;t kill persistent processes</span><br>                   <span class="hljs-keyword">continue</span>;<br>               &#125;<br>               <span class="hljs-keyword">if</span> (app.removed) &#123;<br>                   <span class="hljs-keyword">if</span> (doit) &#123;<br>                       procs.add(app);<br>                   &#125;<br>                   <span class="hljs-keyword">continue</span>;<br>               &#125;<br>------------------------------------------<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">killPackageProcessesLocked</span><span class="hljs-params">(String packageName, <span class="hljs-type">int</span> appId,</span><br><span class="hljs-params">           <span class="hljs-type">int</span> userId, <span class="hljs-type">int</span> minOomAdj, <span class="hljs-type">boolean</span> callerWillRestart, <span class="hljs-type">boolean</span> allowRestart,</span><br><span class="hljs-params">           <span class="hljs-type">boolean</span> doit, <span class="hljs-type">boolean</span> evenPersistent, <span class="hljs-type">boolean</span> setRemoved, <span class="hljs-type">int</span> reasonCode,</span><br><span class="hljs-params">           <span class="hljs-type">int</span> subReason, String reason)</span> &#123;<br>       ArrayList&lt;ProcessRecord&gt; procs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>       <span class="hljs-comment">// Remove all processes this package may have touched: all with the</span><br>       <span class="hljs-comment">// same UID (except for the system or root user), and all whose name</span><br>       <span class="hljs-comment">// matches the package name.</span><br>       <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">NP</span> <span class="hljs-operator">=</span> mProcessNames.getMap().size();<br>       <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">ip</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; ip &lt; NP; ip++) &#123;<br>           SparseArray&lt;ProcessRecord&gt; apps = mProcessNames.getMap().valueAt(ip);<br>           <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">NA</span> <span class="hljs-operator">=</span> apps.size();<br>           <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">ia</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; ia &lt; NA; ia++) &#123;<br>               <span class="hljs-type">ProcessRecord</span> <span class="hljs-variable">app</span> <span class="hljs-operator">=</span> apps.valueAt(ia);<br>               <span class="hljs-keyword">if</span> (app.isPersistent() &amp;&amp; !evenPersistent) &#123;<br>                   <span class="hljs-comment">// we don&#x27;t kill persistent processes</span><br>                   <span class="hljs-keyword">continue</span>;<br>               &#125;<br>               <span class="hljs-keyword">if</span> (app.removed) &#123;<br>                   <span class="hljs-keyword">if</span> (doit) &#123;<br>                       procs.add(app);<br>                   &#125;<br>                   <span class="hljs-keyword">continue</span>;<br>               &#125;<br>------------------------------------------<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>系统也没有更新应用的类加载路径。</p>
 <p>方案一：</p>
@@ -377,7 +379,7 @@
 <p>在应用内接收新版应用安装完成的广播，当APK发生更新或安装时， 匹配自己的包名，然后调用context的startInstrumentation 方法，该方法会强制系统清除应用进程并清理AMS对各种组件的状态记忆并重新启动该应用。</p>
 <p>或者，通过thread的全局异常捕获（类找不到，方法找不到），调用：</p>
 <p><code>boolean b = context.startInstrumentation(new ComponentName(getApplicationContext(), InstrumentationRoboot.class), null, null);</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InstrumentationRoboot</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Instrumentation</span> </span>&#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(Bundle arguments)</span> </span>&#123;<br>        <span class="hljs-keyword">super</span>.onCreate(arguments);<br>    &#125;<br>&#125;          <br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">InstrumentationRoboot</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Instrumentation</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">(Bundle arguments)</span> &#123;<br>        <span class="hljs-built_in">super</span>.onCreate(arguments);<br>    &#125;<br>&#125;          <br></code></pre></td></tr></table></figure>
 
 <p>AndroidManifest.xml</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">manifest</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">package</span>=<span class="hljs-string">&quot;自己的包名&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">instrumentation</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.test.InstrumentationRoboot&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:targetPackage</span>=<span class="hljs-string">&quot;自己的包名&quot;</span>/&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">manifest</span>&gt;</span><br></code></pre></td></tr></table></figure>
@@ -459,7 +461,7 @@
               
                 <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
+                    <i class="iconfont icon-cc-by"></i>
                   </span>
                 </a>
               
@@ -507,8 +509,8 @@
   <div id="waline"></div>
   <script type="text/javascript">
     Fluid.utils.loadComments('#waline', function() {
-      Fluid.utils.createCssLink('https://cdn.staticfile.org/waline/2.15.5/waline.min.css')
-      Fluid.utils.createScript('https://cdn.staticfile.org/waline/2.15.5/waline.min.js', function() {
+      Fluid.utils.createCssLink('https://cdn.staticfile.org/waline/2.15.5/waline.css')
+      Fluid.utils.createScript('https://cdn.staticfile.org/waline/2.15.5/waline.js', function() {
         var options = Object.assign(
           {"serverURL":"waline-server-eight.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
           {
@@ -648,10 +650,11 @@
       </span>
     
     
-  
-</div>
 
   
+
+</div>
+
   
   
 </div>

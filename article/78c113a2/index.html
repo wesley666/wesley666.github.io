@@ -7,8 +7,11 @@
 
 <head>
   <meta charset="UTF-8">
+
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
   <link rel="icon" href="/img/fluid.png">
+  
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -53,7 +56,7 @@
 <!-- 主题依赖的图标库，不要自行修改 -->
 <!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
 
@@ -79,7 +82,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -113,15 +116,13 @@
   
 
   
-
-  
     
   
 
 
 
   
-<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
 
 
 <body>
@@ -312,6 +313,7 @@
           <span id="busuanzi_value_page_pv"></span> 次
         </span>
         
+
       
     
   </div>
@@ -390,10 +392,10 @@
 </tbody></table>
 <p><code>ExceptionInInitializerError</code> 通常意味着在静态初始化块或静态变量初始化过程中发生了异常。</p>
 <p><strong>静态代码块异常</strong>：如果在静态代码块中有任何异常抛出，都会导致此错误。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">StaticBlock</span> </span>&#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> state;<br><br>    <span class="hljs-keyword">static</span> &#123;<br>        state = <span class="hljs-number">42</span> / <span class="hljs-number">0</span>; <span class="hljs-comment">//除0异常</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StaticBlock</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> state;<br><br>    <span class="hljs-keyword">static</span> &#123;<br>        state = <span class="hljs-number">42</span> / <span class="hljs-number">0</span>; <span class="hljs-comment">//除0异常</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p><strong>静态变量初始化异常</strong>：如果静态变量在初始化时抛出了异常，也会导致此错误。（编译后实际上也是在静态代码块里面）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Example</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> number = Integer.parseInt(<span class="hljs-string">&quot;abc&quot;</span>); <span class="hljs-comment">// 这里会抛出NumberFormatException</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Example</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">number</span> <span class="hljs-operator">=</span> Integer.parseInt(<span class="hljs-string">&quot;abc&quot;</span>); <span class="hljs-comment">// 这里会抛出NumberFormatException</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
 
 
 
@@ -405,11 +407,11 @@
 <h2 id="工作中的例子"><a href="#工作中的例子" class="headerlink" title="工作中的例子"></a>工作中的例子</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">java.lang.ExceptionInInitializerError at com.xxx.xx.Service.onInit(Service.java:<span class="hljs-number">654</span>) <br></code></pre></td></tr></table></figure>
 
 <p>查看654行代码，引用了一个静态类。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        String path = <span class="hljs-string">&quot;/data/data/com.xxx.xx/lib/libxxplay.so&quot;</span>;<br>        File file = <span class="hljs-keyword">new</span> File(path);<br>        <span class="hljs-keyword">if</span> (file.exists()) &#123;<br>            SFLogger.d(TAG, <span class="hljs-string">&quot;use /data/data/com.xxx.xx/lib/libxxplay.so&quot;</span>);<br>            System.load(path);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            SFLogger.d(TAG, <span class="hljs-string">&quot;use /system/lib/libxxplay.so&quot;</span>);<br>            System.loadLibrary(<span class="hljs-string">&quot;xxplay&quot;</span>);<br>        &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>        SFLogger.e(TAG, <span class="hljs-string">&quot;JniUtil loadLibrary exception = &quot;</span> + e.getMessage());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">static</span> &#123;<br>    <span class="hljs-keyword">try</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">path</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;/data/data/com.xxx.xx/lib/libxxplay.so&quot;</span>;<br>        <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(path);<br>        <span class="hljs-keyword">if</span> (file.exists()) &#123;<br>            SFLogger.d(TAG, <span class="hljs-string">&quot;use /data/data/com.xxx.xx/lib/libxxplay.so&quot;</span>);<br>            System.load(path);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            SFLogger.d(TAG, <span class="hljs-string">&quot;use /system/lib/libxxplay.so&quot;</span>);<br>            System.loadLibrary(<span class="hljs-string">&quot;xxplay&quot;</span>);<br>        &#125;<br>    &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>        SFLogger.e(TAG, <span class="hljs-string">&quot;JniUtil loadLibrary exception = &quot;</span> + e.getMessage());<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>以上代码咋一看好像也没什么问题啊，异常都catch住了。</p>
 <p>但如果仔细研究就会发现，这里的问题是滥用了<code>Exception</code>，没有针对具体异常进行捕获。查看loadLibrary源码发现其可能会抛出<code>SecurityException</code>、<code>UnsatisfiedLinkError</code>或者<code>NullPointerException</code>，<code>SecurityException</code>和<code>NullPointerException</code>的父类都是<code>RuntimeException</code>，是一种异常（<code>Exception</code>），<code>UnsatisfiedLinkError</code>的父类是<code>LinkageError</code>，是一种错误（<code>Error</code>），所以如果这里发生了<code>UnsatisfiedLinkError</code>，通过<code>Exception</code>是捕获不了的，必须通过他们的共同父类<code>Throwable</code>来进行捕获。当然，最好还是针对具体的异常进行捕获，不要用这种扩大化的捕获方式，容易隐藏问题。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Loads the native library specified by the &lt;code&gt;libname&lt;/code&gt;</span><br><span class="hljs-comment"> * argument.  The &lt;code&gt;libname&lt;/code&gt; argument must not contain any platform</span><br><span class="hljs-comment"> * specific prefix, file extension or path. If a native library</span><br><span class="hljs-comment"> * called &lt;code&gt;libname&lt;/code&gt; is statically linked with the VM, then the</span><br><span class="hljs-comment"> * JNI_OnLoad_&lt;code&gt;libname&lt;/code&gt; function exported by the library is invoked.</span><br><span class="hljs-comment"> * See the JNI Specification for more details.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Otherwise, the libname argument is loaded from a system library</span><br><span class="hljs-comment"> * location and mapped to a native library image in an implementation-</span><br><span class="hljs-comment"> * dependent manner.</span><br><span class="hljs-comment"> * &lt;p&gt;</span><br><span class="hljs-comment"> * The call &lt;code&gt;System.loadLibrary(name)&lt;/code&gt; is effectively</span><br><span class="hljs-comment"> * equivalent to the call</span><br><span class="hljs-comment"> * &lt;blockquote&gt;&lt;pre&gt;</span><br><span class="hljs-comment"> * Runtime.getRuntime().loadLibrary(name)</span><br><span class="hljs-comment"> * &lt;/pre&gt;&lt;/blockquote&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span>      libname   the name of the library.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@exception</span>  SecurityException  if a security manager exists and its</span><br><span class="hljs-comment"> *             &lt;code&gt;checkLink&lt;/code&gt; method doesn&#x27;t allow</span><br><span class="hljs-comment"> *             loading of the specified dynamic library</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@exception</span>  UnsatisfiedLinkError if either the libname argument</span><br><span class="hljs-comment"> *             contains a file path, the native library is not statically</span><br><span class="hljs-comment"> *             linked with the VM,  or the library cannot be mapped to a</span><br><span class="hljs-comment"> *             native library image by the host system.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@exception</span>  NullPointerException if &lt;code&gt;libname&lt;/code&gt; is</span><br><span class="hljs-comment"> *             &lt;code&gt;null&lt;/code&gt;</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@see</span>        java.lang.Runtime#loadLibrary(java.lang.String)</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@see</span>        java.lang.SecurityManager#checkLink(java.lang.String)</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@CallerSensitive</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">loadLibrary</span><span class="hljs-params">(String libname)</span> </span>&#123;<br>    Runtime.getRuntime().loadLibrary0(Reflection.getCallerClass(), libname);<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Loads the native library specified by the &lt;code&gt;libname&lt;/code&gt;</span><br><span class="hljs-comment"> * argument.  The &lt;code&gt;libname&lt;/code&gt; argument must not contain any platform</span><br><span class="hljs-comment"> * specific prefix, file extension or path. If a native library</span><br><span class="hljs-comment"> * called &lt;code&gt;libname&lt;/code&gt; is statically linked with the VM, then the</span><br><span class="hljs-comment"> * JNI_OnLoad_&lt;code&gt;libname&lt;/code&gt; function exported by the library is invoked.</span><br><span class="hljs-comment"> * See the JNI Specification for more details.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * Otherwise, the libname argument is loaded from a system library</span><br><span class="hljs-comment"> * location and mapped to a native library image in an implementation-</span><br><span class="hljs-comment"> * dependent manner.</span><br><span class="hljs-comment"> * &lt;p&gt;</span><br><span class="hljs-comment"> * The call &lt;code&gt;System.loadLibrary(name)&lt;/code&gt; is effectively</span><br><span class="hljs-comment"> * equivalent to the call</span><br><span class="hljs-comment"> * &lt;blockquote&gt;&lt;pre&gt;</span><br><span class="hljs-comment"> * Runtime.getRuntime().loadLibrary(name)</span><br><span class="hljs-comment"> * &lt;/pre&gt;&lt;/blockquote&gt;</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@param</span>      libname   the name of the library.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@exception</span>  SecurityException  if a security manager exists and its</span><br><span class="hljs-comment"> *             &lt;code&gt;checkLink&lt;/code&gt; method doesn&#x27;t allow</span><br><span class="hljs-comment"> *             loading of the specified dynamic library</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@exception</span>  UnsatisfiedLinkError if either the libname argument</span><br><span class="hljs-comment"> *             contains a file path, the native library is not statically</span><br><span class="hljs-comment"> *             linked with the VM,  or the library cannot be mapped to a</span><br><span class="hljs-comment"> *             native library image by the host system.</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@exception</span>  NullPointerException if &lt;code&gt;libname&lt;/code&gt; is</span><br><span class="hljs-comment"> *             &lt;code&gt;null&lt;/code&gt;</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@see</span>        java.lang.Runtime#loadLibrary(java.lang.String)</span><br><span class="hljs-comment"> * <span class="hljs-doctag">@see</span>        java.lang.SecurityManager#checkLink(java.lang.String)</span><br><span class="hljs-comment"> */</span><br><span class="hljs-meta">@CallerSensitive</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">loadLibrary</span><span class="hljs-params">(String libname)</span> &#123;<br>    Runtime.getRuntime().loadLibrary0(Reflection.getCallerClass(), libname);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 
 
@@ -489,7 +491,7 @@
               
                 <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
+                    <i class="iconfont icon-cc-by"></i>
                   </span>
                 </a>
               
@@ -537,8 +539,8 @@
   <div id="waline"></div>
   <script type="text/javascript">
     Fluid.utils.loadComments('#waline', function() {
-      Fluid.utils.createCssLink('https://cdn.staticfile.org/waline/2.15.5/waline.min.css')
-      Fluid.utils.createScript('https://cdn.staticfile.org/waline/2.15.5/waline.min.js', function() {
+      Fluid.utils.createCssLink('https://cdn.staticfile.org/waline/2.15.5/waline.css')
+      Fluid.utils.createScript('https://cdn.staticfile.org/waline/2.15.5/waline.js', function() {
         var options = Object.assign(
           {"serverURL":"waline-server-eight.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
           {
@@ -678,10 +680,11 @@
       </span>
     
     
-  
-</div>
 
   
+
+</div>
+
   
   
 </div>
