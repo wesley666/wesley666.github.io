@@ -27,7 +27,7 @@
 <meta property="og:description" content="测试反应投屏时下一集可能播放不成功。 首先看一下日志：  onCompletiononCasthandlerMessage: 2finish: PlayerActivity@abc7fdconPause: PlayerActivity@abc7fdconNewIntent: PlayerActivity@abc7fdconResume: PlayerActivity@abc7fdconPause:">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-01-04T09:34:44.000Z">
-<meta property="article:modified_time" content="2025-01-04T10:32:17.620Z">
+<meta property="article:modified_time" content="2025-01-04T10:36:03.481Z">
 <meta property="article:author" content="Wesley">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="AndroidActivity">
@@ -289,7 +289,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          301 字
+          314 字
         
       </span>
     
@@ -366,10 +366,10 @@
 </blockquote>
 <p>看到日志时很迷惑，为什么 finish 了，安卓还会执行onNewIntent，不应该是新建一个 activity 吗？</p>
 <p>先来看一下场景描述：</p>
-<p>视频播完后会发送一个 finish 信息，如果 3s 内没有下一个视频进来就会执行 finish，有视频进来就会 remove 掉这条信息。</p>
+<p>视频播完后会发送一个 finish 信息，如果 3s 内没有下一个视频进来就会执行 finish，有视频进来就会在 onNewIntent 中 remove 掉这条信息。</p>
 <p>经过实验和详细分析后，终于找到了问题原因：</p>
 <p>首先因为视频播放结束发了一条finish消息，finish消息没有执行时突然来了下一集的消息，这时候执行startActivty会插入一条onNewIntent消息。结果，这时候finish因为时间到了，该执行了。然后 finish 执行完后，onNewIntent 也该执行了。执行完后因为 finish 的原因， onDestroy也执行了。结果就是下一集没播完就退出来了。</p>
-<p>解决办法：在startActivity前remove掉finish消息。</p>
+<p>解决办法：在startActivity前remove掉finish消息，比onNewIntent 的时间节点还要提前。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>面试必备：Android（9.0）Activity启动流程(一) : <a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903959581163528">https://juejin.cn/post/6844903959581163528</a></p>
 <p>面试必备：Android（9.0）Activity启动流程(二) : <a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903959589552142">https://juejin.cn/post/6844903959589552142</a></p>
 <p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24639272/onnewintent-called-after-finish-executed">android - onNewIntent called after finish() executed - Stack Overflow</a></p>
