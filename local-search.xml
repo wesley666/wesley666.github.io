@@ -181,7 +181,7 @@
     
     <categories>
       
-      <category>AndroidAPPUI</category>
+      <category>安卓APP</category>
       
     </categories>
     
@@ -208,7 +208,7 @@
     
     <categories>
       
-      <category>AndroidUtils</category>
+      <category>Android调试相关</category>
       
     </categories>
     
@@ -312,7 +312,7 @@
     
     <categories>
       
-      <category>AndroidActivity</category>
+      <category>Android</category>
       
     </categories>
     
@@ -366,7 +366,7 @@
     
     <categories>
       
-      <category>gradle</category>
+      <category>AppBuild</category>
       
     </categories>
     
@@ -473,7 +473,7 @@
     
     <categories>
       
-      <category>反编译</category>
+      <category>安卓安全和逆向</category>
       
     </categories>
     
@@ -666,7 +666,7 @@
     
     <categories>
       
-      <category>Java编程技巧</category>
+      <category>编程技巧</category>
       
     </categories>
     
@@ -693,7 +693,7 @@
     
     <categories>
       
-      <category>Android Build</category>
+      <category>Android Build System</category>
       
     </categories>
     
@@ -720,7 +720,7 @@
     
     <categories>
       
-      <category>Android Framework</category>
+      <category>AndroidFrameworkFeature</category>
       
     </categories>
     
@@ -774,7 +774,7 @@
     
     <categories>
       
-      <category>Android System</category>
+      <category>AndroidFrameworkFeature</category>
       
     </categories>
     
@@ -936,7 +936,7 @@
     
     <categories>
       
-      <category>Android System</category>
+      <category>Android源码分析</category>
       
     </categories>
     
@@ -990,7 +990,7 @@
     
     <categories>
       
-      <category>Android Framework PackageManagerService</category>
+      <category>AndroidFrameworkFeature</category>
       
     </categories>
     
@@ -1044,7 +1044,7 @@
     
     <categories>
       
-      <category>Android常见问题</category>
+      <category>Android调试相关</category>
       
     </categories>
     
