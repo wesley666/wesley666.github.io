@@ -1,0 +1,861 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="FPS（帧率），即frames per second。 目前，帧率统计软件使用的信息来源主要有两个: 一个是基于dumpsys SurfaceFlinger --latency layer-name；另一个是基于dumpsys gfxinfo。 本文不说怎么使用上面两个方法来统计帧率，主要说dumpsys SurfaceFlinger --latency layer-name的数据来源。 想知道怎">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓帧率FPS计算原理">
+<meta property="og:url" content="https://iwesley.top/article/8fa06fb4/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="FPS（帧率），即frames per second。 目前，帧率统计软件使用的信息来源主要有两个: 一个是基于dumpsys SurfaceFlinger --latency layer-name；另一个是基于dumpsys gfxinfo。 本文不说怎么使用上面两个方法来统计帧率，主要说dumpsys SurfaceFlinger --latency layer-name的数据来源。 想知道怎">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-03T07:46:46.000Z">
+<meta property="article:modified_time" content="2022-06-03T13:46:46.000Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="安卓显示系统">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>安卓帧率FPS计算原理 - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="安卓帧率FPS计算原理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-03 15:46" pubdate>
+          2022年6月3日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          17 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">安卓帧率FPS计算原理</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于：2022年6月3日 晚上
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>FPS（帧率），即frames per second。</p>
+<p>目前，帧率统计软件使用的信息来源主要有两个: 一个是基于<code>dumpsys SurfaceFlinger --latency layer-name</code>；另一个是基于<code>dumpsys gfxinfo</code>。</p>
+<p>本文不说怎么使用上面两个方法来统计帧率，主要说<code>dumpsys SurfaceFlinger --latency layer-name</code>的数据来源。</p>
+<p>想知道怎么统计帧率的，可以参考下面两篇文章：</p>
+<p><a target="_blank" rel="noopener" href="https://testerhome.com/topics/20187">android 端监控方案分享 · TesterHome</a></p>
+<p><a target="_blank" rel="noopener" href="https://testerhome.com/topics/21045">介绍下基于 systrace gfx 统计帧率方案的实现过程 · TesterHome</a></p>
+<p>执行<code>dumpsys SurfaceFlinger --latency layer-name</code>命令后，产生的输出来源于<code>FrameTracker::dumpStats(std::string&amp; result)</code>方法。</p>
+<p>frameworks&#x2F;native&#x2F;services&#x2F;surfaceflinger&#x2F;FrameTracker.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">FrameTracker::dumpStats</span><span class="hljs-params">(std::string&amp; result)</span> <span class="hljs-type">const</span> </span>&#123;<br>    <span class="hljs-function">Mutex::Autolock <span class="hljs-title">lock</span><span class="hljs-params">(mMutex)</span></span>;<br>    <span class="hljs-built_in">processFencesLocked</span>();<br><br>    <span class="hljs-type">const</span> <span class="hljs-type">size_t</span> o = mOffset;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">1</span>; i &lt; NUM_FRAME_RECORDS; i++) &#123;<br>        <span class="hljs-type">const</span> <span class="hljs-type">size_t</span> index = (o+i) % NUM_FRAME_RECORDS;<br>        base::<span class="hljs-built_in">StringAppendF</span>(&amp;result, <span class="hljs-string">&quot;%&quot;</span> PRId64 <span class="hljs-string">&quot;\t%&quot;</span> PRId64 <span class="hljs-string">&quot;\t%&quot;</span> PRId64 <span class="hljs-string">&quot;\n&quot;</span>,<br>                            mFrameRecords[index].desiredPresentTime,<br>                            mFrameRecords[index].actualPresentTime,<br>                            mFrameRecords[index].frameReadyTime);<br>    &#125;<br>    result.<span class="hljs-built_in">append</span>(<span class="hljs-string">&quot;\n&quot;</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>先说结论：desiredPresentTime，actualPresentTime，frameReadyTime分别代表：</p>
+<ul>
+<li>desiredPresentTime：queueBuffer 的时间戳</li>
+<li>actualPresentTime：present fence signal 的时间戳</li>
+<li>frameReadyTime：acquire fence signal 的时间戳</li>
+</ul>
+<p><strong>Fence的类型</strong>：</p>
+<p><a target="_blank" rel="noopener" href="https://source.android.com/devices/graphics/sync">Synchronization Framework</a> </p>
+<p>The Hardware Composer handles three types of sync fences:</p>
+<ul>
+<li><strong>Acquire fences</strong> are passed along with input buffers to the <code>setLayerBuffer</code> and <code>setClientTarget</code> calls. These represent a pending write into the buffer and must signal before the SurfaceFlinger or the HWC attempts to read from the associated buffer to perform composition.</li>
+<li><strong>Release fences</strong> are retrieved after the call to <code>presentDisplay</code> using the <code>getReleaseFences</code> call. These represent a pending read from the previous buffer on the same layer. A release fence signals when the HWC is no longer using the previous buffer because the current buffer has replaced the previous buffer on the display. Release fences are passed back to the app along with the previous buffers that will be replaced during the current composition. The app must wait until a release fence signals before writing new contents into the buffer that was returned to them.</li>
+<li><strong>Present fences</strong> are returned, one per frame, as part of the call to <code>presentDisplay</code>. Present fences represent when the composition of this frame has completed, or alternately, when the composition result of the prior frame is no longer needed. For physical displays, <code>presentDisplay</code> returns present fences when the current frame appears on the screen. After present fences are returned, it’s safe to write to the SurfaceFlinger target buffer again, if applicable. For virtual displays, present fences are returned when it’s safe to read from the output buffer.</li>
+</ul>
+<p>在 Android 里面，总共有三类 fence —— acquire fence，release fence 和 present fence。其中，acquire fence 和 release fence 隶属于 Layer，present fence 隶属于帧（即 Layers）：</p>
+<p>acquire fence ：App 将 Buffer 通过 <code>queueBuffer()</code> 还给 BufferQueue 的时候，此时该 Buffer 的 GPU 侧其实是还没有完成的，此时会带上一个 fence，这个 fence 就是 <strong>acquire fence</strong>。当 SurfaceFlinger&#x2F; HWC 要读取 Buffer 以进行合成操作的时候，需要等 <strong>acquire fence</strong> 释放之后才行。</p>
+<p>release fence ：当 App 通过 <code>dequeueBuffer()</code> 从 BufferQueue 申请 Buffer，要对 Buffer 进行绘制的时候，需要保证 HWC 已经不再需要这个 Buffer 了，即需要等 release fence signal 才能对 Buffer 进行写操作。</p>
+<p>present fence ：present fence 在 HWC1 的时候称为 retire fence，在 HWC2 中改名为 present fence。当前帧成功显示到屏幕的时候，present fence 就会 signal。</p>
+<h2 id="desiredPresentTime和frameReadyTime来自哪里（基于安卓12源码分析）"><a href="#desiredPresentTime和frameReadyTime来自哪里（基于安卓12源码分析）" class="headerlink" title="desiredPresentTime和frameReadyTime来自哪里（基于安卓12源码分析）"></a>desiredPresentTime和frameReadyTime来自哪里（基于<a target="_blank" rel="noopener" href="https://cs.android.com/android/platform/superproject/+/android-12.0.0_r32:frameworks/native/services/surfaceflinger/FrameTracker.h;bpv=1;bpt=0">安卓12</a>源码分析）</h2><p>frameworks&#x2F;native&#x2F;services&#x2F;surfaceflinger&#x2F;FrameTracker.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// setDesiredPresentTime sets the time at which the current frame</span><br><span class="hljs-comment">// should be presented to the user under ideal (i.e. zero latency)</span><br><span class="hljs-comment">// conditions.</span><br><span class="hljs-comment">//理想条件下（即零延迟）呈现给用户的时间点。</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setDesiredPresentTime</span><span class="hljs-params">(<span class="hljs-type">nsecs_t</span> desiredPresentTime)</span></span>;<br><br><span class="hljs-comment">// setFrameReadyTime sets the time at which the current frame became ready</span><br><span class="hljs-comment">// to be presented to the user.  For example, if the frame contents is</span><br><span class="hljs-comment">// being written to memory by some asynchronous hardware, this would be</span><br><span class="hljs-comment">// the time at which those writes completed.</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setFrameReadyTime</span><span class="hljs-params">(<span class="hljs-type">nsecs_t</span> readyTime)</span></span>;<br><br><span class="hljs-comment">// setFrameReadyFence sets the fence that is used to get the time at which</span><br><span class="hljs-comment">// the current frame became ready to be presented to the user.</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setFrameReadyFence</span><span class="hljs-params">(std::shared_ptr&lt;FenceTime&gt;&amp;&amp; readyFence)</span></span>;<br><br><span class="hljs-comment">// setActualPresentTime sets the timestamp at which the current frame became</span><br><span class="hljs-comment">// visible to the user.</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setActualPresentTime</span><span class="hljs-params">(<span class="hljs-type">nsecs_t</span> displayTime)</span></span>;<br><br><span class="hljs-comment">// setActualPresentFence sets the fence that is used to get the time</span><br><span class="hljs-comment">// at which the current frame became visible to the user.</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">setActualPresentFence</span><span class="hljs-params">(<span class="hljs-type">const</span> std::shared_ptr&lt;FenceTime&gt;&amp; fence)</span></span>;<br></code></pre></td></tr></table></figure>
+
+<p>frameworks&#x2F;native&#x2F;services&#x2F;surfaceflinger&#x2F;BufferLayer.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">BufferLayer::onPostComposition</span><span class="hljs-params">(<span class="hljs-type">const</span> DisplayDevice* display,</span></span><br><span class="hljs-params"><span class="hljs-function">                                    <span class="hljs-type">const</span> std::shared_ptr&lt;FenceTime&gt;&amp; glDoneFence,</span></span><br><span class="hljs-params"><span class="hljs-function">                                    <span class="hljs-type">const</span> std::shared_ptr&lt;FenceTime&gt;&amp; presentFence,</span></span><br><span class="hljs-params"><span class="hljs-function">                                    <span class="hljs-type">const</span> CompositorTiming&amp; compositorTiming)</span> </span>&#123;<br>	......<br><br>    <span class="hljs-comment">// Update mFrameTracker.</span><br>    <span class="hljs-type">nsecs_t</span> desiredPresentTime = mBufferInfo.mDesiredPresentTime;<br>    <span class="hljs-comment">//关键点1：设置desiredPresentTime</span><br>    mFrameTracker.<span class="hljs-built_in">setDesiredPresentTime</span>(desiredPresentTime);<br><br> 	......<br>	std::shared_ptr&lt;FenceTime&gt; frameReadyFence = mBufferInfo.mFenceTime;<br>    <span class="hljs-keyword">if</span> (frameReadyFence-&gt;<span class="hljs-built_in">isValid</span>()) &#123;<br>        <span class="hljs-comment">//关键点2：设置frameReadyFence</span><br>        mFrameTracker.<span class="hljs-built_in">setFrameReadyFence</span>(std::<span class="hljs-built_in">move</span>(frameReadyFence));<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">//纯软件绘制才走这里，frameReadyTime和desiredPresentTime就一样了</span><br>        <span class="hljs-comment">// There was no fence for this frame, so assume that it was ready</span><br>        <span class="hljs-comment">// to be presented at the desired present time.</span><br>        mFrameTracker.<span class="hljs-built_in">setFrameReadyTime</span>(desiredPresentTime);<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (display) &#123;<br>        <span class="hljs-type">const</span> Fps refreshRate = display-&gt;<span class="hljs-built_in">refreshRateConfigs</span>().<span class="hljs-built_in">getCurrentRefreshRate</span>().<span class="hljs-built_in">getFps</span>();<br>        <span class="hljs-type">const</span> std::optional&lt;Fps&gt; renderRate =<br>                mFlinger-&gt;mScheduler-&gt;<span class="hljs-built_in">getFrameRateOverride</span>(<span class="hljs-built_in">getOwnerUid</span>());<br>        <span class="hljs-keyword">if</span> (presentFence-&gt;<span class="hljs-built_in">isValid</span>()) &#123;<br>            <span class="hljs-comment">//关键点3,设置actualPresentFence</span><br>            mFlinger-&gt;mTimeStats-&gt;<span class="hljs-built_in">setPresentFence</span>(layerId, mCurrentFrameNumber, presentFence,<br>                                                  refreshRate, renderRate,<br>                                                  <span class="hljs-built_in">frameRateToSetFrameRateVotePayload</span>(<br>                                                          mDrawingState.frameRate),<br>                                                  <span class="hljs-built_in">getGameMode</span>());<br>            mFlinger-&gt;mFrameTracer-&gt;<span class="hljs-built_in">traceFence</span>(layerId, <span class="hljs-built_in">getCurrentBufferId</span>(), mCurrentFrameNumber,<br>                                               presentFence,<br>                                               FrameTracer::FrameEvent::PRESENT_FENCE);<br>            mFrameTracker.<span class="hljs-built_in">setActualPresentFence</span>(std::<span class="hljs-built_in">shared_ptr</span>&lt;FenceTime&gt;(presentFence));<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span> displayId = PhysicalDisplayId::<span class="hljs-built_in">tryCast</span>(display-&gt;<span class="hljs-built_in">getId</span>());<br>                   displayId &amp;&amp; mFlinger-&gt;<span class="hljs-built_in">getHwComposer</span>().<span class="hljs-built_in">isConnected</span>(*displayId)) &#123;<br>            <span class="hljs-comment">// The HWC doesn&#x27;t support present fences, so use the refresh</span><br>            <span class="hljs-comment">// timestamp instead.</span><br>            <span class="hljs-type">const</span> <span class="hljs-type">nsecs_t</span> actualPresentTime = display-&gt;<span class="hljs-built_in">getRefreshTimestamp</span>();<br>            mFlinger-&gt;mTimeStats-&gt;<span class="hljs-built_in">setPresentTime</span>(layerId, mCurrentFrameNumber, actualPresentTime,<br>                                                 refreshRate, renderRate,<br>                                                 <span class="hljs-built_in">frameRateToSetFrameRateVotePayload</span>(<br>                                                         mDrawingState.frameRate),<br>                                                 <span class="hljs-built_in">getGameMode</span>());<br>            mFlinger-&gt;mFrameTracer-&gt;<span class="hljs-built_in">traceTimestamp</span>(layerId, <span class="hljs-built_in">getCurrentBufferId</span>(),<br>                                                   mCurrentFrameNumber, actualPresentTime,<br>                                                   FrameTracer::FrameEvent::PRESENT_FENCE);<br>            <span class="hljs-comment">//不支持fence，才设置成屏幕刷新周期时间戳</span><br>            mFrameTracker.<span class="hljs-built_in">setActualPresentTime</span>(actualPresentTime);<br>        &#125;<br>    &#125;<br>    mFrameTracker.<span class="hljs-built_in">advanceFrame</span>();<br>    mBufferInfo.mFrameLatencyNeeded = <span class="hljs-literal">false</span>;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从上面代码来看，desiredPresentTime和frameReadyFence与mBufferInfo有关，接下来看一下它是在哪里赋值的。</p>
+<p>frameworks&#x2F;native&#x2F;services&#x2F;surfaceflinger&#x2F;BufferQueueLayer.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">BufferQueueLayer::gatherBufferInfo</span><span class="hljs-params">()</span> </span>&#123;<br>    BufferLayer::<span class="hljs-built_in">gatherBufferInfo</span>();<br><br>    <span class="hljs-comment">//与desiredPresentTime有关</span><br>    mBufferInfo.mDesiredPresentTime = mConsumer-&gt;<span class="hljs-built_in">getTimestamp</span>();<br>    <span class="hljs-comment">//与frameReadyFence有关</span><br>    mBufferInfo.mFenceTime = mConsumer-&gt;<span class="hljs-built_in">getCurrentFenceTime</span>();<br>    mBufferInfo.mFence = mConsumer-&gt;<span class="hljs-built_in">getCurrentFence</span>();<br>......<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>继续往下追踪，看mConsumer的<a target="_blank" rel="noopener" href="https://cs.android.com/android/platform/superproject/+/android-12.0.0_r32:frameworks/native/services/surfaceflinger/BufferLayerConsumer.h;drc=df83280563736a5778100a42f04bc2ca5523442e;bpv=1;bpt=1;l=287">mCurrentTimestamp</a>和<a target="_blank" rel="noopener" href="https://cs.android.com/android/platform/superproject/+/android-12.0.0_r32:frameworks/native/services/surfaceflinger/BufferLayerConsumer.h;drc=df83280563736a5778100a42f04bc2ca5523442e;bpv=1;bpt=1;l=278">mCurrentFenceTime</a>是在哪里赋值的。</p>
+<p>frameworks&#x2F;native&#x2F;services&#x2F;surfaceflinger&#x2F;BufferLayerConsumer.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//获取mCurrentTimestamp</span><br><span class="hljs-function"><span class="hljs-type">nsecs_t</span> <span class="hljs-title">BufferLayerConsumer::getTimestamp</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-built_in">BLC_LOGV</span>(<span class="hljs-string">&quot;getTimestamp&quot;</span>);<br>    <span class="hljs-function">Mutex::Autolock <span class="hljs-title">lock</span><span class="hljs-params">(mMutex)</span></span>;<br>    <span class="hljs-keyword">return</span> mCurrentTimestamp;<br>&#125;<br><br><span class="hljs-comment">//获取mCurrentFenceTime</span><br><span class="hljs-function">std::shared_ptr&lt;FenceTime&gt; <span class="hljs-title">BufferLayerConsumer::getCurrentFenceTime</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123;<br>    <span class="hljs-function">Mutex::Autolock <span class="hljs-title">lock</span><span class="hljs-params">(mMutex)</span></span>;<br>    <span class="hljs-keyword">return</span> mCurrentFenceTime;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">status_t</span> <span class="hljs-title">BufferLayerConsumer::updateAndReleaseLocked</span><span class="hljs-params">(<span class="hljs-type">const</span> BufferItem&amp; item,</span></span><br><span class="hljs-params"><span class="hljs-function">                                                     PendingRelease* pendingRelease)</span> </span>&#123;<br>    <span class="hljs-type">status_t</span> err = NO_ERROR;<br><br>    <span class="hljs-type">int</span> slot = item.mSlot;<br><br>    <span class="hljs-built_in">BLC_LOGV</span>(<span class="hljs-string">&quot;updateAndRelease: (slot=%d buf=%p) -&gt; (slot=%d buf=%p)&quot;</span>, mCurrentTexture,<br>             (mCurrentTextureBuffer != <span class="hljs-literal">nullptr</span> &amp;&amp; mCurrentTextureBuffer-&gt;<span class="hljs-built_in">getBuffer</span>() != <span class="hljs-literal">nullptr</span>)<br>                     ? mCurrentTextureBuffer-&gt;<span class="hljs-built_in">getBuffer</span>()-&gt;handle<br>                     : <span class="hljs-number">0</span>,<br>             slot, mSlots[slot].mGraphicBuffer-&gt;handle);<br><br>    <span class="hljs-comment">// Hang onto the pointer so that it isn&#x27;t freed in the call to</span><br>    <span class="hljs-comment">// releaseBufferLocked() if we&#x27;re in shared buffer mode and both buffers are</span><br>    <span class="hljs-comment">// the same.</span><br><br>    std::shared_ptr&lt;renderengine::ExternalTexture&gt; nextTextureBuffer;<br>    &#123;<br>        <span class="hljs-function">std::lock_guard&lt;std::mutex&gt; <span class="hljs-title">lock</span><span class="hljs-params">(mImagesMutex)</span></span>;<br>        nextTextureBuffer = mImages[slot];<br>    &#125;<br><br>    <span class="hljs-comment">// release old buffer</span><br>    <span class="hljs-keyword">if</span> (mCurrentTexture != BufferQueue::INVALID_BUFFER_SLOT) &#123;<br>        <span class="hljs-keyword">if</span> (pendingRelease == <span class="hljs-literal">nullptr</span>) &#123;<br>            <span class="hljs-type">status_t</span> status =<br>                    <span class="hljs-built_in">releaseBufferLocked</span>(mCurrentTexture, mCurrentTextureBuffer-&gt;<span class="hljs-built_in">getBuffer</span>());<br>            <span class="hljs-keyword">if</span> (status &lt; NO_ERROR) &#123;<br>                <span class="hljs-built_in">BLC_LOGE</span>(<span class="hljs-string">&quot;updateAndRelease: failed to release buffer: %s (%d)&quot;</span>, <span class="hljs-built_in">strerror</span>(-status),<br>                         status);<br>                err = status;<br>                <span class="hljs-comment">// keep going, with error raised [?]</span><br>            &#125;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            pendingRelease-&gt;currentTexture = mCurrentTexture;<br>            pendingRelease-&gt;graphicBuffer = mCurrentTextureBuffer-&gt;<span class="hljs-built_in">getBuffer</span>();<br>            pendingRelease-&gt;isPending = <span class="hljs-literal">true</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// Update the BufferLayerConsumer state.</span><br>    mCurrentTexture = slot;<br>    mCurrentTextureBuffer = nextTextureBuffer;<br>    mCurrentCrop = item.mCrop;<br>    mCurrentTransform = item.mTransform;<br>    mCurrentScalingMode = item.mScalingMode;<br>    <span class="hljs-comment">//mCurrentTimestamp在这里赋值</span><br>    mCurrentTimestamp = item.mTimestamp;<br>    mCurrentDataSpace = <span class="hljs-built_in">static_cast</span>&lt;ui::Dataspace&gt;(item.mDataSpace);<br>    mCurrentHdrMetadata = item.mHdrMetadata;<br>    mCurrentFence = item.mFence;<br>    <span class="hljs-comment">//mCurrentFenceTime在这里赋值</span><br>    mCurrentFenceTime = item.mFenceTime;<br>    mCurrentFrameNumber = item.mFrameNumber;<br>    mCurrentTransformToDisplayInverse = item.mTransformToDisplayInverse;<br>    mCurrentSurfaceDamage = item.mSurfaceDamage;<br>    mCurrentApi = item.mApi;<br><br>    <span class="hljs-built_in">computeCurrentTransformMatrixLocked</span>();<br><br>    <span class="hljs-keyword">return</span> err;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">status_t</span> <span class="hljs-title">BufferLayerConsumer::updateTexImage</span><span class="hljs-params">(BufferRejecter* rejecter, <span class="hljs-type">nsecs_t</span> expectedPresentTime,</span></span><br><span class="hljs-params"><span class="hljs-function">                                             <span class="hljs-type">bool</span>* autoRefresh, <span class="hljs-type">bool</span>* queuedBuffer,</span></span><br><span class="hljs-params"><span class="hljs-function">                                             <span class="hljs-type">uint64_t</span> maxFrameNumber)</span> </span>&#123;<br>    <span class="hljs-built_in">ATRACE_CALL</span>();<br>    <span class="hljs-built_in">BLC_LOGV</span>(<span class="hljs-string">&quot;updateTexImage&quot;</span>);<br>    <span class="hljs-function">Mutex::Autolock <span class="hljs-title">lock</span><span class="hljs-params">(mMutex)</span></span>;<br><br>    <span class="hljs-keyword">if</span> (mAbandoned) &#123;<br>        <span class="hljs-built_in">BLC_LOGE</span>(<span class="hljs-string">&quot;updateTexImage: BufferLayerConsumer is abandoned!&quot;</span>);<br>        <span class="hljs-keyword">return</span> NO_INIT;<br>    &#125;<br><br>    BufferItem item;<br><br>    <span class="hljs-comment">// Acquire the next buffer.</span><br>    <span class="hljs-comment">// In asynchronous mode the list is guaranteed to be one buffer</span><br>    <span class="hljs-comment">// deep, while in synchronous mode we use the oldest buffer.</span><br>    <span class="hljs-type">status_t</span> err = <span class="hljs-built_in">acquireBufferLocked</span>(&amp;item, expectedPresentTime, maxFrameNumber);<br>    <span class="hljs-keyword">if</span> (err != NO_ERROR) &#123;<br>        <span class="hljs-keyword">if</span> (err == BufferQueue::NO_BUFFER_AVAILABLE) &#123;<br>            err = NO_ERROR;<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (err == BufferQueue::PRESENT_LATER) &#123;<br>            <span class="hljs-comment">// return the error, without logging</span><br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-built_in">BLC_LOGE</span>(<span class="hljs-string">&quot;updateTexImage: acquire failed: %s (%d)&quot;</span>, <span class="hljs-built_in">strerror</span>(-err), err);<br>        &#125;<br>        <span class="hljs-keyword">return</span> err;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (autoRefresh) &#123;<br>        *autoRefresh = item.mAutoRefresh;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (queuedBuffer) &#123;<br>        *queuedBuffer = item.mQueuedBuffer;<br>    &#125;<br><br>    <span class="hljs-comment">// We call the rejecter here, in case the caller has a reason to</span><br>    <span class="hljs-comment">// not accept this buffer.  This is used by SurfaceFlinger to</span><br>    <span class="hljs-comment">// reject buffers which have the wrong size</span><br>    <span class="hljs-type">int</span> slot = item.mSlot;<br>    <span class="hljs-keyword">if</span> (rejecter &amp;&amp; rejecter-&gt;<span class="hljs-built_in">reject</span>(mSlots[slot].mGraphicBuffer, item)) &#123;<br>        <span class="hljs-built_in">releaseBufferLocked</span>(slot, mSlots[slot].mGraphicBuffer);<br>        <span class="hljs-keyword">return</span> BUFFER_REJECTED;<br>    &#125;<br><br>    <span class="hljs-comment">// Release the previous buffer.</span><br>    <span class="hljs-comment">//这里调用</span><br>    err = <span class="hljs-built_in">updateAndReleaseLocked</span>(item, &amp;mPendingRelease);<br>    <span class="hljs-keyword">if</span> (err != NO_ERROR) &#123;<br>        <span class="hljs-keyword">return</span> err;<br>    &#125;<br>    <span class="hljs-keyword">return</span> err;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从上面代码来看，mCurrentTimestamp和mCurrentFenceTime是updateAndReleaseLocked里面赋值的，而其又被updateTexImage调用，这个函数在systrace可视化页面很常见了，接下来分析与他们相关的mTimestamp和mFenceTime。</p>
+<p>frameworks&#x2F;native&#x2F;libs&#x2F;gui&#x2F;include&#x2F;gui&#x2F;BufferItem.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c++"> <span class="hljs-comment">// mTimestamp is the current timestamp for this buffer slot. This gets</span><br>    <span class="hljs-comment">// to set by queueBuffer each time this slot is queued. This value</span><br>    <span class="hljs-comment">// is guaranteed to be monotonically increasing for each newly</span><br>    <span class="hljs-comment">// acquired buffer.</span><br><span class="hljs-comment">//从这里的注释已经可以知道它是queueBuffer时的时间戳</span><br>    <span class="hljs-type">int64_t</span> mTimestamp;<br><br> <span class="hljs-comment">// The std::shared_ptr&lt;FenceTime&gt; wrapper around mFence.</span><br>    std::shared_ptr&lt;FenceTime&gt; mFenceTime&#123;FenceTime::NO_FENCE&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>frameworks&#x2F;native&#x2F;libs&#x2F;gui&#x2F;BufferQueueProducer.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs c++"><br><span class="hljs-function"><span class="hljs-type">status_t</span> <span class="hljs-title">BufferQueueProducer::queueBuffer</span><span class="hljs-params">(<span class="hljs-type">int</span> slot,</span></span><br><span class="hljs-params"><span class="hljs-function">        <span class="hljs-type">const</span> QueueBufferInput &amp;input, QueueBufferOutput *output)</span> </span>&#123;<br>    <span class="hljs-built_in">ATRACE_CALL</span>();<br>    <span class="hljs-built_in">ATRACE_BUFFER_INDEX</span>(slot);<br><br>    <span class="hljs-type">int64_t</span> requestedPresentTimestamp;<br>    <span class="hljs-type">bool</span> isAutoTimestamp;<br>    android_dataspace dataSpace;<br>    <span class="hljs-function">Rect <span class="hljs-title">crop</span><span class="hljs-params">(Rect::EMPTY_RECT)</span></span>;<br>    <span class="hljs-type">int</span> scalingMode;<br>    <span class="hljs-type">uint32_t</span> transform;<br>    <span class="hljs-type">uint32_t</span> stickyTransform;<br>    sp&lt;Fence&gt; acquireFence;<br>    <span class="hljs-type">bool</span> getFrameTimestamps = <span class="hljs-literal">false</span>;<br>    <span class="hljs-comment">//关键点</span><br>    input.<span class="hljs-built_in">deflate</span>(&amp;requestedPresentTimestamp, &amp;isAutoTimestamp, &amp;dataSpace,<br>            &amp;crop, &amp;scalingMode, &amp;transform, &amp;acquireFence, &amp;stickyTransform,<br>            &amp;getFrameTimestamps);<br>    <span class="hljs-type">const</span> Region&amp; surfaceDamage = input.<span class="hljs-built_in">getSurfaceDamage</span>();<br>    <span class="hljs-type">const</span> HdrMetadata&amp; hdrMetadata = input.<span class="hljs-built_in">getHdrMetadata</span>();<br><br>    <span class="hljs-keyword">if</span> (acquireFence == <span class="hljs-literal">nullptr</span>) &#123;<br>        <span class="hljs-built_in">BQ_LOGE</span>(<span class="hljs-string">&quot;queueBuffer: fence is NULL&quot;</span>);<br>        <span class="hljs-keyword">return</span> BAD_VALUE;<br>    &#125;<br>    <span class="hljs-comment">//关键点</span><br>    <span class="hljs-keyword">auto</span> acquireFenceTime = std::<span class="hljs-built_in">make_shared</span>&lt;FenceTime&gt;(acquireFence);<br><br>    ......<br><br>    sp&lt;IConsumerListener&gt; frameAvailableListener;<br>    sp&lt;IConsumerListener&gt; frameReplacedListener;<br>    <span class="hljs-type">int</span> callbackTicket = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">uint64_t</span> currentFrameNumber = <span class="hljs-number">0</span>;<br>    BufferItem item;<br>    &#123; <span class="hljs-comment">// Autolock scope</span><br>        ......<br>        <span class="hljs-comment">//这里赋值</span><br>        item.mTimestamp = requestedPresentTimestamp;<br>        item.mIsAutoTimestamp = isAutoTimestamp;<br>        item.mDataSpace = dataSpace;<br>        item.mHdrMetadata = hdrMetadata;<br>        item.mFrameNumber = currentFrameNumber;<br>        item.mSlot = slot;<br>        item.mFence = acquireFence;<br>         <span class="hljs-comment">//这里赋值</span><br>        item.mFenceTime = acquireFenceTime;<br>        ......<br><br>        <span class="hljs-built_in">ATRACE_INT</span>(mCore-&gt;mConsumerName.<span class="hljs-built_in">string</span>(),<br>                <span class="hljs-built_in">static_cast</span>&lt;<span class="hljs-type">int32_t</span>&gt;(mCore-&gt;mQueue.<span class="hljs-built_in">size</span>()));<br><span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> NO_BINDER</span><br>        mCore-&gt;mOccupancyTracker.<span class="hljs-built_in">registerOccupancyChange</span>(mCore-&gt;mQueue.<span class="hljs-built_in">size</span>());<br><span class="hljs-meta">#<span class="hljs-keyword">endif</span></span><br>        <span class="hljs-comment">// Take a ticket for the callback functions</span><br>        callbackTicket = mNextCallbackTicket++;<br><br>        <span class="hljs-built_in">VALIDATE_CONSISTENCY</span>();<br>    &#125; <span class="hljs-comment">// Autolock scope</span><br>    ......<br>    <span class="hljs-keyword">return</span> NO_ERROR;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>frameworks&#x2F;native&#x2F;libs&#x2F;gui&#x2F;include&#x2F;gui&#x2F;IGraphicBufferProducer.h</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-comment">// timestamp - a monotonically increasing value in nanoseconds</span><br>        <span class="hljs-comment">// isAutoTimestamp - if the timestamp was synthesized at queue time</span><br>        <span class="hljs-comment">// dataSpace - description of the contents, interpretation depends on format</span><br>        <span class="hljs-comment">// crop - a crop rectangle that&#x27;s used as a hint to the consumer</span><br>        <span class="hljs-comment">// scalingMode - a set of flags from NATIVE_WINDOW_SCALING_* in &lt;window.h&gt;</span><br>        <span class="hljs-comment">// transform - a set of flags from NATIVE_WINDOW_TRANSFORM_* in &lt;window.h&gt;</span><br><br>        <span class="hljs-comment">// acquireFenceTime相关</span><br>        <span class="hljs-comment">// fence - a fence that the consumer must wait on before reading the buffer,</span><br>        <span class="hljs-comment">//         set this to Fence::NO_FENCE if the buffer is ready immediately</span><br><br>        <span class="hljs-comment">// sticky - the sticky transform set in Surface (only used by the LEGACY</span><br>        <span class="hljs-comment">//          camera mode).</span><br>        <span class="hljs-comment">// getFrameTimestamps - whether or not the latest frame timestamps</span><br>        <span class="hljs-comment">//                      should be retrieved from the consumer.</span><br>        <span class="hljs-comment">// slot - the slot index to queue. This is used only by queueBuffers().</span><br>        <span class="hljs-comment">//        queueBuffer() ignores this value and uses the argument `slot`</span><br>        <span class="hljs-comment">//        instead.</span><br>        <span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-title">QueueBufferInput</span><span class="hljs-params">(<span class="hljs-type">int64_t</span> _timestamp, <span class="hljs-type">bool</span> _isAutoTimestamp,</span></span><br><span class="hljs-params"><span class="hljs-function">                android_dataspace _dataSpace, <span class="hljs-type">const</span> Rect&amp; _crop,</span></span><br><span class="hljs-params"><span class="hljs-function">                <span class="hljs-type">int</span> _scalingMode, <span class="hljs-type">uint32_t</span> _transform, <span class="hljs-type">const</span> sp&lt;Fence&gt;&amp; _fence,</span></span><br><span class="hljs-params"><span class="hljs-function">                <span class="hljs-type">uint32_t</span> _sticky = <span class="hljs-number">0</span>, <span class="hljs-type">bool</span> _getFrameTimestamps = <span class="hljs-literal">false</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">                <span class="hljs-type">int</span> _slot = <span class="hljs-number">-1</span>)</span></span><br><span class="hljs-function">                : timestamp(_timestamp), isAutoTimestamp(_isAutoTimestamp),</span><br><span class="hljs-function">                  dataSpace(_dataSpace), crop(_crop), scalingMode(_scalingMode),</span><br><span class="hljs-function">                  transform(_transform), stickyTransform(_sticky),</span><br><span class="hljs-function">                  fence(_fence), surfaceDamage(),</span><br><span class="hljs-function">                  getFrameTimestamps(_getFrameTimestamps), slot(_slot) &#123;</span> &#125;<br><br>		<span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">deflate</span><span class="hljs-params">(<span class="hljs-type">int64_t</span>* outTimestamp, <span class="hljs-type">bool</span>* outIsAutoTimestamp,</span></span><br><span class="hljs-params"><span class="hljs-function">                android_dataspace* outDataSpace,</span></span><br><span class="hljs-params"><span class="hljs-function">                Rect* outCrop, <span class="hljs-type">int</span>* outScalingMode,</span></span><br><span class="hljs-params"><span class="hljs-function">                <span class="hljs-type">uint32_t</span>* outTransform, sp&lt;Fence&gt;* outFence,</span></span><br><span class="hljs-params"><span class="hljs-function">                <span class="hljs-type">uint32_t</span>* outStickyTransform = <span class="hljs-literal">nullptr</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">                <span class="hljs-type">bool</span>* outGetFrameTimestamps = <span class="hljs-literal">nullptr</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">                <span class="hljs-type">int</span>* outSlot = <span class="hljs-literal">nullptr</span>)</span> <span class="hljs-type">const</span> </span>&#123;<br>            <span class="hljs-comment">//mTimestamp相关</span><br>            *outTimestamp = timestamp;<br>            *outIsAutoTimestamp = <span class="hljs-built_in">bool</span>(isAutoTimestamp);<br>            *outDataSpace = dataSpace;<br>            *outCrop = crop;<br>            *outScalingMode = scalingMode;<br>            *outTransform = transform;<br>            <span class="hljs-comment">//acquireFenceTime相关</span><br>            *outFence = fence;<br>            <span class="hljs-keyword">if</span> (outStickyTransform != <span class="hljs-literal">nullptr</span>) &#123;<br>                *outStickyTransform = stickyTransform;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (outGetFrameTimestamps) &#123;<br>                *outGetFrameTimestamps = getFrameTimestamps;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (outSlot) &#123;<br>                *outSlot = slot;<br>            &#125;<br>        &#125;<br></code></pre></td></tr></table></figure>
+
+<p>frameworks&#x2F;native&#x2F;libs&#x2F;gui&#x2F;Surface.cpp</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs C++"><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Surface::getQueueBufferInputLocked</span><span class="hljs-params">(<span class="hljs-type">android_native_buffer_t</span>* buffer, <span class="hljs-type">int</span> fenceFd,</span></span><br><span class="hljs-params"><span class="hljs-function">        <span class="hljs-type">nsecs_t</span> timestamp, IGraphicBufferProducer::QueueBufferInput* out)</span> </span>&#123;<br>    <span class="hljs-type">bool</span> isAutoTimestamp = <span class="hljs-literal">false</span>;<br>     <span class="hljs-comment">//desiredPresentTime的真正来源</span><br>    <span class="hljs-keyword">if</span> (timestamp == NATIVE_WINDOW_TIMESTAMP_AUTO) &#123;<br>        timestamp = <span class="hljs-built_in">systemTime</span>(SYSTEM_TIME_MONOTONIC);<br>        isAutoTimestamp = <span class="hljs-literal">true</span>;<br>        <span class="hljs-built_in">ALOGV</span>(<span class="hljs-string">&quot;Surface::queueBuffer making up timestamp: %.2f ms&quot;</span>,<br>            timestamp / <span class="hljs-number">1000000.0</span>);<br>    &#125;<br><br>    <span class="hljs-comment">// Make sure the crop rectangle is entirely inside the buffer.</span><br>    <span class="hljs-function">Rect <span class="hljs-title">crop</span><span class="hljs-params">(Rect::EMPTY_RECT)</span></span>;<br>    mCrop.<span class="hljs-built_in">intersect</span>(<span class="hljs-built_in">Rect</span>(buffer-&gt;width, buffer-&gt;height), &amp;crop);<br>    <span class="hljs-comment">//frameReadyFence真正来源</span><br>    <span class="hljs-function">sp&lt;Fence&gt; <span class="hljs-title">fence</span><span class="hljs-params">(fenceFd &gt;= <span class="hljs-number">0</span> ? <span class="hljs-keyword">new</span> Fence(fenceFd) : Fence::NO_FENCE)</span></span>;<br>    <span class="hljs-comment">//实例化QueueBufferInput，并传递timestamp和fence</span><br>    <span class="hljs-function">IGraphicBufferProducer::QueueBufferInput <span class="hljs-title">input</span><span class="hljs-params">(timestamp, isAutoTimestamp,</span></span><br><span class="hljs-params"><span class="hljs-function">            <span class="hljs-keyword">static_cast</span>&lt;android_dataspace&gt;(mDataSpace), crop, mScalingMode,</span></span><br><span class="hljs-params"><span class="hljs-function">            mTransform ^ mStickyTransform, fence, mStickyTransform,</span></span><br><span class="hljs-params"><span class="hljs-function">            mEnableFrameTimestamps)</span></span>;<br><br>    <span class="hljs-comment">// we should send HDR metadata as needed if this becomes a bottleneck</span><br>    input.<span class="hljs-built_in">setHdrMetadata</span>(mHdrMetadata);<br><br>    ......<br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">Surface::queueBuffer</span><span class="hljs-params">(<span class="hljs-type">android_native_buffer_t</span>* buffer, <span class="hljs-type">int</span> fenceFd)</span> </span>&#123;<br>    <span class="hljs-built_in">ATRACE_CALL</span>();<br>    <span class="hljs-built_in">ALOGV</span>(<span class="hljs-string">&quot;Surface::queueBuffer&quot;</span>);<br>    ......<br><br>    IGraphicBufferProducer::QueueBufferOutput output;<br>    IGraphicBufferProducer::QueueBufferInput input;<br>    <span class="hljs-comment">//调用</span><br>    <span class="hljs-built_in">getQueueBufferInputLocked</span>(buffer, fenceFd, mTimestamp, &amp;input);<br>    sp&lt;Fence&gt; fence = input.fence;<br><br>    <span class="hljs-type">nsecs_t</span> now = <span class="hljs-built_in">systemTime</span>();<br>    <span class="hljs-comment">//调用</span><br>    <span class="hljs-type">status_t</span> err = mGraphicBufferProducer-&gt;<span class="hljs-built_in">queueBuffer</span>(i, input, &amp;output);<br>    mLastQueueDuration = <span class="hljs-built_in">systemTime</span>() - now;<br>    <span class="hljs-keyword">if</span> (err != OK)  &#123;<br>        <span class="hljs-built_in">ALOGE</span>(<span class="hljs-string">&quot;queueBuffer: error queuing buffer, %d&quot;</span>, err);<br>    &#125;<br><br>    <span class="hljs-built_in">onBufferQueuedLocked</span>(i, fence, output);<br>    <span class="hljs-keyword">return</span> err;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>getQueueBufferInputLocked最终被 <a target="_blank" rel="noopener" href="https://cs.android.com/android/platform/superproject/+/android-12.0.0_r32:frameworks/native/libs/gui/include/gui/Surface.h;drc=3816c49c18dcf85b5939fe1a19df9e90df7f7f77;bpv=1;bpt=1;l=68">Surface</a>::<a target="_blank" rel="noopener" href="https://cs.android.com/android/platform/superproject/+/android-12.0.0_r32:frameworks/native/libs/gui/Surface.cpp;drc=3816c49c18dcf85b5939fe1a19df9e90df7f7f77;bpv=1;bpt=1;l=1147?gsn=queueBuffer&gs=kythe://android.googlesource.com/platform/superproject?lang=c++?path=frameworks/native/libs/gui/include/gui/Surface.h%238ix9Mzse72s8AmkfJJL8ZC5PpQSlym212XP1ntX0qEA&gs=kythe://android.googlesource.com/platform/superproject?lang=c++?path=frameworks/native/libs/gui/Surface.cpp%236jMutzq7HDv_qx9HGBbz2a0yzcDbFeo_I0RFUPJcBuQ">queueBuffer</a>调用。</p>
+<p>至此，已经分析完 desiredPresentTime 和 frameReadyTime 的最终来源了，即：</p>
+<ul>
+<li>desiredPresentTime：queueBuffer 的时间戳</li>
+<li>frameReadyTime：acquire fence signal 的时间戳</li>
+</ul>
+<h2 id="actualPresentTime指代的是什么"><a href="#actualPresentTime指代的是什么" class="headerlink" title="actualPresentTime指代的是什么"></a>actualPresentTime指代的是什么</h2><p>我就不分析这个了，流程都是差不多的，详情参考：</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904182898524168">或许是迄今为止第一篇讲解 fps 计算原理的文章吧 - 掘金</a></p>
+<p>其作者提到，计算一个 App 的 fps 的原理就是：</p>
+<p>统计在一秒内该 App 往屏幕刷了多少帧，而在 Android 的世界里，每一帧显示到屏幕的标志是：present fence signal 了，因此计算 App 的 fps 就可以转换为：<strong>一秒内 App 的 Layer 有多少个有效 present fence signal 了（这里有效 present fence 是指，在本次 VSYNC 中该 Layer 有更新的 present fence）</strong></p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/435304317">安卓帧率计算方案和背后原理剖析</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904182898524168">或许是迄今为止第一篇讲解 fps 计算原理的文章吧 - 掘金</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android-Display-System/" class="category-chain-item">Android Display System</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Android/" class="print-no-link">#Android</a>
+      
+        <a href="/tags/%E5%AE%89%E5%8D%93%E6%98%BE%E7%A4%BA%E7%B3%BB%E7%BB%9F/" class="print-no-link">#安卓显示系统</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>安卓帧率FPS计算原理</div>
+      <div>https://iwesley.top/article/8fa06fb4/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月3日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/article/5867f171/" title="安卓系统应用的卸载和恢复(非data分区)">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">安卓系统应用的卸载和恢复(非data分区)</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/5e685b29/" title="安卓TV或者盒子重启后应用使用时间丢失的问题">
+                        <span class="hidden-mobile">安卓TV或者盒子重启后应用使用时间丢失的问题</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline-server-eight.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

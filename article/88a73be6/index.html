@@ -1,0 +1,820 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="fluid字体更换参考链接： 配置指南 | Hexo Fluid Hexo’s Fluid 主题私人定制（持续更新） - Eren の 宇宙船 博客网站字体设置：思源宋体 Browse Fonts - Google Fonts font-family - CSS（层叠样式表） | MDN 思源宋体，如何评价，以及如何正确使用 - 少数派  衬线体和无衬线体维基百科的解析： 衬线体（英语：Serif">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fluid字体更换">
+<meta property="og:url" content="https://iwesley.top/article/88a73be6/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="fluid字体更换参考链接： 配置指南 | Hexo Fluid Hexo’s Fluid 主题私人定制（持续更新） - Eren の 宇宙船 博客网站字体设置：思源宋体 Browse Fonts - Google Fonts font-family - CSS（层叠样式表） | MDN 思源宋体，如何评价，以及如何正确使用 - 少数派  衬线体和无衬线体维基百科的解析： 衬线体（英语：Serif">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614143120.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614143759.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614143923.webp">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614144419.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614141407.png">
+<meta property="article:published_time" content="2021-06-14T05:59:15.000Z">
+<meta property="article:modified_time" content="2021-06-14T05:59:15.000Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="fluid">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614143120.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>fluid字体更换 - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="fluid字体更换"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-06-14 13:59" pubdate>
+          2021年6月14日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          797 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          7 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">fluid字体更换</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="fluid字体更换"><a href="#fluid字体更换" class="headerlink" title="fluid字体更换"></a>fluid字体更换</h1><p>参考链接：</p>
+<p><a target="_blank" rel="noopener" href="https://fluid-dev.github.io/hexo-fluid-docs/guide/#%E5%85%A8%E5%B1%80%E5%AD%97%E4%BD%93">配置指南 | Hexo Fluid</a></p>
+<p><a target="_blank" rel="noopener" href="https://erenship.com/posts/40222.html#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AD%97%E4%BD%93">Hexo’s Fluid 主题私人定制（持续更新） - Eren の 宇宙船</a></p>
+<p><a target="_blank" rel="noopener" href="https://bestzuo.cn/posts/notoserifsc.html">博客网站字体设置：思源宋体</a></p>
+<p><a target="_blank" rel="noopener" href="https://fonts.google.com/">Browse Fonts - Google Fonts</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/font-family">font-family - CSS（层叠样式表） | MDN</a></p>
+<p><a target="_blank" rel="noopener" href="https://sspai.com/post/38705">思源宋体，如何评价，以及如何正确使用 - 少数派</a></p>
+<hr>
+<h2 id="衬线体和无衬线体"><a href="#衬线体和无衬线体" class="headerlink" title="衬线体和无衬线体"></a>衬线体和无衬线体</h2><p>维基百科的解析：</p>
+<p>衬线体（英语：Serif）是一种有衬线的字体，又称为有衬线体、衬线字、曲线描边字，俗称白体字；而与之相对的，没有衬线的字体则被称为无衬线体。衬线是字形笔画的起始段与末端的装饰细节部分。</p>
+<p>无衬线体（法语：sans-serif）指没有衬线的字体，与衬线字体相反，完全抛弃装饰衬线，只剩下主干，造型简明有力，更具现代感，起源也很晚。适用于标题、广告，瞬间的识别性高。在汉字等东亚字体中称“黑体”，与有衬线的“白体”相对。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614143120.png" srcset="/img/loading.gif" lazyload alt="无衬线体和衬线体区别"></p>
+<h2 id="思源宋体"><a href="#思源宋体" class="headerlink" title="思源宋体"></a>思源宋体</h2><p><strong>思源宋体</strong>（英语：Source Han Serif，Google公司则称Noto Serif CJK，“思源”一词来自于成语“饮水思源”）是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Adobe">Adobe</a>与<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Google">Google</a>所领导开发的开放源代码字体家族，使用<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/SIL%E9%96%8B%E6%94%BE%E5%8E%9F%E5%A7%8B%E7%A2%BC%E5%AD%97%E5%9E%8B%E6%8E%88%E6%AC%8A">SIL开放源代码字体许可</a>在 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/GitHub">GitHub</a> 上发布。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614143759.png" srcset="/img/loading.gif" lazyload alt="image-20210614143742710"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614143923.webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="使用思源宋体"><a href="#使用思源宋体" class="headerlink" title="使用思源宋体"></a>使用思源宋体</h2><p>2018 年在 Google Fonts 上已经托管了思源宋体，所以我们可以直接通过托管引入到我们的博客中。打开 <a target="_blank" rel="noopener" href="https://fonts.google.com/">Google Fonts</a>，搜索思源宋体的英文名：<code>Noto Serif SC</code>，在列表中选择我们个人觉得合适的字体样式，点击右侧的 <code>Select this style</code>，注意此处可根据自己需要选择多个样式。记录下<code>link</code>链接。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614144419.png" srcset="/img/loading.gif" lazyload alt="image-20210614144406967"></p>
+<p>新建font.css,相对路径为source\css\font.css</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">html</span>, <span class="hljs-selector-tag">body</span>, <span class="hljs-selector-class">.markdown-body</span> &#123;<br>  <span class="hljs-attribute">font-family</span>: -apple-system, <span class="hljs-string">&#x27;Nimbus Roman No9 L&#x27;</span>, <span class="hljs-string">&#x27;PingFang SC&#x27;</span>, <span class="hljs-string">&#x27;Hiragino Sans GB&#x27;</span>, <span class="hljs-string">&#x27;Noto Serif SC&#x27;</span>, <span class="hljs-string">&#x27;Microsoft Yahei&#x27;</span>, <span class="hljs-string">&#x27;WenQuanYi Micro Hei&#x27;</span>, <span class="hljs-string">&#x27;ST Heiti&#x27;</span>, serif;<br>  <span class="hljs-attribute">font-size</span>: <span class="hljs-number">18px</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>其中 <code>-apple-system</code>、<code>Nimbus Roman No9 L</code> 分别对应 Windows、macOS&#x2F;iOS、Linux 下三种系统内置英文字体，<code>PingFang SC</code>（苹方）、<code>Hiragino Sans GB</code>（冬青黑体）、<code>Microsoft Yahei</code>（微软雅黑）对应三种系统内置中文字体（按照上文说法，Apple 系列在前，Windows 在最后），<code>Josefin Sans</code> 和 <code>Noto Serif SC</code>（思源宋体）则是两套允许免费使用的第三方字体。</p>
+<p>修改_config.yml里面的custom_css和custom_head：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs yml"><span class="hljs-comment"># 主题字体配置</span><br><span class="hljs-comment"># Font</span><br><span class="hljs-attr">font:</span><br>  <span class="hljs-attr">font_size:</span> <span class="hljs-string">18px</span><br>  <span class="hljs-attr">font-family:</span><br>  <span class="hljs-comment">#font-family: Georgia, -apple-system, &#x27;Nimbus Roman No9 L&#x27;, &#x27;PingFang SC&#x27;, &#x27;Hiragino Sans GB&#x27;, &#x27;Noto Serif SC&#x27;, &#x27;Microsoft Yahei&#x27;, &#x27;WenQuanYi Micro Hei&#x27;, &#x27;ST Heiti&#x27;, sans-serif;</span><br>  <span class="hljs-comment">#font_family: KaiTi, &quot;Noto Serif SC&quot;, Georgia, sans, serif;</span><br>  <span class="hljs-attr">code_font_size:</span> <span class="hljs-number">90</span><span class="hljs-string">%</span><br><br><span class="hljs-comment"># 指定自定义 .js 文件路径，支持列表；路径是相对 source 目录，如 /js/custom.js 对应存放目录 source/js/custom.js</span><br><span class="hljs-comment"># Specify the path of your custom js file, support list. The path is relative to the source directory, such as `/js/custom.js` corresponding to the directory `source/js/custom.js`</span><br><span class="hljs-attr">custom_js:</span><br><br><span class="hljs-comment"># 指定自定义 .css 文件路径，用法和 custom_js 相同</span><br><span class="hljs-comment"># The usage is the same as custom_js</span><br><span class="hljs-attr">custom_css:</span> <span class="hljs-string">/css/font.css</span><br><br><span class="hljs-comment"># 自定义 &lt;head&gt; 节点中的 HTML 内容</span><br><span class="hljs-comment"># Customize &lt;head&gt; HTML content</span><br><span class="hljs-comment">#思源宋体</span><br><span class="hljs-attr">custom_head:</span> <span class="hljs-string">&#x27;&lt;link href=&quot;https://fonts.googleapis.com/css2?family=Noto+Serif+SC&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;&#x27;</span><br><br><span class="hljs-comment"># 自定义底部 HTML 内容（位于 footer 上方），注意不要和 `post: custom` 配置冲突</span><br><span class="hljs-comment"># Customize the HTML content at the bottom (located above the footer), be careful not to conflict with `post: custom`</span><br><span class="hljs-attr">custom_html:</span> <span class="hljs-string">&#x27;&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>想查看字体设置是否生效，可以安装以下插件查看（打开的网页需要重新刷新）</p>
+<p><a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/whatfont/jabopobgcpjmedljpbcaablpmlmfcogm">WhatFont - Chrome 网上应用店</a></p>
+<p>类似于这种效果</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210614141407.png" srcset="/img/loading.gif" lazyload alt="image-20210614140824957"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Hexo%E7%9B%B8%E5%85%B3/" class="category-chain-item">Hexo相关</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/hexo/" class="print-no-link">#hexo</a>
+      
+        <a href="/tags/fluid/" class="print-no-link">#fluid</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>fluid字体更换</div>
+      <div>https://iwesley.top/article/88a73be6/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年6月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/article/432db37/" title="春节回乡：见闻与随想">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">春节回乡：见闻与随想</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/569c7f1/" title="每个人的家乡都在沦陷">
+                        <span class="hidden-mobile">每个人的家乡都在沦陷</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline-server-eight.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

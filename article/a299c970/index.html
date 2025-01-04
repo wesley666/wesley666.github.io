@@ -1,0 +1,1074 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="最近为了解决一个问题，需要在升级X应用时对其做startInstrumentation。功能上线后，数据监控平台发现存在IncompatibleClassChangeError，主要集中在安卓5.1，6.0，少量在安卓8.0。究竟是怎么回事呢？一起来分析一下。 安卓6.0机器  java.lang.IncompatibleClassChangeError: retrofit2.converter.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android java.lang.IncompatibleClassChangeError">
+<meta property="og:url" content="https://iwesley.top/article/a299c970/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="最近为了解决一个问题，需要在升级X应用时对其做startInstrumentation。功能上线后，数据监控平台发现存在IncompatibleClassChangeError，主要集中在安卓5.1，6.0，少量在安卓8.0。究竟是怎么回事呢？一起来分析一下。 安卓6.0机器  java.lang.IncompatibleClassChangeError: retrofit2.converter.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-06-30T08:36:17.000Z">
+<meta property="article:modified_time" content="2024-06-30T08:36:17.000Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="art">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>Android java.lang.IncompatibleClassChangeError - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Android java.lang.IncompatibleClassChangeError"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-06-30 16:36" pubdate>
+          2024年6月30日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Android java.lang.IncompatibleClassChangeError</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近为了解决一个问题，需要在升级X应用时对其做startInstrumentation。功能上线后，数据监控平台发现存在IncompatibleClassChangeError，主要集中在安卓5.1，6.0，少量在安卓8.0。究竟是怎么回事呢？一起来分析一下。</p>
+<p>安卓6.0机器</p>
+<blockquote>
+<p>java.lang.IncompatibleClassChangeError: retrofit2.converter.gson.GsonConverterFactory at dalvik.system.DexFile.defineClassNative(Native Method) at dalvik.system.DexFile.defineClass(DexFile.java:226) at dalvik.system.DexFile.loadClassBinaryName(DexFile.java:219) at dalvik.system.DexPathList.findClass(DexPathList.java:339) at dalvik.system.BaseDexClassLoader.findClass(BaseDexClassLoader.java:54) at java.lang.ClassLoader.loadClass(ClassLoader.java:511) at java.lang.ClassLoader.loadClass(ClassLoader.java:469) at</p>
+</blockquote>
+<p>安卓8.0机器：</p>
+<blockquote>
+<p>java.lang.IncompatibleClassChangeError: Structural change of retrofit2.Converter$Factory is hazardous (&#x2F;data&#x2F;app&#x2F;com.xxx.xx-2zz63J0ZnL47Rw6U5B3wfw&#x3D;&#x3D;&#x2F;oat&#x2F;arm&#x2F;base.odex at compile time, &#x2F;data&#x2F;app&#x2F;com.xxx.tool-L0IRpZwtps6TiRfTUrRDAw&#x3D;&#x3D;&#x2F;oat&#x2F;arm&#x2F;base.odex at runtime): Direct method count off: 3 vs 1 Lretrofit2&#x2F;Converter$Factory; (Compile time): Static fields: Instance fields: Direct methods: <init>()V getParameterUpperBound(ILjava&#x2F;lang&#x2F;reflect&#x2F;ParameterizedType;)Ljava&#x2F;lang&#x2F;reflect&#x2F;Type; </p>
+</blockquote>
+<p>注意安卓6抛出的AndroidRuntime没有直接说明原因，不如安卓8清晰。</p>
+<p>首先看一下IncompatibleClassChangeError的定义：</p>
+<table>
+<thead>
+<tr>
+<th><a target="_blank" rel="noopener" href="https://developer.android.com/reference/java/lang/Object">java.lang.Object</a></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>↳</td>
+<td><a target="_blank" rel="noopener" href="https://developer.android.com/reference/java/lang/Throwable">java.lang.Throwable</a></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>↳</td>
+<td><a target="_blank" rel="noopener" href="https://developer.android.com/reference/java/lang/Error">java.lang.Error</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>↳</td>
+<td><a target="_blank" rel="noopener" href="https://developer.android.com/reference/java/lang/LinkageError">java.lang.LinkageError</a></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>↳</td>
+<td>java.lang.IncompatibleClassChangeError</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>当某个类定义发生了不兼容的变更时抛出。当前正在执行的方法所依赖的某个类的类定义已经发生了变化。</p>
+</blockquote>
+<h2 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h2><p>经过分析源码发现，谷歌在Jan 15, 2015，也就是安卓5.1.1开始，加入了以下提交：</p>
+<p><a target="_blank" rel="noopener" href="https://android-review.googlesource.com/c/platform/art/+/123364">ART: Simple structural class check (123364) · Gerrit Code Review</a></p>
+<blockquote>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs smali">ART: Simple structural class<span class="hljs-built_in"> check</span><br><span class="hljs-built_in"></span><br>Adds a simple<span class="hljs-built_in"> check </span>to class-loading when the embedded dex file in<br>an oat file<span class="hljs-built_in"> and </span>the dex file on the class path where we found the<br>class do<span class="hljs-built_in"> not </span>match.<br><br>We require that the number of methods<span class="hljs-built_in"> and </span>fields do<span class="hljs-built_in"> not </span>change, as<br>that will almost certainly mean that quickened<span class="hljs-built_in"> and </span>other compiled<br>offsets are wrong now. This is a reasonably lightweight change, but<br>we should investigate a full comparison including name<span class="hljs-built_in"> and </span>type of<br>members.<br></code></pre></td></tr></table></figure>
+</blockquote>
+<p>关键方法就是<code>CheckSuperClassChange</code>和<code>SimpleStructuralCheck</code>，简单来说就是当art虚拟机发现加载类的dex路径和父类dex路径不一致时，就会执行SimpleStructuralCheck检查，如果发现来自两个dex文件的父类的方法数、字段数不一致，就会抛出异常。</p>
+<p>但是从类的兼容性角度来看，这样的粗暴检查是不合理的。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Add API method</strong></td>
+<td>If method need not be reimplemented by Client  If method must be reimplemented by Client</td>
+<td>Binary compatible (0)  <strong>Breaks compatibility</strong> (1)</td>
+</tr>
+<tr>
+<td>Delete API method</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td>Move API method up type hierarchy</td>
+<td>If method in supertype need not be reimplemented by Client &lt;br If method in supertype must be reimplemented by Client</td>
+<td>Binary compatible  <strong>Breaks compatibility</strong> (9)</td>
+</tr>
+<tr>
+<td>Move API method down type hierarchy</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong> (9)</td>
+</tr>
+<tr>
+<td>Add API constructor</td>
+<td>If there are other constructors  If this is only constructor</td>
+<td>Binary compatible  <strong>Breaks compatibility</strong> (2)</td>
+</tr>
+<tr>
+<td>Delete API constructor</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td><strong>Add API field</strong></td>
+<td>If class is not subclassable by Client (this includes enums)  If class is subclassable by Client</td>
+<td>Binary compatible  <strong>May break compatibility</strong> (3)</td>
+</tr>
+<tr>
+<td>Delete API field</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td>Expand superinterface set (direct or inherited)</td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Contract superinterface set (direct or inherited)</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong> (4)</td>
+</tr>
+<tr>
+<td>Expand superclass set (direct or inherited)</td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Contract superclass set (direct or inherited)</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong> (4)</td>
+</tr>
+<tr>
+<td>Add, delete, or change static or instance initializers</td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Add API type member</td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Delete API type member</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td>Re-order field, method, constructor, and type member declarations</td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Add or delete non-API members; that is, <code>private</code> or default access fields, methods, constructors, and type members</td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Change <code>abstract</code> to non-<code>abstract</code></td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Change non-<code>abstract</code> to <code>abstract</code></td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong> (5)</td>
+</tr>
+<tr>
+<td>Change <code>final</code> to non-<code>final</code></td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Change non-<code>final</code> to <code>final</code></td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong> (6)</td>
+</tr>
+<tr>
+<td>Add type parameter</td>
+<td>If class has no type parameters  If class has type parameters</td>
+<td>Binary compatible (7)  <strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td>Delete type parameter</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td>Re-order type parameters</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td>Rename type parameter</td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Add, delete, or change type bounds of type parameter</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td>Rename enum constant</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td>Add, change, or delete enum constant arguments</td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Add, change, or delete enum constant class body</td>
+<td>-</td>
+<td>Binary compatible</td>
+</tr>
+<tr>
+<td>Add enum constant</td>
+<td>-</td>
+<td>Binary compatible (8)</td>
+</tr>
+<tr>
+<td>Delete enum constant</td>
+<td>-</td>
+<td><strong>Breaks compatibility</strong></td>
+</tr>
+<tr>
+<td>Re-order enum constants</td>
+<td>-</td>
+<td>Binary compatible (8)</td>
+</tr>
+</tbody></table>
+<p>后面谷歌意识到了这个问题，在安卓8.1去掉了，<a target="_blank" rel="noopener" href="https://android-review.googlesource.com/c/platform/art/+/421051">Revert “ART: Simple structural class check” (421051) · Gerrit Code Review</a></p>
+<blockquote>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">Revert <span class="hljs-string">&quot;ART: Simple structural class check&quot;</span><br><br>This reverts commit fd9eb3923dcf417afcf5ed4ebb<span class="hljs-symbol">13867f</span>d<span class="hljs-symbol">10f</span>2de3.<br><br>Remove the simple structural check. Its naive expectations for<br>resolution have <span class="hljs-keyword">been </span>wrong since we introduced compiling APKs with<br>a classpath for <span class="hljs-keyword">shared </span>libraries <span class="hljs-keyword">and </span>have never <span class="hljs-keyword">been </span>updated.<br></code></pre></td></tr></table></figure>
+</blockquote>
+<p>所以，<code>java.lang.IncompatibleClassChangeError: Structural change of</code> ……. 这个错误波及范围是安卓5.1到安卓8.0。</p>
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><p>安卓6.0</p>
+<p><a target="_blank" rel="noopener" href="http://aospxref.com/android-6.0.1_r9/xref/art/runtime/class_linker.cc">class_linker.cc - OpenGrok cross reference for &#x2F;art&#x2F;runtime&#x2F;class_linker.cc</a></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// Very simple structural check on whether the classes match. Only compares the number of</span><br><span class="hljs-comment">// methods and fields.</span><br> <span class="hljs-comment">// 校验当前加载的父类与编译时(dex2oat)的父类是否一致(odex中的数据结构)</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title">SimpleStructuralCheck</span><span class="hljs-params">(<span class="hljs-type">const</span> DexFile&amp; dex_file1, <span class="hljs-type">const</span> DexFile::ClassDef&amp; dex_class_def1,</span></span><br><span class="hljs-params"><span class="hljs-function">                                  <span class="hljs-type">const</span> DexFile&amp; dex_file2, <span class="hljs-type">const</span> DexFile::ClassDef&amp; dex_class_def2,</span></span><br><span class="hljs-params"><span class="hljs-function">                                  std::string* error_msg)</span> </span>&#123;<br>  <span class="hljs-function">ClassDataItemIterator <span class="hljs-title">dex_data1</span><span class="hljs-params">(dex_file1, dex_file<span class="hljs-number">1.</span>GetClassData(dex_class_def1))</span></span>;<br>  <span class="hljs-function">ClassDataItemIterator <span class="hljs-title">dex_data2</span><span class="hljs-params">(dex_file2, dex_file<span class="hljs-number">2.</span>GetClassData(dex_class_def2))</span></span>;<br><br>  <span class="hljs-comment">// Counters for current dex file.</span><br>  <span class="hljs-type">size_t</span> dex_virtual_methods1, dex_direct_methods1, dex_static_fields1, dex_instance_fields1;<br>  <span class="hljs-built_in">CountMethodsAndFields</span>(dex_data1, &amp;dex_virtual_methods1, &amp;dex_direct_methods1, &amp;dex_static_fields1,<br>                        &amp;dex_instance_fields1);<br>  <span class="hljs-comment">// Counters for compile-time dex file.</span><br>  <span class="hljs-type">size_t</span> dex_virtual_methods2, dex_direct_methods2, dex_static_fields2, dex_instance_fields2;<br>  <span class="hljs-built_in">CountMethodsAndFields</span>(dex_data2, &amp;dex_virtual_methods2, &amp;dex_direct_methods2, &amp;dex_static_fields2,<br>                        &amp;dex_instance_fields2);<br><br>  <span class="hljs-keyword">if</span> (dex_virtual_methods1 != dex_virtual_methods2) &#123;<br>    std::string class_dump = <span class="hljs-built_in">DumpClasses</span>(dex_file1, dex_class_def1, dex_file2, dex_class_def2);<br>    *error_msg = <span class="hljs-built_in">StringPrintf</span>(<span class="hljs-string">&quot;Virtual method count off: %zu vs %zu\n%s&quot;</span>, dex_virtual_methods1,<br>                              dex_virtual_methods2, class_dump.<span class="hljs-built_in">c_str</span>());<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>  &#125;<br>  <span class="hljs-keyword">if</span> (dex_direct_methods1 != dex_direct_methods2) &#123;<br>    std::string class_dump = <span class="hljs-built_in">DumpClasses</span>(dex_file1, dex_class_def1, dex_file2, dex_class_def2);<br>    *error_msg = <span class="hljs-built_in">StringPrintf</span>(<span class="hljs-string">&quot;Direct method count off: %zu vs %zu\n%s&quot;</span>, dex_direct_methods1,<br>                              dex_direct_methods2, class_dump.<span class="hljs-built_in">c_str</span>());<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>  &#125;<br>  <span class="hljs-keyword">if</span> (dex_static_fields1 != dex_static_fields2) &#123;<br>    std::string class_dump = <span class="hljs-built_in">DumpClasses</span>(dex_file1, dex_class_def1, dex_file2, dex_class_def2);<br>    *error_msg = <span class="hljs-built_in">StringPrintf</span>(<span class="hljs-string">&quot;Static field count off: %zu vs %zu\n%s&quot;</span>, dex_static_fields1,<br>                              dex_static_fields2, class_dump.<span class="hljs-built_in">c_str</span>());<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>  &#125;<br>  <span class="hljs-keyword">if</span> (dex_instance_fields1 != dex_instance_fields2) &#123;<br>    std::string class_dump = <span class="hljs-built_in">DumpClasses</span>(dex_file1, dex_class_def1, dex_file2, dex_class_def2);<br>    *error_msg = <span class="hljs-built_in">StringPrintf</span>(<span class="hljs-string">&quot;Instance field count off: %zu vs %zu\n%s&quot;</span>, dex_instance_fields1,<br>                              dex_instance_fields2, class_dump.<span class="hljs-built_in">c_str</span>());<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>  &#125;<br><br>  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-comment">// klass 表示当前加载的类</span><br><span class="hljs-comment">// dex_file 为当前加载的类所在的 dex 文件</span><br><span class="hljs-comment">// class_def 表示当前类在 dex 文件中的数据结构</span><br><span class="hljs-comment">// super_class 表示当前加载的父类，正常来说(app_image的场景除外)这个类是按照双亲委托模型加载的父类，而要校验的正是这个类</span><br><span class="hljs-comment">// Checks whether a the super-class changed from what we had at compile-time. This would</span><br><span class="hljs-comment">// invalidate quickening.</span><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">bool</span> <span class="hljs-title">CheckSuperClassChange</span><span class="hljs-params">(Handle&lt;mirror::Class&gt; klass,</span></span><br><span class="hljs-params"><span class="hljs-function">                                  <span class="hljs-type">const</span> DexFile&amp; dex_file,</span></span><br><span class="hljs-params"><span class="hljs-function">                                  <span class="hljs-type">const</span> DexFile::ClassDef&amp; class_def,</span></span><br><span class="hljs-params"><span class="hljs-function">                                  mirror::Class* super_class)</span></span><br><span class="hljs-function">    <span class="hljs-title">SHARED_LOCKS_REQUIRED</span><span class="hljs-params">(Locks::mutator_lock_)</span> </span>&#123;<br>  <span class="hljs-comment">// Check for unexpected changes in the superclass.</span><br>  <span class="hljs-comment">// Quick check 1) is the super_class class-loader the boot class loader? This always has</span><br>  <span class="hljs-comment">// precedence.</span><br>  <span class="hljs-keyword">if</span> (super_class-&gt;<span class="hljs-built_in">GetClassLoader</span>() != <span class="hljs-literal">nullptr</span> &amp;&amp;<br>      <span class="hljs-comment">// Quick check 2) different dex cache? Breaks can only occur for different dex files,</span><br>      <span class="hljs-comment">// which is implied by different dex cache.</span><br>      klass-&gt;<span class="hljs-built_in">GetDexCache</span>() != super_class-&gt;<span class="hljs-built_in">GetDexCache</span>()) &#123;<br>    <span class="hljs-comment">// Now comes the expensive part: things can be broken if (a) the klass&#x27; dex file has a</span><br>    <span class="hljs-comment">// definition for the super-class, and (b) the files are in separate oat files. The oat files</span><br>    <span class="hljs-comment">// are referenced from the dex file, so do (b) first. Only relevant if we have oat files.</span><br>    <span class="hljs-type">const</span> OatDexFile* class_oat_dex_file = dex_file.<span class="hljs-built_in">GetOatDexFile</span>();<br>    <span class="hljs-type">const</span> OatFile* class_oat_file = <span class="hljs-literal">nullptr</span>;<br>    <span class="hljs-keyword">if</span> (class_oat_dex_file != <span class="hljs-literal">nullptr</span>) &#123;<br>      class_oat_file = class_oat_dex_file-&gt;<span class="hljs-built_in">GetOatFile</span>();<br>    &#125;<br>    <span class="hljs-comment">// class_oat_file不能为空</span><br>    <span class="hljs-keyword">if</span> (class_oat_file != <span class="hljs-literal">nullptr</span>) &#123;<br>      <span class="hljs-type">const</span> OatDexFile* loaded_super_oat_dex_file = super_class-&gt;<span class="hljs-built_in">GetDexFile</span>().<span class="hljs-built_in">GetOatDexFile</span>();<br>      <span class="hljs-type">const</span> OatFile* loaded_super_oat_file = <span class="hljs-literal">nullptr</span>;<br>      <span class="hljs-keyword">if</span> (loaded_super_oat_dex_file != <span class="hljs-literal">nullptr</span>) &#123;<br>        loaded_super_oat_file = loaded_super_oat_dex_file-&gt;<span class="hljs-built_in">GetOatFile</span>();<br>      &#125;<br><br>      <span class="hljs-keyword">if</span> (loaded_super_oat_file != <span class="hljs-literal">nullptr</span> &amp;&amp; class_oat_file != loaded_super_oat_file) &#123;<br>        <span class="hljs-comment">// Now check (a).</span><br>        <span class="hljs-type">const</span> DexFile::ClassDef* super_class_def = dex_file.<span class="hljs-built_in">FindClassDef</span>(class_def.superclass_idx_);<br>        <span class="hljs-keyword">if</span> (super_class_def != <span class="hljs-literal">nullptr</span>) &#123;<br>          <span class="hljs-comment">// Uh-oh, we found something. Do our check.</span><br>          std::string error_msg;<br>          <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">SimpleStructuralCheck</span>(dex_file, *super_class_def,<br>                                     super_class-&gt;<span class="hljs-built_in">GetDexFile</span>(), *super_class-&gt;<span class="hljs-built_in">GetClassDef</span>(),<br>                                     &amp;error_msg)) &#123;<br>            <span class="hljs-comment">// Print a warning to the log. This exception might be caught, e.g., as common in test</span><br>            <span class="hljs-comment">// drivers. When the class is later tried to be used, we re-throw a new instance, as we</span><br>            <span class="hljs-comment">// only save the type of the exception.</span><br>            <span class="hljs-built_in">LOG</span>(WARNING) &lt;&lt; <span class="hljs-string">&quot;Incompatible structural change detected: &quot;</span> &lt;&lt;<br>                <span class="hljs-built_in">StringPrintf</span>(<br>                    <span class="hljs-string">&quot;Structural change of %s is hazardous (%s at compile time, %s at runtime): %s&quot;</span>,<br>                    <span class="hljs-built_in">PrettyType</span>(super_class_def-&gt;class_idx_, dex_file).<span class="hljs-built_in">c_str</span>(),<br>                    class_oat_file-&gt;<span class="hljs-built_in">GetLocation</span>().<span class="hljs-built_in">c_str</span>(),<br>                    loaded_super_oat_file-&gt;<span class="hljs-built_in">GetLocation</span>().<span class="hljs-built_in">c_str</span>(),<br>                    error_msg.<span class="hljs-built_in">c_str</span>());<br>            <span class="hljs-built_in">ThrowIncompatibleClassChangeError</span>(klass.<span class="hljs-built_in">Get</span>(),<br>                <span class="hljs-string">&quot;Structural change of %s is hazardous (%s at compile time, %s at runtime): %s&quot;</span>,<br>                <span class="hljs-built_in">PrettyType</span>(super_class_def-&gt;class_idx_, dex_file).<span class="hljs-built_in">c_str</span>(),<br>                class_oat_file-&gt;<span class="hljs-built_in">GetLocation</span>().<span class="hljs-built_in">c_str</span>(),<br>                loaded_super_oat_file-&gt;<span class="hljs-built_in">GetLocation</span>().<span class="hljs-built_in">c_str</span>(),<br>                error_msg.<span class="hljs-built_in">c_str</span>());<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>          &#125;<br>        &#125;<br>      &#125;<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>就拿我司应用报的错误来说，A应用在编译时集成了一个新版本的<code>Lretrofit2/Converter$Factory</code>，插桩应用B集成的是一个旧版本的<code>Lretrofit2/Converter$Factory</code>，执行插桩时，A和B是运行在同一个进程的，又因为B应用的classloader路径排在A的前面。所以，当A应用初始化<code>GsonConverterFactory</code> （B不包含这个类）时，根据类双亲委派原则，优先加载的是应用B的<code>Lretrofit2/Converter$Factory</code>，符合<code>CheckSuperClassChange</code>规则：<code>GsonConverterFactory</code> 类的dex路径和父类<code>Lretrofit2/Converter$Factory</code>dex路径不一致，进入了<code>SimpleStructuralCheck</code>检查，这时候就会拿A和B应用里面的<code>Lretrofit2/Converter$Factory</code>类进行检查，结果发现方法数不一致，导致了异常。</p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><p>上面源码分析提到在安卓5.1到安卓8.0都有这个检查，但根据监控平台的数据显示在安卓8.0基本不会发生，为什么呢？</p>
+<p>我们再来看一下<code>CheckSuperClassChange</code>这个方法，除了要求类和父类来自不同的dex文件，还要求class_oat_file不能为空，也就是对应的odex文件不能为空，否则也不会执行<code>SimpleStructuralCheck</code>。那么什么情况class_oat_file为空呢？那么我们就需要了解oat文件的打开过程了。</p>
+<h3 id="oat文件加载流程"><a href="#oat文件加载流程" class="headerlink" title="oat文件加载流程"></a>oat文件加载流程</h3><p>在这里我不会详细分析oat文件的加载流程，如需深入了解可以参考附录。我更关心的是class_oat_file在什么情况为空。</p>
+<p>oat文件加载流程关键入口是：<code>ClassLinker::OpenDexFilesFromOat</code></p>
+<p>首先来看一下安卓6的：</p>
+<p><a target="_blank" rel="noopener" href="http://aospxref.com/android-6.0.1_r9/xref/art/runtime/class_linker.cc">class_linker.cc - OpenGrok cross reference for &#x2F;art&#x2F;runtime&#x2F;class_linker.cc</a></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><code class="hljs c++"><br>std::vector&lt;std::unique_ptr&lt;<span class="hljs-type">const</span> DexFile&gt;&gt; ClassLinker::<span class="hljs-built_in">OpenDexFilesFromOat</span>(<br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span>* dex_location, <span class="hljs-type">const</span> <span class="hljs-type">char</span>* oat_location,<br>    std::vector&lt;std::string&gt;* error_msgs) &#123;<br>  <span class="hljs-built_in">CHECK</span>(error_msgs != <span class="hljs-literal">nullptr</span>);<br>  .....<br>  .....<br>  <span class="hljs-comment">// Check if we already have an up-to-date oat file open.</span><br>  <span class="hljs-comment">//检查内存是否存在对应的oat文件</span><br>  <span class="hljs-type">const</span> OatFile* source_oat_file = <span class="hljs-literal">nullptr</span>;<br>  &#123;<br>    <span class="hljs-function">ReaderMutexLock <span class="hljs-title">mu</span><span class="hljs-params">(Thread::Current(), dex_lock_)</span></span>;<br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> OatFile* oat_file : oat_files_) &#123;<br>      <span class="hljs-built_in">CHECK</span>(oat_file != <span class="hljs-literal">nullptr</span>);<br>      <span class="hljs-keyword">if</span> (oat_file_assistant.<span class="hljs-built_in">GivenOatFileIsUpToDate</span>(*oat_file)) &#123;<br>        source_oat_file = oat_file;<br>        <span class="hljs-keyword">break</span>;<br>      &#125;<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">// If we didn&#x27;t have an up-to-date oat file open, try to load one from disk.</span><br>  <span class="hljs-comment">//如果内存没有则从磁盘加载</span><br>  <span class="hljs-keyword">if</span> (source_oat_file == <span class="hljs-literal">nullptr</span>) &#123;<br>    <span class="hljs-comment">// Update the oat file on disk if we can. This may fail, but that&#x27;s okay.</span><br>    <span class="hljs-comment">// Best effort is all that matters here.</span><br>    <span class="hljs-comment">// 关键地方：检查磁盘的oat文件是否需要更新</span><br>    <span class="hljs-keyword">if</span> (!oat_file_assistant.<span class="hljs-built_in">MakeUpToDate</span>(&amp;error_msg)) &#123;<br>      <span class="hljs-built_in">LOG</span>(WARNING) &lt;&lt; error_msg;<br>    &#125;<br><br>    <span class="hljs-comment">// Get the oat file on disk.</span><br>    <span class="hljs-comment">// 从磁盘加载oat文件</span><br>    std::unique_ptr&lt;OatFile&gt; oat_file = oat_file_assistant.<span class="hljs-built_in">GetBestOatFile</span>();<br>    <span class="hljs-keyword">if</span> (oat_file.<span class="hljs-built_in">get</span>() != <span class="hljs-literal">nullptr</span>) &#123;<br>      <span class="hljs-comment">// Take the file only if it has no collisions, or we must take it because of preopting.</span><br>      <span class="hljs-comment">// 关键地方：检查待加载的oat文件是否和已经加载的存在类冲突</span><br>      <span class="hljs-comment">// 如果存在类冲突，考虑直接加载apk里面的dex文件</span><br>      <span class="hljs-type">bool</span> accept_oat_file = !<span class="hljs-built_in">HasCollisions</span>(oat_file.<span class="hljs-built_in">get</span>(), &amp;error_msg);<br>      <span class="hljs-keyword">if</span> (!accept_oat_file) &#123;<br>        <span class="hljs-comment">// Failed the collision check. Print warning.</span><br>        <span class="hljs-keyword">if</span> (Runtime::<span class="hljs-built_in">Current</span>()-&gt;<span class="hljs-built_in">IsDexFileFallbackEnabled</span>()) &#123;<br>          <span class="hljs-built_in">LOG</span>(WARNING) &lt;&lt; <span class="hljs-string">&quot;Found duplicate classes, falling back to interpreter mode for &quot;</span><br>                       &lt;&lt; dex_location;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>          <span class="hljs-built_in">LOG</span>(WARNING) &lt;&lt; <span class="hljs-string">&quot;Found duplicate classes, dex-file-fallback disabled, will be failing to &quot;</span><br>                          <span class="hljs-string">&quot; load classes for &quot;</span> &lt;&lt; dex_location;<br>        &#125;<br>        <span class="hljs-built_in">LOG</span>(WARNING) &lt;&lt; error_msg;<br><br>        <span class="hljs-comment">// However, if the app was part of /system and preopted, there is no original dex file</span><br>        <span class="hljs-comment">// available. In that case grudgingly accept the oat file.</span><br>        <span class="hljs-comment">// 系统应用大部分都会在编译服务器做dex优化，这时候apk里面就不会包含dex文件了。这种情况的话还是加载oat文件</span><br>        <span class="hljs-keyword">if</span> (!DexFile::<span class="hljs-built_in">MaybeDex</span>(dex_location)) &#123;<br>          accept_oat_file = <span class="hljs-literal">true</span>;<br>          <span class="hljs-built_in">LOG</span>(WARNING) &lt;&lt; <span class="hljs-string">&quot;Dex location &quot;</span> &lt;&lt; dex_location &lt;&lt; <span class="hljs-string">&quot; does not seem to include dex file. &quot;</span><br>                       &lt;&lt; <span class="hljs-string">&quot;Allow oat file use. This is potentially dangerous.&quot;</span>;<br>        &#125;<br>      &#125;<br><br>      <span class="hljs-keyword">if</span> (accept_oat_file) &#123;<br>        <span class="hljs-comment">// 获取oat文件</span><br>        source_oat_file = oat_file.<span class="hljs-built_in">release</span>();<br>        <span class="hljs-built_in">RegisterOatFile</span>(source_oat_file);<br>      &#125;<br>    &#125;<br>  &#125;<br><br>  std::vector&lt;std::unique_ptr&lt;<span class="hljs-type">const</span> DexFile&gt;&gt; dex_files;<br><br>  <span class="hljs-comment">// Load the dex files from the oat file.</span><br>  <span class="hljs-comment">// 加载oat文件里面的dex文件</span><br>  <span class="hljs-keyword">if</span> (source_oat_file != <span class="hljs-literal">nullptr</span>) &#123;<br>    dex_files = oat_file_assistant.<span class="hljs-built_in">LoadDexFiles</span>(*source_oat_file, dex_location);<br>    <span class="hljs-keyword">if</span> (dex_files.<span class="hljs-built_in">empty</span>()) &#123;<br>      error_msgs-&gt;<span class="hljs-built_in">push_back</span>(<span class="hljs-string">&quot;Failed to open dex files from &quot;</span><br>          + source_oat_file-&gt;<span class="hljs-built_in">GetLocation</span>());<br>    &#125;<br>  &#125;<br><br>  <span class="hljs-comment">// Fall back to running out of the original dex file if we couldn&#x27;t load any</span><br>  <span class="hljs-comment">// dex_files from the oat file.</span><br>  <span class="hljs-comment">// 如果加载oat文件里面的dex文件失败，则直接尝试加载apk里面的dex文件。</span><br>  <span class="hljs-keyword">if</span> (dex_files.<span class="hljs-built_in">empty</span>()) &#123;<br>    <span class="hljs-keyword">if</span> (oat_file_assistant.<span class="hljs-built_in">HasOriginalDexFiles</span>()) &#123;<br>      <span class="hljs-keyword">if</span> (Runtime::<span class="hljs-built_in">Current</span>()-&gt;<span class="hljs-built_in">IsDexFileFallbackEnabled</span>()) &#123;<br>        <span class="hljs-keyword">if</span> (!DexFile::<span class="hljs-built_in">Open</span>(dex_location, dex_location, &amp;error_msg, &amp;dex_files)) &#123;<br>          <span class="hljs-built_in">LOG</span>(WARNING) &lt;&lt; error_msg;<br>          error_msgs-&gt;<span class="hljs-built_in">push_back</span>(<span class="hljs-string">&quot;Failed to open dex files from &quot;</span> + std::<span class="hljs-built_in">string</span>(dex_location));<br>        &#125;<br>      &#125; <span class="hljs-keyword">else</span> &#123;<br>        error_msgs-&gt;<span class="hljs-built_in">push_back</span>(<span class="hljs-string">&quot;Fallback mode disabled, skipping dex files.&quot;</span>);<br>      &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      error_msgs-&gt;<span class="hljs-built_in">push_back</span>(<span class="hljs-string">&quot;No original dex files found for dex location &quot;</span><br>          + std::<span class="hljs-built_in">string</span>(dex_location));<br>    &#125;<br>  &#125;<br>  <span class="hljs-keyword">return</span> dex_files;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从上面源码分析可以发现，如果dex文件来自于apk而不是oat文件的话class_oat_file就会为空，不会执行<code>SimpleStructuralCheck</code>。</p>
+<p>安卓8：</p>
+<p>入口也是<code>ClassLinker::OpenDexFilesFromOat</code>，只不过迁移到了oat_file_manager.cc里面：</p>
+<p><a target="_blank" rel="noopener" href="http://aospxref.com/android-8.0.0_r36/xref/art/runtime/oat_file_manager.cc">oat_file_manager.cc - OpenGrok cross reference for &#x2F;art&#x2F;runtime&#x2F;oat_file_manager.cc</a></p>
+<p>过程也是大同小异的，研究发现<code>HasCollisions</code>方法有不一样的地方。</p>
+<p>安卓6开始引入<code>HasCollisions</code>这个方法</p>
+<p>安卓6：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// For b/21333911.</span><br><span class="hljs-type">static</span> <span class="hljs-keyword">constexpr</span> <span class="hljs-type">bool</span> kDuplicateClassesCheck = <span class="hljs-literal">false</span>;<br><br><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">ClassLinker::HasCollisions</span><span class="hljs-params">(<span class="hljs-type">const</span> OatFile* oat_file, std::string* error_msg)</span> </span>&#123;<br>  <span class="hljs-keyword">if</span> (!kDuplicateClassesCheck) &#123; <span class="hljs-comment">//这个设置成了false</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>  &#125;<br>    ........<br>    ........<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>搜索一下kDuplicateClassesCheck看是干什么的，<a target="_blank" rel="noopener" href="https://android.googlesource.com/platform/art/+/1bc977c/runtime/oat_file_manager.cc">runtime&#x2F;oat_file_manager.cc - platform&#x2F;art - Git at Google</a></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// For b/21333911.</span><br><span class="hljs-comment">// Only enabled for debug builds to prevent bit rot. There are too many performance regressions for</span><br><span class="hljs-comment">// normal builds.</span><br><span class="hljs-type">static</span> <span class="hljs-keyword">constexpr</span> <span class="hljs-type">bool</span> kDuplicateClassesCheck = kIsDebugBuild;<br></code></pre></td></tr></table></figure>
+
+<p>所以在安卓6是不会触发这个检查的，查看源码后发现安卓7.0才开始默认启用。</p>
+<p>因此，在安卓7.0开始，如果插桩应用或者插件应用包含了和宿主应用一样的类，一般来说，也不会触发<code>SimpleStructuralCheck</code>。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>我在一台64位的安卓6.0机器进行插桩和加载插件测试：</p>
+<h3 id="插桩测试"><a href="#插桩测试" class="headerlink" title="插桩测试"></a>插桩测试</h3><p>安装应用时会做dex优化，生成oat文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell">06-24 16:56:07.393 21329 21384 I PackageManager.DexOptimizer: Running dexopt (dex2oat) on: /data/app/vmdl566966682.tmp/base.apk pkg=com.example.myapplication.myapplication isa=arm vmSafeMode=false debuggable=false oatDir = /data/app/vmdl566966682.tmp/oat<br>06-24 16:56:07.422  5953  5953 I dex2oat : Starting dex2oat.<br>06-24 16:56:07.874  5953  5958 I dex2oat : Skipping compilation of long com.alibaba.fastjson.parser.JSONLexer.longValue(): it contains a non natural loop<br>06-24 16:56:07.933  5953  5958 I dex2oat : Skipping compilation of double[] com.alibaba.fastjson.parser.JSONLexer.scanFieldDoubleArray(long): it contains a non natural loop<br>06-24 16:56:07.963  5953  5958 I dex2oat : Skipping compilation of float[] com.alibaba.fastjson.parser.JSONLexer.scanFieldFloatArray(long): it contains a non natural loop<br>06-24 16:56:09.083  5953  5953 I dex2oat : dex2oat took 1.659s (threads: 4) arena alloc=10MB java alloc=971KB native alloc=15MB free=600KB<br></code></pre></td></tr></table></figure>
+
+<p>情况1：64位应用对32位应用做插桩</p>
+<p>加载oat文件，执行<code>MakeUpToDate</code>检查时，发现安装时的oat文件不适用于32位环境，需要重新生成oat文件，结果因为权限问题生成失败。结果就是class_oat_file为空，不会执行<code>SimpleStructuralCheck</code>。所以，一般不会出现<code>IncompatibleClassChangeError</code>。</p>
+<blockquote>
+<p>加载类时， fork出来的dex2oat是应用权限，不能对&#x2F;data&#x2F;dalvik-cache&#x2F;（root权限）进行读写。</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">06-24 16:36:29.851 32154 32154 W art     : wesley GivenOatFileIsUpToDate is false, dex_location:/data/app/com.example.myapplication.myapplication-1/base.apk<br>06-24 16:36:29.851 32154 32154 W art     : wesley source_oat_file is null<br>06-24 16:36:29.851 32154 32154 W art     : wesley :GetDexOptNeeded HasOriginalDexFiles: 1<br>06-24 16:36:29.889 32174 32174 E dex2oat : Failed to create oat file: /data/dalvik-cache/arm/data@app@com.example.myapplication.myapplication-1@base.apk@classes.dex: Permission denied<br>06-24 16:36:29.889 32174 32174 I dex2oat : dex2oat took 307.667us (threads: 4)<br>06-24 16:36:29.893 32154 32154 W art     : wesley MakeUpToDate fail: Failed execv(/system/bin/dex2oat --runtime-arg -classpath --runtime-arg  --instruction-set=arm --instruction-set-features=smp,div,-atomic_ldrd_strd --runtime-arg -Xrelocate --boot-image=/system/framework/boot.art --runtime-arg -Xms64m --runtime-arg -Xmx512m --instruction-set-variant=cortex-a7 --instruction-set-features=default --dex-file=/data/app/com.example.myapplication.myapplication-1/base.apk --oat-file=/data/dalvik-cache/arm/data@app@com.example.myapplication.myapplication-1@base.apk@classes.dex) because non-0 exit status<br>06-24 16:36:29.893 32154 32154 W art     : wesley oat_file is null:<br>06-24 16:36:29.893 32154 32154 W art     : wesley :HasOriginalDexFiles true<br>06-24 16:36:29.985 32154 32154 W art     : wesley :load OriginalDexFiles success<br>06-24 16:36:29.986 32154 32154 W art     : wesley GivenOatFileIsUpToDate is false, dex_location:/data/app/com.tianci.de-2/base.apk<br>06-24 16:36:29.986 32154 32154 W art     : wesley source_oat_file is null<br>06-24 16:36:29.989 32154 32154 W art     : wesley :GetDexOptNeeded: kNoDexOptNeeded<br>06-24 16:36:29.989 32154 32154 W art     : wesley MakeUpToDate success<br>06-24 16:36:29.989 32154 32154 W art     : wesley accept_oat_file:1<br></code></pre></td></tr></table></figure>
+
+<p>情况2：32位应用对32位应用做插桩</p>
+<p>通过<code>adb install --abi armeabi-v7a &lt;path to apk&gt;</code>强制指定应用运行在32位，这种情况class_oat_file不会为空了，就会触发：<code>Incompatible structural change detected: Structural change......</code> 。</p>
+<h3 id="插件加载"><a href="#插件加载" class="headerlink" title="插件加载"></a>插件加载</h3><p>情况1：通过<code>PathClassLoader</code>去<code>loadClass</code>（通过adb install安装的插件），会触发：<code>Incompatible structural change detected: Structural change......</code>（两个应用都是64位安装）</p>
+<p>情况2：没有安装的插件，应用运行正常，也是因为权限问题做<code>dex2oat</code>失败，直接从apk文件加载了dex。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs shell">06-24 16:11:56.975 24635 24635 W art     : wesley GivenOatFileIsUpToDate is false, dex_location:/data/app/com.example.myapplication.myapplication-2/base.apk<br>06-24 16:11:56.975 24635 24635 W art     : wesley source_oat_file is null<br>06-24 16:11:56.979 24635 24635 W art     : wesley :GetDexOptNeeded: kNoDexOptNeeded<br>06-24 16:11:56.979 24635 24635 W art     : wesley MakeUpToDate success<br>06-24 16:11:56.979 24635 24635 W art     : wesley accept_oat_file:1<br>06-24 16:11:57.050 24635 24635 W art     : wesley GivenOatFileIsUpToDate is false, dex_location:/data/app/plugin.platform-1/base.apk<br>06-24 16:11:57.050 24635 24635 W art     : wesley GivenOatFileIsUpToDate is false, dex_location:/data/app/plugin.platform-1/base.apk<br>06-24 16:11:57.050 24635 24635 W art     : wesley source_oat_file is null<br>06-24 16:11:57.053 24635 24635 W art     : wesley :GetDexOptNeeded: kNoDexOptNeeded<br>06-24 16:11:57.053 24635 24635 W art     : wesley MakeUpToDate success<br>06-24 16:11:57.053 24635 24635 W art     : wesley accept_oat_file:1<br><br>06-24 16:11:57.063 24635 24635 W art     : wesley GivenOatFileIsUpToDate is false, dex_location:/data/user/0/com.example.myapplication.myapplication/files/Plugin.apk<br>06-24 16:11:57.063 24635 24635 W art     : wesley GivenOatFileIsUpToDate is false, dex_location:/data/user/0/com.example.myapplication.myapplication/files/Plugin.apk<br>06-24 16:11:57.063 24635 24635 W art     : wesley GivenOatFileIsUpToDate is false, dex_location:/data/user/0/com.example.myapplication.myapplication/files/Plugin.apk<br>06-24 16:11:57.063 24635 24635 W art     : wesley source_oat_file is null<br>06-24 16:11:57.063 24635 24635 W art     : wesley :GetDexOptNeeded HasOriginalDexFiles: 1<br>06-24 16:11:57.107 24661 24661 E dex2oat : Failed to create oat file: /data/dalvik-cache/arm64/data@user@0@com.example.myapplication.myapplication@files@Plugin.apk@classes.dex: Permission denied<br>06-24 16:11:57.107 24661 24661 I dex2oat : dex2oat took 295.167us (threads: 4)<br>06-24 16:11:57.108 24635 24635 W art     : wesley MakeUpToDate fail: Failed execv(/system/bin/dex2oat --runtime-arg -classpath --runtime-arg  --instruction-set=arm64 --instruction-set-features=smp,a53 --runtime-arg -Xrelocate --boot-image=/system/framework/boot.art --runtime-arg -Xms64m --runtime-arg -Xmx512m --instruction-set-variant=generic --instruction-set-features=default --dex-file=/data/user/0/com.example.myapplication.myapplication/files/Plugin.apk --oat-file=/data/dalvik-cache/arm64/data@user@0@com.example.myapplication.myapplication@files@Plugin.apk@classes.dex) because non-0 exit status<br>06-24 16:11:57.108 24635 24635 W art     : wesley oat_file is null:<br>06-24 16:11:57.108 24635 24635 W art     : wesley :HasOriginalDexFiles true<br>06-24 16:11:57.121 24635 24635 W art     : wesley :load OriginalDexFiles success<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>看完上面的内容后，应该很容易知道怎么解决了。要么就是想办法通过<code>SimpleStructuralCheck</code>，要么就是想办法不进人<code>SimpleStructuralCheck</code>。</p>
+<p>想办法通过<code>SimpleStructuralCheck</code>：插桩或者插件的类和宿主保持一致。</p>
+<p>想办法不进人<code>SimpleStructuralCheck</code>：插件compileOnly公共接口；插件不安装，以文件的方式进行加载；插件安装，类加载入口中转到插件文件等等。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6894165613028048904">插件化之 Incompatible structural change detected 问题分析 - 掘金</a></p>
+<p>[<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-257893.htm">原创]菜鸟学8.1版本dex加载流程笔记–第一篇：oat_file_manager与oat_file_assistant-Android安全-看雪-安全社区|安全招聘|kanxue.com</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jls/se7/html/jls-13.html">Chapter 13. Binary Compatibility</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AndroidBugFix/" class="category-chain-item">AndroidBugFix</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Android/" class="print-no-link">#Android</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/art/" class="print-no-link">#art</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Android java.lang.IncompatibleClassChangeError</div>
+      <div>https://iwesley.top/article/a299c970/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年6月30日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/article/c0d037a/" title="哔哩哔哩直播链接报403解决办法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">哔哩哔哩直播链接报403解决办法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/860ebe82/" title="ubuntu24.04启动黑屏">
+                        <span class="hidden-mobile">ubuntu24.04启动黑屏</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline-server-eight.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

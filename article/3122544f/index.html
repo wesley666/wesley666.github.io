@@ -1,0 +1,823 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="最近在公司协助同事解决了几个类找不到的问题，都比较典型，特此记录一下。 原因1：新旧版本SDK API兼容性io.reactivex.exceptions.UndeliverableException: java.lang.NoClassDefFoundError: Failed resolution of: Lretrofit2&#x2F;HttpException;  at io.reactivex.p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="探究安卓应用类找不到的原因(NoClassDefFoundError和ClassNotFoundException)">
+<meta property="og:url" content="https://iwesley.top/article/3122544f/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="最近在公司协助同事解决了几个类找不到的问题，都比较典型，特此记录一下。 原因1：新旧版本SDK API兼容性io.reactivex.exceptions.UndeliverableException: java.lang.NoClassDefFoundError: Failed resolution of: Lretrofit2&#x2F;HttpException;  at io.reactivex.p">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-05-26T09:12:55.000Z">
+<meta property="article:modified_time" content="2024-05-26T09:12:55.000Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>探究安卓应用类找不到的原因(NoClassDefFoundError和ClassNotFoundException) - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="探究安卓应用类找不到的原因(NoClassDefFoundError和ClassNotFoundException)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-26 17:12" pubdate>
+          2024年5月26日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          13 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">探究安卓应用类找不到的原因(NoClassDefFoundError和ClassNotFoundException)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近在公司协助同事解决了几个类找不到的问题，都比较典型，特此记录一下。</p>
+<h1 id="原因1：新旧版本SDK-API兼容性"><a href="#原因1：新旧版本SDK-API兼容性" class="headerlink" title="原因1：新旧版本SDK API兼容性"></a>原因1：新旧版本SDK API兼容性</h1><p><code>io.reactivex.exceptions.UndeliverableException: java.lang.NoClassDefFoundError: Failed resolution of: Lretrofit2/HttpException;  at io.reactivex.plugins.RxJavaPlugins.onError(RxJavaPlugins.java:366)  at io.reactivex.internal.schedulers.ScheduledRunnable.run(ScheduledRunnable.java:69)  at io.reactivex.internal.schedulers.ScheduledRunnable.call(ScheduledRunnable.java:57)  at java.util.concurrent.FutureTask.run(FutureTask.java:266)  at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:301)  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)  at java.lang.Thread.run(Thread.java:923) Caused by: java.lang.NoClassDefFoundError: Failed resolution of: Lretrofit2/HttpException;  at retrofit2.adapter.rxjava2.BodyObservable$BodyObserver.onNext(BodyObservable.java:54)  at retrofit2.adapter.rxjava2.BodyObservable$BodyObserver.onNext(BodyObservable.java:</code></p>
+<p>一般碰到这种类找不到的问题，第一时间先看看apk本身，用jadx-gui反编译出来发现没有HttpException这个类，然后用android studio查看，有这个类，但show bytecode是灰色的，证明编译出来的apk是不包含这个类的。</p>
+<p>然后去排查源码，我们确实有依赖retrofit，但为什么编译出来没有呢。看了一下dependency依赖树，确实只有一个版本的retrofit。。。那是不是编译的时候去掉了呢？然后全局搜索了一下retrofit，发现了下面的代码：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs groovy">android.applicationVariants.all &#123; variant -&gt;<br>variant.getRuntimeConfiguration().exclude <span class="hljs-attr">group:</span> <span class="hljs-string">&#x27;com.squareup.retrofit2&#x27;</span>, <span class="hljs-attr">module:</span> <span class="hljs-string">&#x27;retrofit&#x27;</span><br>variant.getRuntimeConfiguration().exclude <span class="hljs-attr">group:</span> <span class="hljs-attr">module:</span> <span class="hljs-string">&#x27;retrofit&#x27;</span><br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>为什么要去掉呢？一般都是为了解决多个版本依赖的问题，但依赖树没有看到多个版本依赖啊，是不是某个sdk源码依赖了retrofit？</p>
+<p>果然，注释掉上面代码后，报类冲突了，发现是我司某个sdk的问题，他自己源码集成了retrofit，包名一样，但因为是比较老的版本，没有HttpException这个类，而应用又是基于新版的retrofit开发的，但编译为了解决冲突去掉了，结果就出问题了。</p>
+<p>那要怎么解决呢？改成exclude旧版的retrofit？行不通，因为这个sdk是源码依赖了retrofit，不是通过implement这种方法。</p>
+<p>最后，我找到了这个sdk的源码，编译了一个没有retrofit的版本。因为依赖关系是应用依赖了A模块，A模块依赖了这个sdk。引进A模块时，exclude掉这个sdk，然后在应用侧直接依赖没有retrofit的版本。</p>
+<h2 id="启发"><a href="#启发" class="headerlink" title="启发"></a>启发</h2><p>解决编译类冲突时，一定要留一个心眼，注意新旧版本api变更的问题。如果代码覆盖率测试没有跑全，就把问题带到线上了。比如，上面那个问题，只有在报错的时候才有可能触发，正常测试大概率是测不出来的，比较隐蔽。</p>
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1><h1 id="原因2：系统的某个jar引用了不同版本的SDK"><a href="#原因2：系统的某个jar引用了不同版本的SDK" class="headerlink" title="原因2：系统的某个jar引用了不同版本的SDK"></a>原因2：系统的某个jar引用了不同版本的SDK</h1><p><code>java.lang.NoSuchMethodError: No static method parseString(Ljava/lang/String;)Lcom/google/gson/JsonElement; in class Lcom/google/gson/JsonParser; or its super classes (declaration of &#39;com.google.gson.JsonParser&#39; appears in /system/framework/xxxxxx.jar)</code></p>
+<p>这也是一个编译通过，运行时报错的例子。重点是最后一句：&#x2F;system&#x2F;framework&#x2F;xxxxxx.jar，这是一个自定义的系统库，放到了BootClasspath里面。反编译后发现里面依赖了一个旧版本的gson，没有parseString这个方法，由于双亲委派机制，应用优先使用了这个旧版本的gson，结果就出问题了。</p>
+<h2 id="启发-1"><a href="#启发-1" class="headerlink" title="启发"></a>启发</h2><p>系统库开发的时候要慎重使用第三方库；如果系统库只是服务于一些特定的应用，不要加入到BootClasspath，应该让应用使用：use-library:动态连接库的方法。</p>
+<h1 id="原因3：升级persist应用"><a href="#原因3：升级persist应用" class="headerlink" title="原因3：升级persist应用"></a>原因3：升级persist应用</h1><p><code>AndroidRuntime: java.lang.RuntimeException: Unable to get provider com.xxxx.sdk.xxxProvider: java.lang.ClassNotFoundException: Didn&#39;t find class &quot;com.xxxx.sdk.xxxProvider&quot; on path: DexPathList[[zip file &quot;/system/vendor/app/xx.apk&quot;],nativeLibraryDirectories=[/vendor/lib, /system/lib]]</code></p>
+<p>一般来说，安卓系统是禁止通过安装的方法来升级persist应用的，但因为历史原因，我司修改了这个机制，导致可以升级这类应用，结果就引发了这个问题：DexPathList没有更新成新安装的路径：data下面，还是停留在system分区。</p>
+<p>一般升级普通应用时，系统会清除该应用的进程，同时清理之前在ActivityManagerService记录的该应用的四大组件，在下次应用重新启动时，系统会重新创建进程并加载各种组件运行。</p>
+<p>但是，当升级的应用有persistent属性时，系统不会清除该应用。原因如下：</p>
+<p><a target="_blank" rel="noopener" href="http://aospxref.com/android-11.0.0_r21/s?refs=killPackageProcessesLocked&project=frameworks">killPackageProcessesLocked (reference) in projects: frameworks - OpenGrok search results</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">killPackageProcessesLocked</span><span class="hljs-params">(String packageName, <span class="hljs-type">int</span> appId,</span><br><span class="hljs-params">           <span class="hljs-type">int</span> userId, <span class="hljs-type">int</span> minOomAdj, <span class="hljs-type">boolean</span> callerWillRestart, <span class="hljs-type">boolean</span> allowRestart,</span><br><span class="hljs-params">           <span class="hljs-type">boolean</span> doit, <span class="hljs-type">boolean</span> evenPersistent, <span class="hljs-type">boolean</span> setRemoved, <span class="hljs-type">int</span> reasonCode,</span><br><span class="hljs-params">           <span class="hljs-type">int</span> subReason, String reason)</span> &#123;<br>       ArrayList&lt;ProcessRecord&gt; procs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>       <span class="hljs-comment">// Remove all processes this package may have touched: all with the</span><br>       <span class="hljs-comment">// same UID (except for the system or root user), and all whose name</span><br>       <span class="hljs-comment">// matches the package name.</span><br>       <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">NP</span> <span class="hljs-operator">=</span> mProcessNames.getMap().size();<br>       <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">ip</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; ip &lt; NP; ip++) &#123;<br>           SparseArray&lt;ProcessRecord&gt; apps = mProcessNames.getMap().valueAt(ip);<br>           <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">NA</span> <span class="hljs-operator">=</span> apps.size();<br>           <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">ia</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; ia &lt; NA; ia++) &#123;<br>               <span class="hljs-type">ProcessRecord</span> <span class="hljs-variable">app</span> <span class="hljs-operator">=</span> apps.valueAt(ia);<br>               <span class="hljs-keyword">if</span> (app.isPersistent() &amp;&amp; !evenPersistent) &#123;<br>                   <span class="hljs-comment">// we don&#x27;t kill persistent processes</span><br>                   <span class="hljs-keyword">continue</span>;<br>               &#125;<br>               <span class="hljs-keyword">if</span> (app.removed) &#123;<br>                   <span class="hljs-keyword">if</span> (doit) &#123;<br>                       procs.add(app);<br>                   &#125;<br>                   <span class="hljs-keyword">continue</span>;<br>               &#125;<br>------------------------------------------<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>系统也没有更新应用的类加载路径。</p>
+<p>方案一：</p>
+<p>安装完新版本后重启系统。</p>
+<p>方案二：</p>
+<p>在应用内接收新版应用安装完成的广播，当APK发生更新或安装时， 匹配自己的包名，然后调用context的startInstrumentation 方法，该方法会强制系统清除应用进程并清理AMS对各种组件的状态记忆并重新启动该应用。</p>
+<p>或者，通过thread的全局异常捕获（类找不到，方法找不到），调用：</p>
+<p><code>boolean b = context.startInstrumentation(new ComponentName(getApplicationContext(), InstrumentationRoboot.class), null, null);</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">InstrumentationRoboot</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Instrumentation</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">(Bundle arguments)</span> &#123;<br>        <span class="hljs-built_in">super</span>.onCreate(arguments);<br>    &#125;<br>&#125;          <br></code></pre></td></tr></table></figure>
+
+<p>AndroidManifest.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">manifest</span> <span class="hljs-attr">xmlns:android</span>=<span class="hljs-string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span><br><span class="hljs-tag">    <span class="hljs-attr">package</span>=<span class="hljs-string">&quot;自己的包名&quot;</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">instrumentation</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;com.test.InstrumentationRoboot&quot;</span></span><br><span class="hljs-tag">        <span class="hljs-attr">android:targetPackage</span>=<span class="hljs-string">&quot;自己的包名&quot;</span>/&gt;</span><br><br><span class="hljs-tag">&lt;/<span class="hljs-name">manifest</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h1 id="其他场景"><a href="#其他场景" class="headerlink" title="其他场景"></a>其他场景</h1><p>插件化加载路径不当，宿主和插件的类加载问题；混淆导致反射失效；在安卓5.0以下没有启用MutilDex等等。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lindroid/article/details/90213146">Android应用具有persistent属性时升级清理AMS缓存数据_android:persistent&#x3D;“true” 自升级-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904179626934279">一个一年没解决的ClassNotFoundException｜类加载机制探索 - 掘金</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jamesjxin/article/details/46606307">怎么解决java.lang.NoClassDefFoundError错误-CSDN博客</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AndroidBugFix/" class="category-chain-item">AndroidBugFix</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Android/" class="print-no-link">#Android</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>探究安卓应用类找不到的原因(NoClassDefFoundError和ClassNotFoundException)</div>
+      <div>https://iwesley.top/article/3122544f/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年5月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/article/78c113a2/" title="java.lang.ExceptionInInitializerError原因及解决办法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">java.lang.ExceptionInInitializerError原因及解决办法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/ba67228f/" title="Java反射的优雅使用">
+                        <span class="hidden-mobile">Java反射的优雅使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline-server-eight.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

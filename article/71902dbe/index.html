@@ -1,0 +1,1125 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="安卓记事本系统设计和模块实现友情提示记事本是我学习安卓后编写的第一个软件，也是我的毕业设计。它存在着许多不完善的地方，如果你有想法可以进一步去完善它。 我当时看的是郭霖《第一行代码》第2版入门的，现在已经出到第3版了，编程语言由Java改成了Kotlin，如果你有时间，也可以把我的项目从Java改成Kotlin编写。目前这两本书都可以在微信读书上面找到。 代码链接 视频演示 用到的关键技术语音识别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓记事本系统设计和模块实现">
+<meta property="og:url" content="https://iwesley.top/article/71902dbe/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="安卓记事本系统设计和模块实现友情提示记事本是我学习安卓后编写的第一个软件，也是我的毕业设计。它存在着许多不完善的地方，如果你有想法可以进一步去完善它。 我当时看的是郭霖《第一行代码》第2版入门的，现在已经出到第3版了，编程语言由Java改成了Kotlin，如果你有时间，也可以把我的项目从Java改成Kotlin编写。目前这两本书都可以在微信读书上面找到。 代码链接 视频演示 用到的关键技术语音识别">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619193435.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619193815.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619193936.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194139.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194248.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194353.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194443.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194511.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194958.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195236.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195332.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195410.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195433.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195701.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195818.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195900.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195943.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200021.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200112.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200212.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200317.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200353.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200430.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200505.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200602.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200633.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200657.png">
+<meta property="article:published_time" content="2021-06-19T11:24:23.000Z">
+<meta property="article:modified_time" content="2021-06-19T17:44:23.000Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="安卓记事本">
+<meta property="article:tag" content="安卓便签">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619193435.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>安卓记事本系统设计和模块实现 - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":null,"path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="安卓记事本系统设计和模块实现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-06-19 19:24" pubdate>
+          2021年6月19日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          89 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">安卓记事本系统设计和模块实现</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于：2021年6月20日 凌晨
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="安卓记事本系统设计和模块实现"><a href="#安卓记事本系统设计和模块实现" class="headerlink" title="安卓记事本系统设计和模块实现"></a>安卓记事本系统设计和模块实现</h1><h2 id="友情提示"><a href="#友情提示" class="headerlink" title="友情提示"></a>友情提示</h2><p>记事本是我学习安卓后编写的第一个软件，也是我的毕业设计。它存在着许多不完善的地方，如果你有想法可以进一步去完善它。</p>
+<p>我当时看的是郭霖《第一行代码》第2版入门的，现在已经出到第3版了，编程语言由Java改成了Kotlin，如果你有时间，也可以把我的项目从Java改成Kotlin编写。目前这两本书都可以在微信读书上面找到。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/wesley666/note">代码链接</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1sz4y1D7a6/">视频演示</a></p>
+<h2 id="用到的关键技术"><a href="#用到的关键技术" class="headerlink" title="用到的关键技术"></a>用到的关键技术</h2><h3 id="语音识别技术和语音合成技术"><a href="#语音识别技术和语音合成技术" class="headerlink" title="语音识别技术和语音合成技术"></a>语音识别技术和语音合成技术</h3><p>多功能记事本APP采用讯飞的语音识别引擎，相当于给软件加上了“耳朵”，让记事本能“听懂”用户的讲话。讯飞公司作为语音识别行业的佼佼者，它的输入法已经可以做到一分钟输入400字了，这极大地提升了用户的输入效率。此外，记事本还会采用安卓官方TextToSpeech类来实现语音合成，它使用的合成引擎取决于手机品牌，比如小米手机默认使用的是小爱语音引擎，谷歌的原生系统一般使用Pico TTS，但不支持中文，坚果手机采用的是讯飞合成引擎。</p>
+<h3 id="图片压缩和加载技术"><a href="#图片压缩和加载技术" class="headerlink" title="图片压缩和加载技术"></a>图片压缩和加载技术</h3><p>现在手机的相机像素越来越高，伴随着的就是图片体积的增大，对存储和显示都有压力。所以，图片的压缩就变得非常重要。记事本软件采用的是鲁班压缩开源框架，作者号称其压缩算法达到的效果可以接近微信朋友圈的图片压缩算法。所有插入到笔记的图片都会先进行图片压缩再进行存储和显示，这极大的缓解了手机的存储空间和避免了图片显示的内存溢出问题。除此之外，图片加载作为图片显示的重要过程，会直接影响图片显示的性能，尤其手机这种硬件受限的设备。安卓有许多开源的图片加载库，其中Glide尤为出色，曾经被谷歌官方推荐过。它性能优异、快速高效，在图片解码速度和解码图片带来的资源压力两方面问题都有很好的解决方案，采用的缓存和自动资源池等技术很好地确保图片显示不会内存溢出，尽可能地让图片加载这个过程变的更加快速和平滑。在记事本的多个地方都要用到Glide加载引擎，比如插入图片时需要选择图片，笔记查看界面需要浏览图片等等。</p>
+<h3 id="云存储技术"><a href="#云存储技术" class="headerlink" title="云存储技术"></a>云存储技术</h3><p>随着移动互联网的发展，几乎所有的手机都提供了云服务，可以同步用户的图片、联系人等数据，其中涉及到的一项重要技术就是云存储技术，它将大量不同类型的存储设备通过软件集合起来协同工作，共同对外提供数据存储服务。本软件采用的服务商是坚果云，安卓客户端通过WebDav协议与其进行通讯，这个协议是基于HTTP的扩展，有利于用户对服务器端的文件进行读写操作。</p>
+<h3 id="Material-Design"><a href="#Material-Design" class="headerlink" title="Material Design"></a>Material Design</h3><p>安卓刚刚发展的那几年，UI设计并不美观，远远不如当时的iOS系统美观。而且，由于安卓是一个开源系统，各个手机厂商在UI设计的规范并不相同，所以很多开发者干脆就把iOS上的设计搬到安卓上面来。后来，谷歌意识到了这个问题并在2014年的开发者大会上发布了一套全新的UI设计语言：Material Design，它是由Google的设计工程师们基于传统优秀的设计原则，结合丰富的创意和科学技术所开发的一套全新的界面设计语言，包含了视觉、运动、互动效果等特性。这种结合卡片化设计风格的语言，给用户带来了良好、美观和一致性的体验，从而统一了谷歌在UI设计上面的表达。目前，Material Design的支持库非常完善了，多功能记事本APP也将采用这一设计语言。</p>
+<h3 id="富文本技术"><a href="#富文本技术" class="headerlink" title="富文本技术"></a>富文本技术</h3><p>富文本技术的实现可以让记事本的内容不仅仅是一种单调的样式，还可以有其他丰富的样式，比如可以突出标题的显示，可以让重点的文字内容变红，可以显示图片等等。所以，富文本技术对多功能记事本APP至关重要。目前有几种方法来实现富文本：</p>
+<ul>
+<li><p>通过使用Html.fromHtml()来解析文本内容，然后显示在TextView中，但安卓原生的Html支持的样式较少，图片显示需要单独处理等等。</p>
+</li>
+<li><p>通过ScrollView、多个EditText、多个ImageView等组件来拆分内容显示，由于是原生布局所以能实现的效果有很多，但是实现起来非常困难，需要处理输入焦点、组件之间的关系怎么安排等问题。</p>
+</li>
+<li><p>通过使用安卓SpannableString类来实现，通过它的public void setSpan(Object what, int start, int end, int flags)方法可以设置多种样式，参数what代表所要设置的样式，参数start和end代表样式设置范围，参数flags是对新插入字符的处理方式。结合ClickableSpan类和ImageSpan类就可以实现点击事件和图片显示，使用非常方便，基本满足了多功能记事本APP对富文本的要求。</p>
+</li>
+</ul>
+<h3 id="持久化技术"><a href="#持久化技术" class="headerlink" title="持久化技术"></a>持久化技术</h3><p>数据持久化技术作为软件的压舱石，是非常重要的，它可以在用户退出软件后保存用户所需要的数据。文件存储、数据库存储和SharedPreferences存储是安卓系统提供的三种数据持久化方法。文件存储可以直接把数据完全保存到文件里面去，适合存储一些简单的文本数据和二进制数据。所以，在多功能记事本APP中主要用来保存图片和语音资源。数据库存储在安卓系统中使用的主要是SQLite数据库，它作为平台系统的关系型数据库，具有占用内存、资源小等方面的优势，在平台APP开发中能够发挥重大作用。它完全内置于安卓操作系统，对存储结构性复杂的数据非常友好，运行速度也非常快。虽然安卓提供了SQLiteOpenHelper帮助类来实现数据库的增删改查各种操作，但是用起来还是没有那么方便。所以在记事本工程里引入LitePal这个开源的数据库框架，它采用的对象关系映射模式可以让创建数据表变得异常简单，并且封装了很多常用的数据库功能接口，让开发流程变得更加便捷和快速。SQLite数据库主要用来保存笔记和待办事项相关内容。SharedPreferences存储采用的是key-value的方式来存储数据，适合保存一些简单数据，操作起来非常方便。此外，SharedPreferences对象与SQLite数据库相比，免去了创建数据库、创建表、写SQL语句等诸多操作，相对而言更加方便，简洁。因此，在APP中主要用来保存用户偏好数据和账号密码。</p>
+<h2 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h2><h3 id="系统总体设计"><a href="#系统总体设计" class="headerlink" title="系统总体设计"></a>系统总体设计</h3><h4 id="系统层次结构"><a href="#系统层次结构" class="headerlink" title="系统层次结构"></a>系统层次结构</h4><p>多功能记事本APP基于安卓手机操作系统开发，系统总体架构按照APP客户端-服务器端模式设计，架构设计如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619193435.png" srcset="/img/loading.gif" lazyload alt="系统架构设计图"></p>
+<p>其中云端的服务器有两种，一种是数据存储服务器，这里指的是坚果云的服务器，安卓客户端可以通过WebDav协议向服务器端请求或者发送数据。另外一种是提供语音识别功能的服务器，这里指的是讯飞公司提供语音服务的服务器，安卓客户端通过网络和密钥与其进行通信，获取语音转换成文字的结果。</p>
+<p>安卓客户端的框架采用MVC结构，MVC即Model-View-Controller，其中M逻辑模型，V是视图模型，C是控制器。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619193815.png" srcset="/img/loading.gif" lazyload alt="MVC架构设计图"></p>
+<p>视图层的主要职责就是控制各种用户界面的显示，即负责用户数据的显示，同时可以与用户进行交互。包括主界面、笔记编辑页面和笔记查看页面等等。</p>
+<p>控制层的主要职责就是处理各种逻辑业务，即接收并解析用户层的操作指令然后到模型层请求数据，得到数据后可以送到视图层进行显示。例如，当用户层请求语音输入时，控制层会负责调用讯飞相关接口，获取到语音数据后，通过网络连接到讯飞语音识别服务器，那边数据处理完成后，模型层就会把数据送到视图层进行展示。</p>
+<p>模型层主要职责就是负责各种用户数据的加载和存储。例如笔记编辑完毕后模型层要把它保存到数据库，用户查看笔记时模型层要获取相应的数据。数据库采用的是专门为嵌入式设备设计的SQLite轻量级数据库。</p>
+<h4 id="系统各功能模块组成"><a href="#系统各功能模块组成" class="headerlink" title="系统各功能模块组成"></a>系统各功能模块组成</h4><p>多功能记事本APP主要分为九大模块：用户界面、输入模块、提醒模块等等。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619193936.png" srcset="/img/loading.gif" lazyload alt="系统模块组成图"></p>
+<p>各个系统模块功能如下：</p>
+<p>（1） 用户界面：与用户直接打交道的就是用户界面，所以一个视觉美观和操作便捷的用户界面至关重要，它直接影响了用户体验。</p>
+<p>（2） 输入模块：主要用来记录用户想法，包括文字、图片和语音。其中，文字输入可以通过传统的键盘输入或者语音识别输入。</p>
+<p>（3） 显示模块：用来显示保存后的笔记或者待办事项。</p>
+<p>（4） 提醒模块：目前，人们行色匆匆，需要忙活的事情太多了。所以，记事本的提醒功能必不可少，包括日历提醒和应用内语音播报提醒。</p>
+<p>（5） 数据同步：现在是大数据时代，很多本地数据都支持同步到云端了。因此，用户的数据可以同时保存到本地和云端，便捷性和安全性都得到了提高。</p>
+<p>（6） 搜索模块：用户的数据量是巨大的，有了搜索功能才能在海量的信息中找到自己需要的，节省大量查找时间。</p>
+<p>（7） 管理模块：主要就是负责笔记和待办事项的增删改查。此外，为了避免误删除笔记，系统还提供回收站功能，当你后悔的时候，还可以从回收站恢复笔记内容。由于待办事项是一些简短的文字记录，办完事后基本没用了，所以只有永久删除选项。此外，还可以更改笔记分组。</p>
+<p>（8） 分享模块：现在是互联网时代，人与人之间的交流变得越来越容易。用户可将笔记通过社交软件实现与他人的便捷分享，让笔记不单单是自己手机上的简单存储。这样就可以节省大量的复制粘贴时间，通过分享接口直接发送消息。</p>
+<p>（9） 权限申请模块：安卓6.0系统开始引入了运行时权限功能，对于一些危险的权限，例如录音，读取数据等等，需要得到用户的授权。对于普通权限，比如读取网络信息，由系统自动完成授权。</p>
+<h3 id="系统各功能模块设计"><a href="#系统各功能模块设计" class="headerlink" title="系统各功能模块设计"></a>系统各功能模块设计</h3><h4 id="用户界面"><a href="#用户界面" class="headerlink" title="用户界面"></a>用户界面</h4><p>软件采用Material Design语言进行界面设计。用户界面主要分为五大部分。</p>
+<ul>
+<li><p>用户主界面：采用<strong>DrawerLayout</strong>为总体布局框架。为了让待办事项这个功能更加高效地提供给用户使用，将其单独独立成一个功能模块，不和笔记编辑器结合在一起，给用户提供更加便捷和快速的记录。利用<strong>ViewPager</strong>和<strong>TabLayout</strong>实现笔记主界面和待办事项主界面的平滑切换。信息的滚动页面结合<strong>RecycleView</strong>。同时，结合<strong>FloatingActionButton</strong>，提供语音输入和键盘输入的入口。</p>
+</li>
+<li><p>侧边栏：采用<strong>NavigationView</strong>为布局框架，和主界面的<strong>DrawerLayout</strong>框架配合使用。提供的是笔记的分组功能和坚果云的登录界面。用户登录坚果云账号后，才能将数据同步到云端。账号和密码保存在<strong>SharedPreferences</strong>里面。</p>
+</li>
+<li><p>笔记的编辑界面：主要采用<strong>EditText</strong>和<strong>ScrollView</strong>组件，前者是为了输入笔记内容，后者是为了更流畅地查看编辑内容，便于修改。此外，编辑界面下侧会提供多个<strong>ImageButton</strong>按钮，当输入法唤醒时，<strong>ImageButton</strong>也会弹出来，给用户提供语音输入、图片插入、加标题、给文字加粗和修改文字的颜色以突出重点的功能。</p>
+</li>
+<li><p>笔记的浏览界面：主要采用<strong>ScrollView</strong>和<strong>TextView</strong>组件，前者为流畅滚动笔记内容提供保证，后者用来显示笔记内容。采用<strong>ContentLoadingProgressBar</strong>组件来表示笔记加载过程，因为当加载云端笔记时，本地没有相应的多媒体资源时，需要从坚果云下载，存在缓冲时间。浏览界面的右上角是菜单栏，提供删除笔记、分享笔记、提醒等功能。</p>
+</li>
+<li><p>待办事项的编辑和浏览界面：由于待办事项功能只是服务于简短的文字记录，所以编辑和浏览界面合二为一，统一采用<strong>PopupWindow</strong>组件，里面也包含了<strong>EditText</strong>组件，用于文字输入和显示。同时，还有提醒按钮，用于事件提醒。</p>
+</li>
+</ul>
+<h4 id="输入模块"><a href="#输入模块" class="headerlink" title="输入模块"></a>输入模块</h4><p>笔记编辑器采用<strong>EditText</strong>组件，结合<strong>SpannableString</strong>类实现富文本功能，比如添加标题和加粗文字等等。结合<strong>ImageSpan</strong>类实现图片显示。文本和多媒体数据分别保存到SQLite数据库和本地文件夹。语音输入采用讯飞识别引擎，实现实时语音识别转换成文字，同时把语音文件保存到本地，结合<strong>MediaPlayer</strong>类可以实现语音播放。插入图片采用知乎的开源框架<strong>matisse</strong>，结合开源框架<strong>Glide</strong>实现图片加载。图片压缩采用鲁班压缩框架。图片预览采用<strong>MNImageBrowser</strong>开源框架，这里也采用Glide作为图片加载引擎，其支持单击和长按监听，可以在这里面实现分享和保存图片到本地的功能。语音和图片的点击事件使用<strong>ClickableSpan</strong>类。具体的语音输入流程和图片插入流程如下图所示。</p>
+<p>待办事项的输入只支持纯文本输入，采用EditText组件即可，可以通过语音或者键盘输入，当语音输入时，语音文件不会被保存。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194139.png" srcset="/img/loading.gif" lazyload alt="语音输入流程图"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194248.png" srcset="/img/loading.gif" lazyload alt="图片插入流程图"></p>
+<h4 id="显示模块"><a href="#显示模块" class="headerlink" title="显示模块"></a>显示模块</h4><p>笔记显示需要支持富文本显示，所以要结合<strong>SpannableStringBuilder</strong>类。通过把笔记内容的<strong>String</strong>字符串转换成<strong>SpannableStringBuilder</strong>富文本进行显示。这过程也需要用到<strong>ImageSpan</strong>类、<strong>ClickableSpan</strong>类、<strong>MediaPlayer</strong>类、<strong>MNImageBrowser</strong>和<strong>Glide</strong>开源框架。首先通过正则表达式查找出语音和图片并设置监听，然后通过反序列化恢复富文本样式，最后通过<strong>TextView</strong>显示出来。待办事项由于只有纯文本，不需要经过任何处理，即可以通过<strong>EditText</strong>显示出来。笔记内容显示过程如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194353.png" srcset="/img/loading.gif" lazyload alt="笔记内容显示流程图"></p>
+<h4 id="提醒模块"><a href="#提醒模块" class="headerlink" title="提醒模块"></a>提醒模块</h4><p>提醒模块包括日历提醒和应用内语音提醒。日历提醒直接从应用打开日历设置提醒时间就行，并传递相关信息，这个由系统来保证时效性，一般不会有耽搁。应用内语音提醒采用<strong>AlarmManager</strong>组件来设置，到点之后采用<strong>TextToSpeech</strong>组件来进行语音播报，同时通知栏会弹出具体消息。设置日历事件和应用内语音提醒过程如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194443.png" srcset="/img/loading.gif" lazyload alt="设置日历事件流程图"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194511.png" srcset="/img/loading.gif" lazyload alt="设置语音提醒流程图"></p>
+<h4 id="数据同步"><a href="#数据同步" class="headerlink" title="数据同步"></a>数据同步</h4><p>数据同步的云端服务器采用支持<strong>WebDav</strong>协议的坚果云。安卓客户端采用<strong>sardine-android</strong>开源框架，使多功能记事本APP支持WebDav协议，让本地客户端可以和支持WebDav协议的坚果云通信，从而支持同步数据。这样的好处就是开发者不必再另外开发服务器端程序，用户只需要到坚果云注册账号就行，数据由坚果云进行保管。具体数据同步过程如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619194958.png" srcset="/img/loading.gif" lazyload alt="数据同步流程图"></p>
+<h4 id="搜索模块"><a href="#搜索模块" class="headerlink" title="搜索模块"></a>搜索模块</h4><p>用户主界面会有个<strong>SearchView</strong>组件，用于查找所需要的数据。当用户输入数据后，后台线程就会到数据库查找相应信息，结果会返回到<strong>RecycleView</strong>显示。当退出搜索时，又会重新显示主界面内容。具体搜索过程如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195236.png" srcset="/img/loading.gif" lazyload alt="搜索流程图"></p>
+<h4 id="管理模块"><a href="#管理模块" class="headerlink" title="管理模块"></a>管理模块</h4><p>笔记和待办事项的管理，主要就是对数据库的增删改查，这里会用到开源框架<strong>LitePal</strong>来对数据库进行操作。对于笔记的分组功能，会在笔记的数据表里增加一个字段，用来判断当前笔记位于哪一个组。这里，主要分成未分组、生活、工作和回收站四个组，方便用户自主选择笔记的分类，同时还可以在笔记查看界面更改分组。由于待办事项是比较简单的文字记录，不提供任何分组。笔记的回收、恢复和更改分组过程如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195332.png" srcset="/img/loading.gif" lazyload alt="image-20210619195332112"></p>
+<h4 id="分享模块"><a href="#分享模块" class="headerlink" title="分享模块"></a>分享模块</h4><p>通过使用<strong>Android Sharesheet</strong>来实现将笔记内容或者图片发送到应用外部，比如微信、QQ等等。笔记分享内容和图片过程如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195410.png" srcset="/img/loading.gif" lazyload alt="image-20210619195410709"></p>
+<h4 id="权限申请模块"><a href="#权限申请模块" class="headerlink" title="权限申请模块"></a>权限申请模块</h4><p>普通权限需要在AndroidManifest.xml添加权限声明，对于危险权限，除了添加声明外，还需要经过用户授权处理。具体授权过程如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195433.png" srcset="/img/loading.gif" lazyload alt="软件授权流程图"></p>
+<h4 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h4><p>采用<strong>SQLite</strong>作为软件数据库。</p>
+<p>笔记表Note：用于记录笔记的各种信息，例如笔记内容、笔记创建时间、笔记标题等等。此外，还有用于坚果云同步的信息字段。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>笔记唯一编号。</td>
+</tr>
+<tr>
+<td>content</td>
+<td>String</td>
+<td>笔记内容。</td>
+</tr>
+<tr>
+<td>groupName</td>
+<td>String</td>
+<td>笔记所属组名字。</td>
+</tr>
+<tr>
+<td>createTime</td>
+<td>String</td>
+<td>笔记创建时间。</td>
+</tr>
+<tr>
+<td>createdTime</td>
+<td>long</td>
+<td>笔记创建时间，用于本地和云端数据的唯一标识。</td>
+</tr>
+<tr>
+<td>updateTime</td>
+<td>String</td>
+<td>笔记更新时间，用来显示。</td>
+</tr>
+<tr>
+<td>updatedTime</td>
+<td>long</td>
+<td>笔记更新时间，用来排序。</td>
+</tr>
+<tr>
+<td>title</td>
+<td>String</td>
+<td>笔记标题。</td>
+</tr>
+<tr>
+<td>subContent</td>
+<td>String</td>
+<td>笔记部分内容。</td>
+</tr>
+<tr>
+<td>restoreSpans</td>
+<td>byte[]</td>
+<td>保存富文本的样式二进制数据。</td>
+</tr>
+<tr>
+<td>timeRemind</td>
+<td>long</td>
+<td>提醒时间。</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>用来标识笔记的状态，0：本地新增， -1：标记删除，1：本地更新，2：已经同步。</td>
+</tr>
+<tr>
+<td>anchor</td>
+<td>long</td>
+<td>记录最近一次同步时间。</td>
+</tr>
+</tbody></table>
+<p>待办事项表Todo：用于记录待办事项的各种信息，例如待办事项内容、创建时间等等。此外，也有用于坚果云同步的信息字段。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>待办事项唯一编号。</td>
+</tr>
+<tr>
+<td>checkBoxFlag</td>
+<td>boolean</td>
+<td>待办事项是否完成的标志。</td>
+</tr>
+<tr>
+<td>content</td>
+<td>String</td>
+<td>待办事项内容。</td>
+</tr>
+<tr>
+<td>createTime</td>
+<td>long</td>
+<td>待办事项创建时间，用于本地和云端的唯一标识。</td>
+</tr>
+<tr>
+<td>updatedTime</td>
+<td>long</td>
+<td>待办事项创建时间，用于排序。</td>
+</tr>
+<tr>
+<td>updateTime</td>
+<td>String</td>
+<td>待办事项创建时间，用于显示。</td>
+</tr>
+<tr>
+<td>timeRemind</td>
+<td>long</td>
+<td>待办事项提醒时间。</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>用来标识待办事项的状态，意思和笔记表一样。</td>
+</tr>
+<tr>
+<td>anchor</td>
+<td>long</td>
+<td>记录最近一次同步时间。</td>
+</tr>
+</tbody></table>
+<p>多媒体记录表MediaForNote：用于笔记的图片和语音资源的坚果云同步。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>int</td>
+<td>多媒体资源唯一标识。</td>
+</tr>
+<tr>
+<td>mediaName</td>
+<td>String</td>
+<td>多媒体资源名字。</td>
+</tr>
+<tr>
+<td>noteCreateTime</td>
+<td>long</td>
+<td>笔记创建时间，用来标识多媒体资源属于哪一个笔记。</td>
+</tr>
+<tr>
+<td>isPhoto</td>
+<td>boolean</td>
+<td>区分图片和语音，从而区分上传路径。</td>
+</tr>
+<tr>
+<td>status</td>
+<td>int</td>
+<td>用来标识记录的状态，意思和笔记表一样。</td>
+</tr>
+<tr>
+<td>anchor</td>
+<td>long</td>
+<td>记录最近一次同步时间。</td>
+</tr>
+</tbody></table>
+<h2 id="多功能记事本功能模块实现"><a href="#多功能记事本功能模块实现" class="headerlink" title="多功能记事本功能模块实现"></a>多功能记事本功能模块实现</h2><h3 id="系统各功能模块的实现"><a href="#系统各功能模块的实现" class="headerlink" title="系统各功能模块的实现"></a>系统各功能模块的实现</h3><h4 id="用户界面-1"><a href="#用户界面-1" class="headerlink" title="用户界面"></a>用户界面</h4><p>整个软件的UI界面是基于Material Design设计的。</p>
+<p>用户主界面：用<strong>DrawerLayout</strong>作为整个界面的根布局，里面由<strong>CoordinatorLayout</strong>和<strong>NavigationView</strong>组成。<strong>CoordinatorLayout</strong>主要包括了<strong>Toolbar</strong>、<strong>TabLayout</strong>和<strong>ViewPager</strong>，其中<strong>TabLayout</strong>、<strong>ViewPager</strong>加上<strong>Fragment</strong>的组合能让笔记界面和待办事项界面实现平滑切换，步骤如下：</p>
+<p>第一，创建存储<strong>NoteFragment</strong>和<strong>TodoFragment</strong>碎片实例的列表；</p>
+<p>第二，创建基于<strong>FragmentPagerAdapter</strong>的<strong>MyAdapter</strong>的扩展类实例；</p>
+<p>第三，将<strong>ViewPager</strong>和<strong>TabLayout</strong>关联起来。</p>
+<p>第四，设置<strong>TabLayout</strong>的属性。为了监听不同的碎片页面，可以设置<strong>ViewPager</strong>监听器，在<strong>onPageSelected</strong>方法里判断当前碎片是<strong>NoteFragment</strong>还是<strong>TodoFragment</strong>。，从而切换右上角的菜单栏。<strong>NoteFragment</strong>和<strong>TodoFragment</strong>碎片里面都包含了<strong>SearchView</strong>、<strong>RecyclerView</strong>和两个<strong>FloatingActionButton</strong>组件。<strong>SearchView</strong>供用户搜索信息，<strong>RecyclerView</strong>提供滚动显示功能，其中笔记支持瀑布流布局和列表布局，待办事项只支持列表布局。为了实现滚动显示，需要定义两个适配器，分别是<strong>NoteAdapter</strong>和<strong>TodoAdapter</strong>，<strong>NoteAdapter</strong>为了支持瀑布流布局和列表布局，需要根据情况引入不同的布局文件，而<strong>TodoAdapter</strong>只需要一个布局文件即可。同时，为了支持单击打开笔记或者待办事项，长按条目弹出删除选项，需要在适配器类里面实现<strong>onClick</strong>和<strong>onLongClick</strong>方法。<strong>FloatingActionButton</strong>提供语音输入和键盘输入的入口。笔记的列表界面和瀑布流界面，待办事项列表界面如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195701.png" srcset="/img/loading.gif" lazyload alt="image-20210619195701525"></p>
+<p>侧边栏：依托用户主界面的<strong>DrawerLayout</strong>根布局，引入<strong>NavigationView</strong>组件，里面有两个重要参数<strong>app:headerLayout</strong>和<strong>app:menu</strong>，前者引入的布局包含了用于显示坚果云品牌图片的开源组件<strong>CircleImageView</strong>、用于输入用户名和密码的两个<strong>EditText</strong>组件和用于登录坚果云的<strong>Button</strong>。后者引入的菜单包含了笔记的分组选项。侧边栏界面如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195818.png" srcset="/img/loading.gif" lazyload alt="侧边栏界面"></p>
+<p>笔记的编辑界面：以<strong>CoordinatorLayout</strong>为根布局，里面主要包括<strong>Toolbar</strong>、<strong>ScrollView</strong>和五个<strong>ImageButton</strong>按钮。<strong>ScrollView</strong>里面继续包含了<strong>EditText</strong>组件，当其获得输入焦点时，输入法和五个<strong>ImageButton</strong>会一起弹出来，供用户输入文字、语音输入、插入图片等等。笔记编辑界面如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195900.png" srcset="/img/loading.gif" lazyload alt="笔记编辑界面"></p>
+<p>笔记的浏览界面：以<strong>CoordinatorLayout</strong>为根布局，主要包含了<strong>Toolbar</strong>、<strong>FloatingActionButton</strong>和<strong>LinearLayout</strong>布局。<strong>FloatingActionButton</strong>提供更改笔记的入口，<strong>LinearLayout</strong>布局又包含了三方面内容，第一就是包含了用于显示笔记更改时间和提醒时间的两个<strong>TextView</strong>的<strong>LinearLayout</strong>布局，第二就是<strong>ContentLoadingProgressBar</strong>组件，显示笔记加载过程，第三就是包含了<strong>TextView</strong>的<strong>ScrollView</strong>滚动组件。右上角是菜单选项，通过工程menu的文件夹新建菜单文件<em>note_show_menu.xml</em>来实现。笔记浏览界面如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619195943.png" srcset="/img/loading.gif" lazyload alt="笔记浏览界面"></p>
+<p>待办事项的编辑和浏览界面：首先新建<strong>PopupWindow</strong>的布局文件，里面以<strong>CardView</strong>为根布局，里面主要包含了<strong>EditText</strong>和<strong>LinearLayout</strong>布局，前者获得输入焦点时会弹出输入法，后者包含了两个用于设置应用内提醒和日历提醒的<strong>Button</strong>和一个显示提醒时间的<strong>TextView</strong>，最后通过实例化<strong>PopupWindow</strong>并加载布局显示编辑界面。编辑完成后，只需要点<strong>PopupWindow</strong>以外触摸空间或者返回按钮，编辑界面就会关闭。待办事项的编辑和浏览界面如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200021.png" srcset="/img/loading.gif" lazyload alt="待办事项编辑和浏览界面"></p>
+<h4 id="输入模块-1"><a href="#输入模块-1" class="headerlink" title="输入模块"></a>输入模块</h4><p>输入模块主要分为三个部分：语音输入、图片插入和文字输入。</p>
+<p>语音输入：如图所示，当输入框获得焦点后，会显示输入选项，选择语音输入图标后会弹出语音录入界面，语音数据会实时上传到讯飞服务器进行识别，识别结果会显示在输入界面，用户说完话后，语音录入界面关闭并在输入框添加小喇叭图标。</p>
+<p>软件上的实现过程：首先，使用讯飞识别引擎之前要在库文件中引入讯飞识别库，然后调用<strong>SpeechUtility.createUtility()</strong> 验证密钥。接下来通过自定义的<strong>XunFeiEngine</strong>类完成识别过程，提供的方法主要有设置语音识别参数的<strong>setParam()<strong>，打印结果方法</strong>printResult()</strong> 和构造函数<strong>XunFeiEngine()<strong>。先实例化</strong>XunFeiEngine</strong>类完成讯飞语音识别引擎的初始化，然后调用<strong>setParam()</strong> 方法完成参数设置，比如讯飞的听写引擎、语言区域、音频保存路径等等。接下来调用<strong>SpeechRecognizer</strong>类的<strong>startListening()</strong> 方法完成监听器设置，在监听器里面通过<strong>onVolumeChanged()</strong> 方法改变语音输入界面的动画效果；通过<strong>onBeginOfSpeech()</strong> 方法知道讯飞语音识别引擎已经准备好了，用户可以开始语音输入；通过<strong>onEndOfSpeech()</strong> 方法知道检测到了语音的尾端点，已经进入识别过程，不再接受语音输入；通过<strong>onResult()</strong> 方法获取识别结果并显示在输入界面；通过<strong>onError()</strong> 方法了解出错问题。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200112.png" srcset="/img/loading.gif" lazyload alt="语音输入界面"></p>
+<p>图片插入：在输入选项选择相机小图标进入图片插入功能，如图所示。在相册界面可以预览图片，选择好图片后点击右下角的使用按钮跳转回来输入框，图片已经正常插入了。</p>
+<p>软件的实现过程：首先在工程引入知乎的开源框架<strong>matisse</strong>和鲁班图片压缩框架<strong>Luban</strong>，然后在<strong>callGallery()</strong> 方法中设置好<strong>Matisse</strong>类，主要设置参数有提供拍照功能、只显示图片资源、设置图片加载引擎为<strong>Glide</strong>、设置唯一标记请求码等等。接下来，图片的选择结果在<strong>onActivityResult()</strong> 方法中处理，通过<strong>Matisse.obtainPathResult()</strong> 方法获取图片的实际路径列表，然后通过<strong>Luban</strong>类相关方法完成图片的压缩和保存，最后完成图片的插入：根据Uri获得<strong>Drawable</strong>资源，设置<strong>ClickableSpan</strong>点击事件，通过<strong>ImageSpan</strong>和<strong>SpannableString</strong>显示到输入界面。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200212.png" srcset="/img/loading.gif" lazyload alt="图片选择界面"></p>
+<p>文字输入：文字的输入选项有三个：文字标题、文字标红和文字加粗，如果什么都不选，就会以正常文字输入。有两种用法：第一种就是先选择输入选项然后再输入文字，如第一张图所示。第二种就是以正常样式输入文字后再通过光标选择文字的样式，如图2所示。</p>
+<p>软件实现：第一种用法实现方式,通过给<strong>Edittext</strong>设置<strong>TextWatcher</strong>监听器，在<strong>TextWatcher</strong>的<strong>afterTextChanged()</strong> 方法里面根据输入选项通过<strong>setSpan()</strong> 方法完成样式设置。第二种用法实现方式，根据对应的输入选项，通过<strong>EditText</strong>的<strong>getSelectionEnd()</strong> 和<strong>getSelectionStart()</strong> 方法获取文字光标范围，最后通过<strong>setSpan()</strong> 方法完成样式设置。其中<strong>setSpan()</strong> 方法主要是给<strong>Editable</strong>设置不同的<strong>TextAppearanceSpan</strong>样式来达到富文本效果。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200317.png" srcset="/img/loading.gif" lazyload alt="image-20210619200316983"></p>
+<p>当输入完成后，通过<strong>addNote()</strong> 方法进行笔记保存，首先通过<strong>getSpans()</strong> 方法获取笔记内容的样式，然后通过<strong>Parcel</strong>类的相关方法把样式内容转换成二进制数据存储，接下来设置笔记的标题、副标题、创建时间等等，最后保存到数据库。</p>
+<p>待办事项的输入支持语音输入和纯文本输入，语音输入实现过程与笔记语音输入过程类似，只不过不需要保存语音录音文件。文字输入就是正常样式输入，不需要其他样式。保存过程类似笔记，但不需要处理样式、标题等内容。</p>
+<h4 id="显示模块-1"><a href="#显示模块-1" class="headerlink" title="显示模块"></a>显示模块</h4><p>笔记从数据库查询出来后，每一个笔记的content字段都要经过自定义<strong>ContentToSpannableString</strong>类的<strong>contentToSpanStr ()</strong> 方法处理，首先要通过正则表达式<strong>Pattern.compile(“&lt;voice src&#x3D;’(.*?)’&#x2F;&gt;”)</strong> 找出笔记内容里面的语音路径，然后通过路径找到本地语音资源，如果本地没有就要联网从坚果云下载，有了语音资源后就要把内容的语音路径替换成<strong>ImageSpan</strong>和<strong>ClickableSpan</strong>，这样就可以显示一个语音图标同时可以实现点击播放音频，音频播放是通过<strong>MediaPlayer</strong>类来完成的。接下来，就是通过正则表达式<strong>Pattern.compile(“&lt;img src&#x3D;’(.*?)’&#x2F;&gt;”)</strong> 来查找笔记的图片资源路径，然后也是优先从本地查找图片，本地没有再从坚果云下载，接着把笔记内容的图片路径替换成<strong>ImageSpan</strong>和<strong>ClickableSpan</strong>，那么<strong>ImageSpan</strong>就是具体要显示的图片，而<strong>ClickableSpan</strong>监听图片的点击事件，在点击事件里面通过开源框架<strong>MNImageBrowser</strong>的<strong>MNImageBrowser</strong>类来实现图片的查看、单击分享图片和长按图片保存到本地的功能，图片加载引擎要用到开源框架<strong>Glide</strong>，保存图片到本地要通过<strong>MediaStore.Images.Media.insertImage()</strong> 方法把图片插入到图库，然后发广播通知图库刷新显示。最后，就是恢复富文本显示，先判断Note的<strong>restoreSpans</strong>字段是否为空，如果为空，设置好字体后直接返回转换成<strong>SpannableStringBuilder</strong>的数据。如果不为空，那么就需要通过<strong>Parcel</strong>反序列化来恢复数据。使用<strong>Parcel</strong>的<strong>unmarshall</strong>方法来把二进制数据恢复成原始数据，然后通过<strong>readParcelable</strong>方法得出自定义的<strong>SaveTextAppearanceSpan</strong>数据，最后继续通过<strong>unmarshall</strong>方法获取富文本<strong>Parcel</strong>数据，然后把实例化<strong>TextAppearanceSpan</strong>的对象依次设置到<strong>SpannableStringBuilder</strong>对象中去，完成后返回数据供<strong>Edittext</strong>显示。</p>
+<p>待办事项的数据直接把原始<strong>String</strong>内容送到<strong>Edittext</strong>显示即可。</p>
+<h4 id="提醒模块-1"><a href="#提醒模块-1" class="headerlink" title="提醒模块"></a>提醒模块</h4><p>应用内提醒：通过<strong>AlarmManager</strong>创建定时任务来实现。首先，系统要获取提醒时间，这里通过<strong>Android-PickerView</strong>开源库来实现。如图1所示，选择好提醒时间后点击确定，然后<strong>TimePickerView</strong>类的监听器就会执行<strong>onTimeSelect()</strong> 方法，在这个方法里面，首先要判断设置的提醒时间是否早于现在，如果是，则抛出提示：”设置的提醒时间不能早于现在”。如果不是，则打开一个服务<strong>AlarmService</strong>去创建定时任务，在打开服务之前，要传递三个重要意图，第一个是提醒时间，第二个是数据的唯一标识，第三个是种类，区分笔记和待办事项。打开<strong>AlarmService</strong>后，首先初始化<strong>TextToSpeech</strong>，为之后的语音提醒作准备。然后，实例化<strong>AlarmManager</strong>类，配置好定时到点后的触发任务<strong>AlarmIntentService</strong>，并传递数据唯一标识和种类。设置定时时间要用到<strong>PendingIntent</strong>类，并按照笔记和待办事项设置好唯一标识符，这个标识符对于取消提醒至关重要。最后调用<strong>AlarmManager</strong>的<strong>setExactAndAllowWhileIdle ()</strong> 方法，设置好定时任务。当提醒时间到了，<strong>AlarmIntentService</strong>服务会被系统唤醒，在这里面的功能就是在通知栏显示通知并且语音播报提醒内容。通知显示后，可以通过通知栏进入笔记页面或者关闭语音播报。特别注意的是，当软件重新启动时，会开启一个线程重新设置没有过期的笔记定时任务。</p>
+<p>日历提醒：通过系统提供的<strong>Calendar</strong>日历服务类打开日历，并传递提醒内容和时间，其他设置由系统的日历来提供。如图2所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200353.png" srcset="/img/loading.gif" lazyload alt="image-20210619200353483"></p>
+<h4 id="数据同步-1"><a href="#数据同步-1" class="headerlink" title="数据同步"></a>数据同步</h4><p>云同步功能采用的服务商是坚果云，所以开启备份之前需要注册一个坚果云账号，然后在坚果云网页第三方应用管理那里申请一个应用密码，最后在应用的侧边栏填上账号密码，然后点击登陆按钮，联网验证账号密码是否正确。用户的账号和密码会保存到<strong>SharedPreferences</strong>里面。应用本地需要接入<strong>sardine-android</strong>开源框架，然后创建一个<strong>SynWithWebDav</strong>类，专门管理数据同步。</p>
+<p>同步过程：为了触发同步，需要在系统引入开源框架<strong>SmartRefreshLayout</strong>，它支持下拉刷新。如图所示，在用户主界面下拉，会显示下拉更新组件<strong>RefreshLayout</strong>。在同步的过程中，为了防止数据冲突，会禁止应用内的触摸活动，同步完成后恢复触摸。然后，<strong>RefreshLayout</strong>监听器接收到视图层的指令，触发<strong>onRefresh</strong>方法，在里面执行数据同步：</p>
+<p>（1） 通过<strong>getSystemService()</strong> 方法获取到<strong>ConnectivityManager</strong>系统服务类，从而得知当前网络情况，如果网络不可用则直接退出同步过程并提示用户网络不可用。</p>
+<p>（2） 禁止触摸活动，并通过<strong>SharedPreferences</strong>获取用户的账号和密码。</p>
+<p>（3） 实例化<strong>SynWithWebDav</strong>类，在它的构造函数里面完成账号和密码的设置，如果是第一个同步，还会在外部存储空间新建一个<strong>noteBackup.db</strong>数据库用于同步，并在里面新建<strong>Note</strong>和<strong>Todo</strong>两个数据表。</p>
+<p>（4） 由于图片和语音数据上传需要花费很多时间，所以首先开辟一个线程用于多媒体数据同步。在新线程里面，先在<strong>MediaForNote</strong>数据表里面获取<strong>status</strong>为0的数据，代表还没有同步的数据。然后，通过<strong>MediaForNote</strong>里面的<strong>isPhoto()</strong> 方法区分多媒体资源路径，最后调用<strong>SynWithWebDav</strong>的<strong>uploadFile()</strong> 方法进行数据上传，通过其返回值判断是否上传成功，成功的话则设置<strong>status</strong>为2，并保存到数据库。</p>
+<p>（5） 从<strong>SharedPreferences</strong>里面获取最近的同步时间，然后获取云端的<strong>noteBackup.db</strong>文件的最近修改时间。当文件存在并且修改时间大于最近同步时间时，那么就需要下载最新的云备份文件，用于合并云端的更改到本地。如果过程中出现网络错误将中断同步过程，退出下拉刷新并恢复触摸。</p>
+<p>（6） 如果云文件下载成功或者云端文件更改时间小于等于最近同步时间，那么接下来就开始进行笔记和待办事项的数据同步。首先，如果云文件同步成功就需要调用<strong>SynWithWebDav</strong>的<strong>updateLocalNotes()<strong>和</strong>updateLocalTodos()</strong> 方法合并云端更改到本地数据库。接下来就是把本地新增或者更改的数据合并到云端数据库，即<strong>status</strong>为0或者1的笔记和待办事项，从数据库查询到数据后，调用<strong>SynWithWebDav</strong>的<strong>updateNotes()<strong>和</strong>updateTodos()</strong> 方法合并数据到备份文件。然后，获取<strong>status</strong>为-1的数据，调用<strong>SynWithWebDav</strong>的<strong>deleteNotes()</strong> 和<strong>deleteTodos()</strong> 方法通知备份数据库说本地一些数据已经删除。最后，把备份文件上传到坚果云，更改最近同步时间。当然，如果本地备份文件的更改时间小于等于最后同步时间则不需要上传，网络出错也会重置同步状态。</p>
+<p>（7） 所有数据同步完成后，退出下拉刷新并恢复全局触摸事件。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200430.png" srcset="/img/loading.gif" lazyload alt="同步界面"></p>
+<h4 id="搜索模块-1"><a href="#搜索模块-1" class="headerlink" title="搜索模块"></a>搜索模块</h4><p>无论是笔记界面还是待办事项界面都有搜索框。如图所示，当用户输入查找字符时，<strong>SearchView</strong>组件的监听器就会接收到指令，开始激活<strong>onQueryTextChange()</strong> 方法，然后在里面调用编写好的<strong>search()</strong> 方法，这个方法适用于查找笔记，即会从对应的组别中筛选出包含查找字符的笔记，然后把结果返回，最后刷新<strong>RecycleView</strong>显示。当点击搜索框的交叉符号时，代表退出查找，监听器会重新运行<strong>RecycleView</strong>刷新方法，继续显示组内笔记。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200505.png" srcset="/img/loading.gif" lazyload alt="image-20210619200505641"></p>
+<h4 id="管理模块-1"><a href="#管理模块-1" class="headerlink" title="管理模块"></a>管理模块</h4><p>为了实现新增信息、删除信息、修改信息和查找信息，这里的信息包括笔记和待办事项，需要设置两个管理数据表的类，一个是用于管理笔记的<strong>NoteDbManager</strong>类，一个是用于管理待办事项的<strong>TodoDbManager</strong>类。它们涉及到<strong>LitePal</strong>的主要方法如下所示：</p>
+<p>（1） 新增信息，由于笔记和待办事项类都扩展了<strong>LitePalSupport</strong>，所以当需要新增一条信息时，只需要调用 <strong>save()</strong> 方法。</p>
+<p>（2） 删除信息，首先要获取所要操作的数据表，然后设置信息的约束项，比如信息的唯一标识字段，最后设置约束项的具体值。函数原型为<strong>public static int deleteAll(Class&lt;?&gt; modelClass, String… conditions)</strong> 。</p>
+<p>（3） 更改信息，有两种方法，第一种就是对已经储存到数据库的对象调用<strong>save()</strong> 方法，符合这种情况的有两种，一种是已经调用过<strong>save()</strong> 方法的对象，另外一种情况是通过<strong>LitePal</strong>提供的方法查询出来的对象。另外一种方法就是先新建一个数据实例，然后设置想更改的字段，最后调用<strong>public int updateAll(String… conditions)</strong> 方法来执行更新操作，这里也可以指定对应的约束条件，不设置的话，默认更新所有数据。</p>
+<p>（4） 查询信息，通过<strong>LitePal</strong>各种查询方法可以搜索到所需要的信息，当需要查询数据表的所有信息时，只需要传入对应的数据类，比如<strong>LitePal.findAll(Note.class)<strong>，会返回一个</strong>Note</strong>类型的<strong>List</strong>集合。当需要添加约束条件时，需要结合<strong>find</strong>方法和<strong>where</strong>方法，例如查询同步标志位时，只需要调用<strong>LitePal.where(“status &#x3D; ?”</strong>,<strong>Integer.toString(status)).find(Note.class)</strong> 方法，就会返回符合条件的<strong>List</strong>集合。当需要对所获取的数据时排序时，需要用到<strong>order</strong>方法，其中<strong>desc</strong>表示降序排列，<strong>asc</strong>或者不写代表升序排列。比如对获取的笔记数据按更新时间降序排序，则调用<strong>LitePal.order(“updatedTime desc”).find(Note.class)</strong> 方法。</p>
+<p>以上就是对数据库的增删改查，接下来就是笔记的分组功能，如图1所示，依靠的是<strong>Note</strong>类里面的<strong>groupName</strong>字段，有四个取值，分别是“未分组”、“生活”、“工作”和“回收站”，只要在侧边栏选择对应的选项，控制层就会依靠<strong>groupName</strong>这个约束条件在数据库查找符合条件的信息，那么视图层就可以查看对应的组内内容了。由于一般不必要在回收站新建内容，所以切换到回收站时，输入按钮会隐藏起来。此外，“全部”不包括“回收站”，查询时要设置好约束条件。移入回收站可以通过长按笔记条目选择，如图2所示。更改分组可以在笔记浏览界面完成，如图3所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200602.png" srcset="/img/loading.gif" lazyload alt="image-20210619200602150"></p>
+<h4 id="分享模块-1"><a href="#分享模块-1" class="headerlink" title="分享模块"></a>分享模块</h4><p>发送文本内容：创建一个<strong>Intent</strong>并将其操作行为设置成<strong>Intent.ACTION_SEND</strong>，然后设置分享的数据类型为<strong>text&#x2F;plain</strong>，调用<strong>putExtra()</strong> 方法把名为<strong>Intent.EXTRA_TEXT</strong> 的笔记内容放到<strong>Intent</strong>对象里面去，接着调用<strong>Intent.createChooser()</strong> 创建一个分享<strong>Intent</strong>，并向其传递前面那个<strong>Intent</strong>对象，最后调用<strong>startActivity()</strong> 方法完成分享动作，如图1所示。</p>
+<p>发送图片：在浏览图片框架<strong>MNImageBrowser</strong>里面设置图片的单击事件，之后的步骤基本和发送文本内容相同，但有两个地方不同，发送图片要设置分享的数据类型为<strong>image&#x2F;jpeg</strong>，通过<strong>putExtra()</strong> 方法放到<strong>Intent</strong>里面去的是名字为<strong>Intent.EXTRA_STREAM</strong>的图片<strong>Uri</strong>数据，如图2所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200633.png" srcset="/img/loading.gif" lazyload alt="image-20210619200633904"></p>
+<h4 id="权限申请模块-1"><a href="#权限申请模块-1" class="headerlink" title="权限申请模块"></a>权限申请模块</h4><p>普通权限：在<strong>AndroidManifest.xml</strong>文件添加权限声明。</p>
+<p>危险权限：首先创建一个包含录音、拍照、读取文件和写入文件权限的字符串数组， 然后通过<strong>ContextCompat.checkSelfPermission()</strong> 方法来逐条判断是否已经获得授权。接下来，对没有获得授权的权限通过<strong>ActivityCompat.requestPermissions()</strong> 方法一次性申请权限。最后，在<strong>onRequestPermissionsResult()</strong> 方法中处理授权结果，如果没有获得必要权限，程序将关闭并退出。授权过程如图所示。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img/20210619200657.png" srcset="/img/loading.gif" lazyload alt="image-20210619200657822"></p>
+<h4 id="数据库实现"><a href="#数据库实现" class="headerlink" title="数据库实现"></a>数据库实现</h4><p>数据库采用的是安卓原生支持的<strong>SQLite</strong>数据库，用<strong>LitePal</strong>开源框架对其进行操作。多功能记事本APP会维护两个数据库，一个是存储在内部存储器的<strong>note.db</strong>数据库文件，用于本地数据的保存，另外一个是存储在外部存储器的<strong>noteBackup.db</strong>数据库文件，用于坚果云同步。具体步骤如下所示：</p>
+<p>（1） 包含库：首先在<strong>build.gradle</strong>文件添加<strong>LitePal</strong>的依赖项，这样<strong>LitePal</strong>开源框架就导入软件工程了。</p>
+<p>（2） 配置<strong>litepal.xml</strong>：在项目的<strong>assets</strong>文件夹中创建一个文件<strong>litepal.xml</strong>，   在文件里面定义好数据库名字和版本号。</p>
+<p>（3） 配置<strong>LitePal</strong>的上下文参数：在<strong>MyApplication</strong>类的<strong>onCreate()</strong> 函数里面调用<strong>LitePal.initialize(this)</strong> 完成初始化。</p>
+<p>（4） 创建数据表：根据数据表字段建好<strong>Note</strong>、<strong>Todo</strong>和<strong>MediaForNote</strong>数据类并在<strong>litepal.xml</strong>文件添加数据表的声明后，当程序操作数据库时，数据表在数据库中就会自动生成。到这里，数据库的建表操作就完成了。程序可以通过<strong>LitePal</strong>提供的接口完成数据库的增删改查。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%AE%89%E5%8D%93APP/" class="category-chain-item">安卓APP</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%AE%89%E5%8D%93%E8%AE%B0%E4%BA%8B%E6%9C%AC/" class="print-no-link">#安卓记事本</a>
+      
+        <a href="/tags/%E5%AE%89%E5%8D%93%E4%BE%BF%E7%AD%BE/" class="print-no-link">#安卓便签</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>安卓记事本系统设计和模块实现</div>
+      <div>https://iwesley.top/article/71902dbe/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年6月19日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/article/ea68fa1f/" title="all-makefiles-under vs all-subdir-makefiles vs first-makefiles-under">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">all-makefiles-under vs all-subdir-makefiles vs first-makefiles-under</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/432db37/" title="春节回乡：见闻与随想">
+                        <span class="hidden-mobile">春节回乡：见闻与随想</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline-server-eight.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
