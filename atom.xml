@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Wesley&#39;s Blog</title>
+  <icon>https://iwesley.top/icon.png</icon>
+  <subtitle>我未曾珍惜的，我不再拥有。</subtitle>
+  <link href="https://iwesley.top/atom.xml" rel="self"/>
+  
+  <link href="https://iwesley.top/"/>
+  <updated>2025-01-04T10:36:03.481Z</updated>
+  <id>https://iwesley.top/</id>
+  
+  <author>
+    <name>Wesley</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>安卓Activity执行finish后onNewIntent也执行了</title>
+    <link href="https://iwesley.top/article/88a54bc8/"/>
+    <id>https://iwesley.top/article/88a54bc8/</id>
+    <published>2025-01-04T09:34:44.000Z</published>
+    <updated>2025-01-04T10:36:03.481Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;测试反应投屏时下一集可能播放不成功。&lt;/p&gt;
+&lt;p&gt;首先看一下日志：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;onCompletion&lt;br&gt;onCast&lt;br&gt;handlerMessage: 2&lt;br&gt;finish:</summary>
+        
+      
+    
+    
+    
+    <category term="AndroidBugFix" scheme="https://iwesley.top/categories/AndroidBugFix/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="AndroidActivity" scheme="https://iwesley.top/tags/AndroidActivity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>安卓应用4字节不对齐导致so加载失败</title>
+    <link href="https://iwesley.top/article/18f59983/"/>
+    <id>https://iwesley.top/article/18f59983/</id>
+    <published>2025-01-04T03:12:24.000Z</published>
+    <updated>2025-01-04T08:32:28.983Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;今天把一个apk给厂商签名后直接push到机器的&amp;#x2F;system&amp;#x2F;app,结果运行app时显示so找不到。报错：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt; java</summary>
+        
+      
+    
+    
+    
+    <category term="Android Build System" scheme="https://iwesley.top/categories/Android-Build-System/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="aosp编译" scheme="https://iwesley.top/tags/aosp%E7%BC%96%E8%AF%91/"/>
+    
+    <category term="Android.mk" scheme="https://iwesley.top/tags/Android-mk/"/>
+    
+    <category term="Android.bp" scheme="https://iwesley.top/tags/Android-bp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>安卓多渠道apk配置不同签名</title>
+    <link href="https://iwesley.top/article/611fb416/"/>
+    <id>https://iwesley.top/article/611fb416/</id>
+    <published>2024-12-24T13:39:40.000Z</published>
+    <updated>2024-12-29T07:06:02.588Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;一般签名都是放在buildTypes里面：&lt;/p&gt;
+&lt;figure class=&quot;highlight groovy&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span</summary>
+        
+      
+    
+    
+    
+    <category term="AppBuild" scheme="https://iwesley.top/categories/AppBuild/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="Android多渠道" scheme="https://iwesley.top/tags/Android%E5%A4%9A%E6%B8%A0%E9%81%93/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>安卓15预置第三方apk时签名报错问题解决</title>
+    <link href="https://iwesley.top/article/133f2b7a/"/>
+    <id>https://iwesley.top/article/133f2b7a/</id>
+    <published>2024-12-24T13:13:45.000Z</published>
+    <updated>2024-12-29T07:06:02.588Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;有同事反馈集成apk时安装失败&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;PackageManager: Failed to scan &amp;#x2F;product&amp;#x2F;app&amp;#x2F;test: No APK Signature Scheme v2</summary>
+        
+      
+    
+    
+    
+    <category term="Android Build System" scheme="https://iwesley.top/categories/Android-Build-System/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="aosp编译" scheme="https://iwesley.top/tags/aosp%E7%BC%96%E8%AF%91/"/>
+    
+    <category term="Android.mk" scheme="https://iwesley.top/tags/Android-mk/"/>
+    
+    <category term="Android.bp" scheme="https://iwesley.top/tags/Android-bp/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>咪咕视频DLNA投屏跳集问题分析</title>
+    <link href="https://iwesley.top/article/73728aea/"/>
+    <id>https://iwesley.top/article/73728aea/</id>
+    <published>2024-12-08T12:08:50.000Z</published>
+    <updated>2024-12-24T12:51:46.756Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;QA在测试公司投屏应用时，发现咪咕视频DLNA投剧集时有时候会跳过一集直接播下一集的问题。&lt;/p&gt;
+&lt;p&gt;尝试自行分析解决不了后，我决定分析一下竞品应用：当贝投屏，结果发现它是正常的。由于当贝投屏是个黑盒子，所以决定抓包看一下。&lt;/p&gt;
+&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="投屏" scheme="https://iwesley.top/categories/%E6%8A%95%E5%B1%8F/"/>
+    
+    
+    <category term="投屏" scheme="https://iwesley.top/tags/%E6%8A%95%E5%B1%8F/"/>
+    
+    <category term="DLNA" scheme="https://iwesley.top/tags/DLNA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android.mk基础知识</title>
+    <link href="https://iwesley.top/article/eaba12cd/"/>
+    <id>https://iwesley.top/article/eaba12cd/</id>
+    <published>2024-11-17T11:11:07.000Z</published>
+    <updated>2024-12-24T12:51:46.755Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Android 浅度解析：mk预置AAR、SO文件、APP包和签名-阿里云开发者社区: &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Android Build System" scheme="https://iwesley.top/categories/Android-Build-System/"/>
+    
+    
+    <category term="安卓Makefile" scheme="https://iwesley.top/tags/%E5%AE%89%E5%8D%93Makefile/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android APP drawable不同文件夹的用法</title>
+    <link href="https://iwesley.top/article/b1dcee32/"/>
+    <id>https://iwesley.top/article/b1dcee32/</id>
+    <published>2024-11-17T10:33:19.000Z</published>
+    <updated>2025-01-04T13:32:28.888Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Screen compatibility: &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="安卓APP" scheme="https://iwesley.top/categories/%E5%AE%89%E5%8D%93APP/"/>
+    
+    
+    <category term="AndroidAPPUI" scheme="https://iwesley.top/tags/AndroidAPPUI/"/>
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android ADB 常用命令</title>
+    <link href="https://iwesley.top/article/dfa112ac/"/>
+    <id>https://iwesley.top/article/dfa112ac/</id>
+    <published>2024-11-17T10:27:15.000Z</published>
+    <updated>2025-01-04T13:21:44.949Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;am monitor </summary>
+        
+      
+    
+    
+    
+    <category term="Android调试相关" scheme="https://iwesley.top/categories/Android%E8%B0%83%E8%AF%95%E7%9B%B8%E5%85%B3/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android APP组件化</title>
+    <link href="https://iwesley.top/article/69eef408/"/>
+    <id>https://iwesley.top/article/69eef408/</id>
+    <published>2024-11-17T09:58:13.000Z</published>
+    <updated>2024-12-24T12:51:46.755Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前导知识&quot;&gt;&lt;a href=&quot;#前导知识&quot; class=&quot;headerlink&quot; title=&quot;前导知识&quot;&gt;&lt;/a&gt;前导知识&lt;/h2&gt;&lt;p&gt;配置 build 变体 ?|? Android Studio ?|? Android Developers: &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="AndroidAPP架构" scheme="https://iwesley.top/categories/AndroidAPP%E6%9E%B6%E6%9E%84/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="AndroidAPP" scheme="https://iwesley.top/tags/AndroidAPP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Tencent mars Xlog编译及使用方法</title>
+    <link href="https://iwesley.top/article/ca471381/"/>
+    <id>https://iwesley.top/article/ca471381/</id>
+    <published>2024-11-17T09:40:51.000Z</published>
+    <updated>2024-12-24T12:51:46.755Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Window11编译&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果已经安装了cygwin，不需要卸载重装，只需要再次运行安装文件setup-x86_64.exe就可以下载或者卸载包。&lt;/p&gt;
+&lt;/blockquote&gt;
+</summary>
+        
+      
+    
+    
+    
+    <category term="AndroidThirdPartSDK" scheme="https://iwesley.top/categories/AndroidThirdPartSDK/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="AndroidThirdPartySDK" scheme="https://iwesley.top/tags/AndroidThirdPartySDK/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>git常见问题</title>
+    <link href="https://iwesley.top/article/ca7dd2f8/"/>
+    <id>https://iwesley.top/article/ca7dd2f8/</id>
+    <published>2024-11-17T09:20:38.000Z</published>
+    <updated>2024-12-24T12:51:46.755Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;gerrit draft and topic |: &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="git" scheme="https://iwesley.top/categories/git/"/>
+    
+    
+    <category term="git" scheme="https://iwesley.top/tags/git/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Android Activity常见问题</title>
+    <link href="https://iwesley.top/article/a218b21a/"/>
+    <id>https://iwesley.top/article/a218b21a/</id>
+    <published>2024-11-17T09:15:36.000Z</published>
+    <updated>2025-01-04T13:33:26.143Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;android finishAffinity()-CSDN博客: &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Android" scheme="https://iwesley.top/categories/Android/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="AndroidActivity" scheme="https://iwesley.top/tags/AndroidActivity/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>安卓常用工具方法</title>
+    <link href="https://iwesley.top/article/bf556c88/"/>
+    <id>https://iwesley.top/article/bf556c88/</id>
+    <published>2024-11-17T08:17:32.000Z</published>
+    <updated>2024-12-24T12:51:46.756Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;获取进程名字&lt;/p&gt;
+&lt;p&gt;【Android】获取当前进程名的四种方法及效率对比_android获取当前进程名-CSDN博客: &lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Android" scheme="https://iwesley.top/categories/Android/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="AndroidUtils" scheme="https://iwesley.top/tags/AndroidUtils/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>gradle常见问题</title>
+    <link href="https://iwesley.top/article/a7bee58f/"/>
+    <id>https://iwesley.top/article/a7bee58f/</id>
+    <published>2024-11-17T07:46:40.000Z</published>
+    <updated>2025-01-04T13:22:42.977Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;aar相关&quot;&gt;&lt;a href=&quot;#aar相关&quot; class=&quot;headerlink&quot; title=&quot;aar相关&quot;&gt;&lt;/a&gt;aar相关&lt;/h1&gt;&lt;h2 id=&quot;添加aar包依赖&quot;&gt;&lt;a href=&quot;#添加aar包依赖&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="AppBuild" scheme="https://iwesley.top/categories/AppBuild/"/>
+    
+    
+    <category term="gradle" scheme="https://iwesley.top/tags/gradle/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>安卓相关知识点网站</title>
+    <link href="https://iwesley.top/article/ed7f9345/"/>
+    <id>https://iwesley.top/article/ed7f9345/</id>
+    <published>2024-11-10T08:38:56.000Z</published>
+    <updated>2024-12-24T12:51:46.756Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;开发者文档&quot;&gt;&lt;a href=&quot;#开发者文档&quot; class=&quot;headerlink&quot; title=&quot;开发者文档&quot;&gt;&lt;/a&gt;开发者文档&lt;/h1&gt;&lt;p&gt;OPPO 开放平台-OPPO开发者服务中心: &lt;a</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>一些有效的工作方法</title>
+    <link href="https://iwesley.top/article/b6e36186/"/>
+    <id>https://iwesley.top/article/b6e36186/</id>
+    <published>2024-11-10T08:37:15.000Z</published>
+    <updated>2024-12-24T12:51:46.756Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;安卓第三方库选择：要考虑兼容性、可维护性、性能比较&lt;/p&gt;
+</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>android IPC: 安卓进程间通讯的几种方式</title>
+    <link href="https://iwesley.top/article/7bbe7ac8/"/>
+    <id>https://iwesley.top/article/7bbe7ac8/</id>
+    <published>2024-11-10T08:17:50.000Z</published>
+    <updated>2024-12-24T12:51:46.755Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Android中目前存在多种IPC方式，分别为：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Bundle&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;文件共享&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Messenger&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;AIDL&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;C</summary>
+        
+      
+    
+    
+    
+    <category term="Android IPC" scheme="https://iwesley.top/categories/Android-IPC/"/>
+    
+    
+    <category term="android ipc" scheme="https://iwesley.top/tags/android-ipc/"/>
+    
+    <category term="android rpc" scheme="https://iwesley.top/tags/android-rpc/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>安卓源码环境:Android.mk如何编译aar包?</title>
+    <link href="https://iwesley.top/article/797e1cc1/"/>
+    <id>https://iwesley.top/article/797e1cc1/</id>
+    <published>2024-11-10T02:56:10.000Z</published>
+    <updated>2024-11-10T02:56:10.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;在安卓源码top目录执行编译命令：（注意：下面的Android.mk要被include进去）&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;make test_aar</summary>
+        
+      
+    
+    
+    
+    <category term="Android Build System" scheme="https://iwesley.top/categories/Android-Build-System/"/>
+    
+    
+    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="aosp编译" scheme="https://iwesley.top/tags/aosp%E7%BC%96%E8%AF%91/"/>
+    
+    <category term="Android.mk" scheme="https://iwesley.top/tags/Android-mk/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>jadx内存不足和反编译失败官方解决办法</title>
+    <link href="https://iwesley.top/article/5ee2a33b/"/>
+    <id>https://iwesley.top/article/5ee2a33b/</id>
+    <published>2024-09-22T09:41:04.000Z</published>
+    <updated>2025-01-04T13:30:54.174Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;如果搜索引擎搜索了好久都解决不了问题，建议到官方文档看一下。&lt;/p&gt;
+&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="安卓安全和逆向" scheme="https://iwesley.top/categories/%E5%AE%89%E5%8D%93%E5%AE%89%E5%85%A8%E5%92%8C%E9%80%86%E5%90%91/"/>
+    
+    
+    <category term="jadx" scheme="https://iwesley.top/tags/jadx/"/>
+    
+    <category term="反编译" scheme="https://iwesley.top/tags/%E5%8F%8D%E7%BC%96%E8%AF%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>哔哩哔哩直播链接报403解决办法</title>
+    <link href="https://iwesley.top/article/c0d037a/"/>
+    <id>https://iwesley.top/article/c0d037a/</id>
+    <published>2024-09-22T08:31:28.000Z</published>
+    <updated>2024-09-22T08:31:28.000Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近投屏接到客诉说苹果哔哩哔哩客户端投直播会显示播放失败。&lt;/p&gt;
+&lt;p&gt;我测试发现安卓端哔哩哔哩是正常的，某投屏软件也能正常播放，我对此感到困惑。通过&lt;code&gt;tcpdump&lt;/code&gt;分析，发现它的ijk播放器在访问链接时改变了User</summary>
+        
+      
+    
+    
+    
+    <category term="投屏" scheme="https://iwesley.top/categories/%E6%8A%95%E5%B1%8F/"/>
+    
+    
+    <category term="投屏" scheme="https://iwesley.top/tags/%E6%8A%95%E5%B1%8F/"/>
+    
+    <category term="网络" scheme="https://iwesley.top/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
+  
+</feed>
