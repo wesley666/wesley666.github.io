@@ -209,7 +209,7 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/article/ca471381/</loc>
+    <loc>https://iwesley.top/article/7bbe7ac8/</loc>
     
     <lastmod>2024-12-24</lastmod>
     
@@ -218,7 +218,7 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/article/7bbe7ac8/</loc>
+    <loc>https://iwesley.top/article/ca471381/</loc>
     
     <lastmod>2024-12-24</lastmod>
     
@@ -437,7 +437,14 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/AndroidActivity/</loc>
+    <loc>https://iwesley.top/tags/Java/</loc>
+    <lastmod>2025-01-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/art/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -451,14 +458,7 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/Java/</loc>
-    <lastmod>2025-01-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://iwesley.top/tags/art/</loc>
+    <loc>https://iwesley.top/tags/AndroidActivity/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -493,13 +493,6 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/AndroidThirdPartySDK/</loc>
-    <lastmod>2025-01-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://iwesley.top/tags/android-ipc/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
@@ -508,6 +501,13 @@
   
   <url>
     <loc>https://iwesley.top/tags/android-rpc/</loc>
+    <lastmod>2025-01-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/AndroidThirdPartySDK/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -584,6 +584,13 @@
   </url>
   
   <url>
+    <loc>https://iwesley.top/tags/%E5%B1%9E%E6%80%A7%E6%9C%8D%E5%8A%A1/</loc>
+    <lastmod>2025-01-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://iwesley.top/tags/aosp%E7%BC%96%E8%AF%91/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
@@ -605,7 +612,7 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/%E5%B1%9E%E6%80%A7%E6%9C%8D%E5%8A%A1/</loc>
+    <loc>https://iwesley.top/tags/UsageStatsService/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -613,13 +620,6 @@
   
   <url>
     <loc>https://iwesley.top/tags/Android%E5%A4%9A%E6%B8%A0%E9%81%93/</loc>
-    <lastmod>2025-01-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://iwesley.top/tags/UsageStatsService/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -640,13 +640,6 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/PackageManagerService/</loc>
-    <lastmod>2025-01-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://iwesley.top/tags/PackageMangerService/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
@@ -654,14 +647,7 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/tags/%E5%AE%B6%E4%B9%A1/</loc>
-    <lastmod>2025-01-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://iwesley.top/tags/collection/</loc>
+    <loc>https://iwesley.top/tags/PackageManagerService/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -676,6 +662,20 @@
   
   <url>
     <loc>https://iwesley.top/tags/%E5%AE%89%E5%8D%93%E4%BE%BF%E7%AD%BE/</loc>
+    <lastmod>2025-01-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/%E5%AE%B6%E4%B9%A1/</loc>
+    <lastmod>2025-01-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://iwesley.top/tags/collection/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -705,7 +705,7 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/categories/Android/</loc>
+    <loc>https://iwesley.top/categories/AndroidBugFix/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -719,7 +719,7 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/categories/AndroidBugFix/</loc>
+    <loc>https://iwesley.top/categories/Android/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -747,14 +747,14 @@
   </url>
   
   <url>
-    <loc>https://iwesley.top/categories/AndroidThirdPartSDK/</loc>
+    <loc>https://iwesley.top/categories/Android-IPC/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://iwesley.top/categories/Android-IPC/</loc>
+    <loc>https://iwesley.top/categories/AndroidThirdPartSDK/</loc>
     <lastmod>2025-01-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
