@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>DLNA库Platinum新增安卓64位so编译方法</title>
+    <link href="/article/4339b418/"/>
+    <url>/article/4339b418/</url>
+    
+    <content type="html"><![CDATA[<p>下载代码（该仓库我已经修改相关编译错误和支持安卓 64 位 so 编译）</p><p><code>git clone https://github.com/wesley666/Platinum -b master</code></p><p>下载Neptune</p><p><code>git submodule update --init</code></p><p>下载 ndk15：</p><p><a href="https://dl.google.com/android/repository/android-ndk-r15c-linux-x86_64.zip">https://dl.google.com/android/repository/android-ndk-r15c-linux-x86_64.zip</a></p><p>建议安装 conda 环境来进行编译</p><p><a href="https://www.anaconda.com/download/success">https://www.anaconda.com/download/success</a></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">conda create -n dlna  python=2.7<br><br>pip install scons<br><br>conda activate dlna<br></code></pre></td></tr></table></figure><p>编译</p> <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">以你的路径为准，如果出现路径错误，可以改成绝对路径</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-built_in">export</span> ANDROID_NDK_ROOT=/home/wesley/ndk/android-ndk-r15c/</span> <br>export ANDROID_NDK_ROOT=~/ndk/android-ndk-r15c/ <br>scons -c target=arm-android-linux build_config=Release<br>scons target=arm-android-linux build_config=Release<br>scons -c target=arm64-android-linux build_config=Release<br>scons target=arm64-android-linux build_config=Release<br>cd Source/Platform/Android/module/platinum<br>~/ndk/android-ndk-r15c/ndk-build clean<br>~/ndk/android-ndk-r15c/ndk-build NDK_DEBUG=0<br></code></pre></td></tr></table></figure><blockquote><p>(dlna) wesley@Wesley:~&#x2F;Project&#x2F;Platinum&#x2F;Source&#x2F;Platform&#x2F;Android&#x2F;module&#x2F;platinum$ ~&#x2F;ndk&#x2F;android-ndk-r15c&#x2F;ndk-build<br>Android NDK: Found platform level in .&#x2F;project.properties. Setting APP_PLATFORM to android-14.<br>jni&#x2F;Android.mk:5: “TARGET_ARCH_ABI:armeabi”<br>jni&#x2F;Android.mk:5: “TARGET_ARCH_ABI:armeabi-v7a”<br>jni&#x2F;Android.mk:5: “TARGET_ARCH_ABI:arm64-v8a”<br>jni&#x2F;Android.mk:15: “build arm64”<br>[armeabi] Compile++ thumb: platinum-jni &lt;&#x3D; platinum-jni.cpp<br>[armeabi] StaticLibrary  : libstdc++.a<br>[armeabi] SharedLibrary  : libplatinum-jni.so<br>[armeabi] Install        : libplatinum-jni.so &#x3D;&gt; libs&#x2F;armeabi&#x2F;libplatinum-jni.so<br>[armeabi-v7a] Compile++ thumb: platinum-jni &lt;&#x3D; platinum-jni.cpp<br>[armeabi-v7a] StaticLibrary  : libstdc++.a<br>[armeabi-v7a] SharedLibrary  : libplatinum-jni.so<br>[armeabi-v7a] Install        : libplatinum-jni.so &#x3D;&gt; libs&#x2F;armeabi-v7a&#x2F;libplatinum-jni.so<br>[arm64-v8a] Compile++      : platinum-jni &lt;&#x3D; platinum-jni.cpp<br>[arm64-v8a] StaticLibrary  : libstdc++.a<br>[arm64-v8a] SharedLibrary  : libplatinum-jni.so<br>[arm64-v8a] Install        : libplatinum-jni.so &#x3D;&gt; libs&#x2F;arm64-v8a&#x2F;libplatinum-jni.so</p></blockquote><p>obj和 libs目录区别：一个用于追溯和调试，一个用于正式版发布。</p><blockquote><p>(dlna) wesley@Wesley:~&#x2F;Project&#x2F;Platinum&#x2F;Source&#x2F;Platform&#x2F;Android&#x2F;module&#x2F;platinum$ file libs&#x2F;arm64-v8a&#x2F;libplatinum-jni.so<br>libs&#x2F;arm64-v8a&#x2F;libplatinum-jni.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]&#x3D;a8cdaa3a1288bd98c13556fbd4a1499e31005091, <strong>stripped</strong></p><p>(dlna) wesley@Wesley:~&#x2F;Project&#x2F;Platinum&#x2F;Source&#x2F;Platform&#x2F;Android&#x2F;module&#x2F;platinum$ file obj&#x2F;local&#x2F;arm64-v8a&#x2F;libplatinum-jni.so<br>obj&#x2F;local&#x2F;arm64-v8a&#x2F;libplatinum-jni.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]&#x3D;a8cdaa3a1288bd98c13556fbd4a1499e31005091, <strong>with debug_info, not stripped</strong></p></blockquote>]]></content>
+    
+    
+    <categories>
+      
+      <category>投屏</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>投屏</tag>
+      
+      <tag>DLNA</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>安卓Activity执行finish后onNewIntent也执行了</title>
     <link href="/article/88a54bc8/"/>
     <url>/article/88a54bc8/</url>

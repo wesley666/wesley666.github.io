@@ -6,7 +6,7 @@
   <link href="https://iwesley.top/atom.xml" rel="self"/>
   
   <link href="https://iwesley.top/"/>
-  <updated>2025-01-04T10:36:03.481Z</updated>
+  <updated>2025-01-18T11:09:59.336Z</updated>
   <id>https://iwesley.top/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>DLNA库Platinum新增安卓64位so编译方法</title>
+    <link href="https://iwesley.top/article/4339b418/"/>
+    <id>https://iwesley.top/article/4339b418/</id>
+    <published>2025-01-18T04:52:15.000Z</published>
+    <updated>2025-01-18T11:09:59.336Z</updated>
+    
+    <content type="html"><![CDATA[<p>下载代码（该仓库我已经修改相关编译错误和支持安卓 64 位 so 编译）</p><p><code>git clone https://github.com/wesley666/Platinum -b master</code></p><p>下载Neptune</p><p><code>git submodule update --init</code></p><p>下载 ndk15：</p><p><a href="https://dl.google.com/android/repository/android-ndk-r15c-linux-x86_64.zip">https://dl.google.com/android/repository/android-ndk-r15c-linux-x86_64.zip</a></p><p>建议安装 conda 环境来进行编译</p><p><a href="https://www.anaconda.com/download/success">https://www.anaconda.com/download/success</a></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">conda create -n dlna  python=2.7<br><br>pip install scons<br><br>conda activate dlna<br></code></pre></td></tr></table></figure><p>编译</p> <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">以你的路径为准，如果出现路径错误，可以改成绝对路径</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-built_in">export</span> ANDROID_NDK_ROOT=/home/wesley/ndk/android-ndk-r15c/</span> <br>export ANDROID_NDK_ROOT=~/ndk/android-ndk-r15c/ <br>scons -c target=arm-android-linux build_config=Release<br>scons target=arm-android-linux build_config=Release<br>scons -c target=arm64-android-linux build_config=Release<br>scons target=arm64-android-linux build_config=Release<br>cd Source/Platform/Android/module/platinum<br>~/ndk/android-ndk-r15c/ndk-build clean<br>~/ndk/android-ndk-r15c/ndk-build NDK_DEBUG=0<br></code></pre></td></tr></table></figure><blockquote><p>(dlna) wesley@Wesley:~&#x2F;Project&#x2F;Platinum&#x2F;Source&#x2F;Platform&#x2F;Android&#x2F;module&#x2F;platinum$ ~&#x2F;ndk&#x2F;android-ndk-r15c&#x2F;ndk-build<br>Android NDK: Found platform level in .&#x2F;project.properties. Setting APP_PLATFORM to android-14.<br>jni&#x2F;Android.mk:5: “TARGET_ARCH_ABI:armeabi”<br>jni&#x2F;Android.mk:5: “TARGET_ARCH_ABI:armeabi-v7a”<br>jni&#x2F;Android.mk:5: “TARGET_ARCH_ABI:arm64-v8a”<br>jni&#x2F;Android.mk:15: “build arm64”<br>[armeabi] Compile++ thumb: platinum-jni &lt;&#x3D; platinum-jni.cpp<br>[armeabi] StaticLibrary  : libstdc++.a<br>[armeabi] SharedLibrary  : libplatinum-jni.so<br>[armeabi] Install        : libplatinum-jni.so &#x3D;&gt; libs&#x2F;armeabi&#x2F;libplatinum-jni.so<br>[armeabi-v7a] Compile++ thumb: platinum-jni &lt;&#x3D; platinum-jni.cpp<br>[armeabi-v7a] StaticLibrary  : libstdc++.a<br>[armeabi-v7a] SharedLibrary  : libplatinum-jni.so<br>[armeabi-v7a] Install        : libplatinum-jni.so &#x3D;&gt; libs&#x2F;armeabi-v7a&#x2F;libplatinum-jni.so<br>[arm64-v8a] Compile++      : platinum-jni &lt;&#x3D; platinum-jni.cpp<br>[arm64-v8a] StaticLibrary  : libstdc++.a<br>[arm64-v8a] SharedLibrary  : libplatinum-jni.so<br>[arm64-v8a] Install        : libplatinum-jni.so &#x3D;&gt; libs&#x2F;arm64-v8a&#x2F;libplatinum-jni.so</p></blockquote><p>obj和 libs目录区别：一个用于追溯和调试，一个用于正式版发布。</p><blockquote><p>(dlna) wesley@Wesley:~&#x2F;Project&#x2F;Platinum&#x2F;Source&#x2F;Platform&#x2F;Android&#x2F;module&#x2F;platinum$ file libs&#x2F;arm64-v8a&#x2F;libplatinum-jni.so<br>libs&#x2F;arm64-v8a&#x2F;libplatinum-jni.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]&#x3D;a8cdaa3a1288bd98c13556fbd4a1499e31005091, <strong>stripped</strong></p><p>(dlna) wesley@Wesley:~&#x2F;Project&#x2F;Platinum&#x2F;Source&#x2F;Platform&#x2F;Android&#x2F;module&#x2F;platinum$ file obj&#x2F;local&#x2F;arm64-v8a&#x2F;libplatinum-jni.so<br>obj&#x2F;local&#x2F;arm64-v8a&#x2F;libplatinum-jni.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]&#x3D;a8cdaa3a1288bd98c13556fbd4a1499e31005091, <strong>with debug_info, not stripped</strong></p></blockquote>]]></content>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;下载代码（该仓库我已经修改相关编译错误和支持安卓 64 位 so 编译）&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;git clone https://github.com/wesley666/Platinum -b</summary>
+        
+      
+    
+    
+    
+    <category term="投屏" scheme="https://iwesley.top/categories/%E6%8A%95%E5%B1%8F/"/>
+    
+    
+    <category term="投屏" scheme="https://iwesley.top/tags/%E6%8A%95%E5%B1%8F/"/>
+    
+    <category term="DLNA" scheme="https://iwesley.top/tags/DLNA/"/>
+    
+  </entry>
   
   <entry>
     <title>安卓Activity执行finish后onNewIntent也执行了</title>
@@ -582,36 +612,6 @@
     <category term="jadx" scheme="https://iwesley.top/tags/jadx/"/>
     
     <category term="反编译" scheme="https://iwesley.top/tags/%E5%8F%8D%E7%BC%96%E8%AF%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>哔哩哔哩直播链接报403解决办法</title>
-    <link href="https://iwesley.top/article/c0d037a/"/>
-    <id>https://iwesley.top/article/c0d037a/</id>
-    <published>2024-09-22T08:31:28.000Z</published>
-    <updated>2024-09-22T08:31:28.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>最近投屏接到客诉说苹果哔哩哔哩客户端投直播会显示播放失败。</p><p>我测试发现安卓端哔哩哔哩是正常的，某投屏软件也能正常播放，我对此感到困惑。通过<code>tcpdump</code>分析，发现它的ijk播放器在访问链接时改变了User Agent。</p><p>然后我就开始测试了：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java">headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Mozilla/5.0.BiliTV/1.7.2&quot;</span>); <span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Bilibili Freedoooooom/MarkII&quot;</span>);<span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Linux Androi&quot;</span>);<span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Android&quot;</span>);<span class="hljs-comment">//403 forbidden</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;stagefright&quot;</span>);<span class="hljs-comment">//403 forbidden</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;a&quot;</span>);<span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Androi&quot;</span>);<span class="hljs-comment">//正常</span><br>headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;stagefrigh&quot;</span>);<span class="hljs-comment">//正常</span><br></code></pre></td></tr></table></figure><p>经测试发现含有Android或者stagefright都会导致访问403，其他都正常。</p><p>而安卓默认的User Agent就包含了Android和stagefright。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java">AString <span class="hljs-title function_">MakeUserAgent</span><span class="hljs-params">()</span> &#123;<br>    AString ua;<br>    ua.append(<span class="hljs-string">&quot;stagefright/1.2 (Linux;Android &quot;</span>);<br>#<span class="hljs-keyword">if</span> (PROPERTY_VALUE_MAX &lt; <span class="hljs-number">8</span>)<br>#error <span class="hljs-string">&quot;PROPERTY_VALUE_MAX must be at least 8&quot;</span><br>#endif<br>    <span class="hljs-type">char</span> value[PROPERTY_VALUE_MAX];<br>    property_get(<span class="hljs-string">&quot;ro.build.version.release&quot;</span>, value, <span class="hljs-string">&quot;Unknown&quot;</span>);<br>    ua.append(value);<br>    ua.append(<span class="hljs-string">&quot;)&quot;</span>);<br>    <span class="hljs-keyword">return</span> ua;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p>既然知道了问题原因，那么解决起来就很简单了，当判断是哔哩哔哩的直播链接时，改变播放器的user agent。</p><h3 id="ijk播放器"><a href="#ijk播放器" class="headerlink" title="ijk播放器"></a>ijk播放器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">mIjkPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, <span class="hljs-string">&quot;user_agent&quot;</span>, <span class="hljs-string">&quot;Bilibili Freedoooooom/MarkII&quot;</span>);<br></code></pre></td></tr></table></figure><h3 id="MediaPlayer播放器"><a href="#MediaPlayer播放器" class="headerlink" title="MediaPlayer播放器"></a>MediaPlayer播放器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">headers.put(<span class="hljs-string">&quot;User-Agent&quot;</span>, <span class="hljs-string">&quot;Bilibili Freedoooooom/MarkII&quot;</span>);<br>mPlayer.setDataSource(<span class="hljs-built_in">this</span>, Uri.parse(videoUrl), headers);<br></code></pre></td></tr></table></figure><p>注意，由于谷歌的bug，安卓5.0和5.1不支持该设置</p><p>[MediaPlayer ignores User-Agent header <a href="https://issuetracker.google.com/issues/37018604?pli=1">37018604] - Issue Tracker</a></p><p><a href="https://android-review.googlesource.com/c/platform/frameworks/av/+/124333/1/media/libstagefright/http/MediaHTTP.cpp#b53">…&#x2F;MediaHTTP.cpp · Gerrit Code Review</a></p><h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>当然也可以通过本地代理来解决，拦截播放请求就可以随意改变user agent了，这也可以解决安卓5.0以下MediaPlayer不支持某些tls版本的问题。</p><p>参考链接：</p><p><a href="https://blog.51cto.com/u_16213339/7466348">哔哩哔哩视频403Forbidden原因</a></p><p><a href="https://im.salty.fish/index.php/archives/revengr-bilibili-352.html">浅度剖析B站的新 -352 风控策略 - A Salty Blog</a></p>]]></content>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;最近投屏接到客诉说苹果哔哩哔哩客户端投直播会显示播放失败。&lt;/p&gt;
-&lt;p&gt;我测试发现安卓端哔哩哔哩是正常的，某投屏软件也能正常播放，我对此感到困惑。通过&lt;code&gt;tcpdump&lt;/code&gt;分析，发现它的ijk播放器在访问链接时改变了User</summary>
-        
-      
-    
-    
-    
-    <category term="投屏" scheme="https://iwesley.top/categories/%E6%8A%95%E5%B1%8F/"/>
-    
-    
-    <category term="投屏" scheme="https://iwesley.top/tags/%E6%8A%95%E5%B1%8F/"/>
-    
-    <category term="网络" scheme="https://iwesley.top/tags/%E7%BD%91%E7%BB%9C/"/>
     
   </entry>
   

@@ -19,18 +19,18 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="测试反应投屏时下一集可能播放不成功。 首先看一下日志：  onCompletiononCasthandlerMessage: 2finish: PlayerActivity@abc7fdconPause: PlayerActivity@abc7fdconNewIntent: PlayerActivity@abc7fdconResume: PlayerActivity@abc7fdconPause:">
+    <meta name="description" content="下载代码（该仓库我已经修改相关编译错误和支持安卓 64 位 so 编译） git clone https:&#x2F;&#x2F;github.com&#x2F;wesley666&#x2F;Platinum -b master 下载Neptune git submodule update --init 下载 ndk15： https:&#x2F;&#x2F;dl.google.com&#x2F;android&#x2F;repository&#x2F;android-ndk-r15c">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安卓Activity执行finish后onNewIntent也执行了">
-<meta property="og:url" content="https://iwesley.top/article/88a54bc8/index.html">
+<meta property="og:title" content="DLNA库Platinum新增安卓64位so编译方法">
+<meta property="og:url" content="https://iwesley.top/article/4339b418/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="测试反应投屏时下一集可能播放不成功。 首先看一下日志：  onCompletiononCasthandlerMessage: 2finish: PlayerActivity@abc7fdconPause: PlayerActivity@abc7fdconNewIntent: PlayerActivity@abc7fdconResume: PlayerActivity@abc7fdconPause:">
+<meta property="og:description" content="下载代码（该仓库我已经修改相关编译错误和支持安卓 64 位 so 编译） git clone https:&#x2F;&#x2F;github.com&#x2F;wesley666&#x2F;Platinum -b master 下载Neptune git submodule update --init 下载 ndk15： https:&#x2F;&#x2F;dl.google.com&#x2F;android&#x2F;repository&#x2F;android-ndk-r15c">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-01-04T09:34:44.000Z">
-<meta property="article:modified_time" content="2025-01-04T10:36:03.481Z">
+<meta property="article:published_time" content="2025-01-18T04:52:15.000Z">
+<meta property="article:modified_time" content="2025-01-18T11:09:59.336Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="Android">
-<meta property="article:tag" content="AndroidActivity">
+<meta property="article:tag" content="投屏">
+<meta property="article:tag" content="DLNA">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -39,7 +39,7 @@
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>安卓Activity执行finish后onNewIntent也执行了 - Wesley&#39;s Blog</title>
+  <title>DLNA库Platinum新增安卓64位so编译方法 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -262,7 +262,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="安卓Activity执行finish后onNewIntent也执行了"></span>
+            <span id="subtitle" data-typed-text="DLNA库Platinum新增安卓64位so编译方法"></span>
           
         </div>
 
@@ -278,8 +278,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-01-04 17:34" pubdate>
-          2025年1月4日 下午
+        <time datetime="2025-01-18 12:52" pubdate>
+          2025年1月18日 下午
         </time>
       </span>
     
@@ -290,7 +290,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          314 字
+          425 字
         
       </span>
     
@@ -301,7 +301,7 @@
         
         
         
-          3 分钟
+          4 分钟
         
       </span>
     
@@ -338,12 +338,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">安卓Activity执行finish后onNewIntent也执行了</h1>
+            <h1 id="seo-header">DLNA库Platinum新增安卓64位so编译方法</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年1月4日 晚上
+                    本文最后更新于：2025年1月18日 晚上
                   
                 
               </p>
@@ -351,20 +351,27 @@
             
               <div class="markdown-body">
                 
-                <p>测试反应投屏时下一集可能播放不成功。</p>
-<p>首先看一下日志：</p>
+                <p>下载代码（该仓库我已经修改相关编译错误和支持安卓 64 位 so 编译）</p>
+<p><code>git clone https://github.com/wesley666/Platinum -b master</code></p>
+<p>下载Neptune</p>
+<p><code>git submodule update --init</code></p>
+<p>下载 ndk15：</p>
+<p><a target="_blank" rel="noopener" href="https://dl.google.com/android/repository/android-ndk-r15c-linux-x86_64.zip">https://dl.google.com/android/repository/android-ndk-r15c-linux-x86_64.zip</a></p>
+<p>建议安装 conda 环境来进行编译</p>
+<p><a target="_blank" rel="noopener" href="https://www.anaconda.com/download/success">https://www.anaconda.com/download/success</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell">conda create -n dlna  python=2.7<br><br>pip install scons<br><br>conda activate dlna<br></code></pre></td></tr></table></figure>
+
+<p>编译</p>
+ <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">以你的路径为准，如果出现路径错误，可以改成绝对路径</span><br><span class="hljs-meta prompt_">#</span><span class="language-bash"><span class="hljs-built_in">export</span> ANDROID_NDK_ROOT=/home/wesley/ndk/android-ndk-r15c/</span> <br>export ANDROID_NDK_ROOT=~/ndk/android-ndk-r15c/ <br>scons -c target=arm-android-linux build_config=Release<br>scons target=arm-android-linux build_config=Release<br>scons -c target=arm64-android-linux build_config=Release<br>scons target=arm64-android-linux build_config=Release<br>cd Source/Platform/Android/module/platinum<br>~/ndk/android-ndk-r15c/ndk-build clean<br>~/ndk/android-ndk-r15c/ndk-build NDK_DEBUG=0<br></code></pre></td></tr></table></figure>
+
 <blockquote>
-<p>onCompletion<br>onCast<br>handlerMessage: 2<br>finish: PlayerActivity@abc7fdc<br>onPause: PlayerActivity@abc7fdc<br>onNewIntent: PlayerActivity@abc7fdc<br>onResume: PlayerActivity@abc7fdc<br>onPause: PlayerActivity@abc7fdc<br>onResume: HomeActivity@71ec50a<br>onstop: PlayerActivity@abc7fdc<br>onDestroy:PlayerActivity@abc7fdc</p>
+<p>(dlna) wesley@Wesley:~&#x2F;Project&#x2F;Platinum&#x2F;Source&#x2F;Platform&#x2F;Android&#x2F;module&#x2F;platinum$ ~&#x2F;ndk&#x2F;android-ndk-r15c&#x2F;ndk-build<br>Android NDK: Found platform level in .&#x2F;project.properties. Setting APP_PLATFORM to android-14.<br>jni&#x2F;Android.mk:5: “TARGET_ARCH_ABI:armeabi”<br>jni&#x2F;Android.mk:5: “TARGET_ARCH_ABI:armeabi-v7a”<br>jni&#x2F;Android.mk:5: “TARGET_ARCH_ABI:arm64-v8a”<br>jni&#x2F;Android.mk:15: “build arm64”<br>[armeabi] Compile++ thumb: platinum-jni &lt;&#x3D; platinum-jni.cpp<br>[armeabi] StaticLibrary  : libstdc++.a<br>[armeabi] SharedLibrary  : libplatinum-jni.so<br>[armeabi] Install        : libplatinum-jni.so &#x3D;&gt; libs&#x2F;armeabi&#x2F;libplatinum-jni.so<br>[armeabi-v7a] Compile++ thumb: platinum-jni &lt;&#x3D; platinum-jni.cpp<br>[armeabi-v7a] StaticLibrary  : libstdc++.a<br>[armeabi-v7a] SharedLibrary  : libplatinum-jni.so<br>[armeabi-v7a] Install        : libplatinum-jni.so &#x3D;&gt; libs&#x2F;armeabi-v7a&#x2F;libplatinum-jni.so<br>[arm64-v8a] Compile++      : platinum-jni &lt;&#x3D; platinum-jni.cpp<br>[arm64-v8a] StaticLibrary  : libstdc++.a<br>[arm64-v8a] SharedLibrary  : libplatinum-jni.so<br>[arm64-v8a] Install        : libplatinum-jni.so &#x3D;&gt; libs&#x2F;arm64-v8a&#x2F;libplatinum-jni.so</p>
 </blockquote>
-<p>看到日志时很迷惑，为什么 finish 了，安卓还会执行onNewIntent，不应该是新建一个 activity 吗？</p>
-<p>先来看一下场景描述：</p>
-<p>视频播完后会发送一个 finish 信息，如果 3s 内没有下一个视频进来就会执行 finish，有视频进来就会在 onNewIntent 中 remove 掉这条信息。</p>
-<p>经过实验和详细分析后，终于找到了问题原因：</p>
-<p>首先因为视频播放结束发了一条finish消息，finish消息没有执行时突然来了下一集的消息，这时候执行startActivty会插入一条onNewIntent消息。结果，这时候finish因为时间到了，该执行了。然后 finish 执行完后，onNewIntent 也该执行了。执行完后因为 finish 的原因， onDestroy也执行了。结果就是下一集没播完就退出来了。</p>
-<p>解决办法：在startActivity前remove掉finish消息，比onNewIntent 的时间节点还要提前。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>面试必备：Android（9.0）Activity启动流程(一) : <a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903959581163528">https://juejin.cn/post/6844903959581163528</a></p>
-<p>面试必备：Android（9.0）Activity启动流程(二) : <a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903959589552142">https://juejin.cn/post/6844903959589552142</a></p>
-<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24639272/onnewintent-called-after-finish-executed">android - onNewIntent called after finish() executed - Stack Overflow</a></p>
+<p>obj和 libs目录区别：一个用于追溯和调试，一个用于正式版发布。</p>
+<blockquote>
+<p>(dlna) wesley@Wesley:~&#x2F;Project&#x2F;Platinum&#x2F;Source&#x2F;Platform&#x2F;Android&#x2F;module&#x2F;platinum$ file libs&#x2F;arm64-v8a&#x2F;libplatinum-jni.so<br>libs&#x2F;arm64-v8a&#x2F;libplatinum-jni.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]&#x3D;a8cdaa3a1288bd98c13556fbd4a1499e31005091, <strong>stripped</strong></p>
+<p>(dlna) wesley@Wesley:~&#x2F;Project&#x2F;Platinum&#x2F;Source&#x2F;Platform&#x2F;Android&#x2F;module&#x2F;platinum$ file obj&#x2F;local&#x2F;arm64-v8a&#x2F;libplatinum-jni.so<br>obj&#x2F;local&#x2F;arm64-v8a&#x2F;libplatinum-jni.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]&#x3D;a8cdaa3a1288bd98c13556fbd4a1499e31005091, <strong>with debug_info, not stripped</strong></p>
+</blockquote>
 
                 
               </div>
@@ -383,7 +390,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/AndroidBugFix/" class="category-chain-item">AndroidBugFix</a>
+  <a href="/categories/%E6%8A%95%E5%B1%8F/" class="category-chain-item">投屏</a>
   
   
 
@@ -398,9 +405,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Android/" class="print-no-link">#Android</a>
+        <a href="/tags/%E6%8A%95%E5%B1%8F/" class="print-no-link">#投屏</a>
       
-        <a href="/tags/AndroidActivity/" class="print-no-link">#AndroidActivity</a>
+        <a href="/tags/DLNA/" class="print-no-link">#DLNA</a>
       
     </div>
   
@@ -412,8 +419,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>安卓Activity执行finish后onNewIntent也执行了</div>
-      <div>https://iwesley.top/article/88a54bc8/</div>
+      <div>DLNA库Platinum新增安卓64位so编译方法</div>
+      <div>https://iwesley.top/article/4339b418/</div>
     </div>
     <div class="license-meta">
       
@@ -425,7 +432,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年1月4日</div>
+          <div>2025年1月18日</div>
         </div>
       
       
@@ -457,18 +464,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/article/4339b418/" title="DLNA库Platinum新增安卓64位so编译方法">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">DLNA库Platinum新增安卓64位so编译方法</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/article/18f59983/" title="安卓应用4字节不对齐导致so加载失败">
-                        <span class="hidden-mobile">安卓应用4字节不对齐导致so加载失败</span>
+                      <a href="/article/88a54bc8/" title="安卓Activity执行finish后onNewIntent也执行了">
+                        <span class="hidden-mobile">安卓Activity执行finish后onNewIntent也执行了</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
