@@ -4,25 +4,6 @@
   
   
   <entry>
-    <title>二进制基础知识</title>
-    <link href="/article/d633df5c/"/>
-    <url>/article/d633df5c/</url>
-    
-    <content type="html"><![CDATA[<p>将补码（Two’s Complement）转换为十进制的方法主要有以下几种。以下是详细的推导和示例：</p><hr><h3 id="方法-1：标准公式法"><a href="#方法-1：标准公式法" class="headerlink" title="方法 1：标准公式法"></a><strong>方法 1：标准公式法</strong></h3><p>补码的十进制值由符号位和数值位共同决定：</p><ul><li><strong>公式</strong>：<br>[<br>\text{十进制值} &#x3D; (-1)^{\text{符号位}} \times \left( \text{数值位的二进制值} \right)<br>]</li><li><strong>步骤</strong>：<ol><li><strong>判断符号位</strong>：最高位为符号位（0表示正数，1表示负数）。</li><li><strong>计算数值位</strong>：<ul><li><strong>正数</strong>：符号位为0，直接按二进制转十进制。</li><li><strong>负数</strong>：符号位为1，需将补码转换为原码，再计算十进制值。</li></ul></li></ol></li></ul><h4 id="示例（8位补码）"><a href="#示例（8位补码）" class="headerlink" title="示例（8位补码）"></a><strong>示例（8位补码）</strong></h4><ul><li><p><strong>正数补码</strong>：<code>0010 1101</code><br>符号位为0，直接计算数值位：<br>(2^5 + 2^3 + 2^2 + 2^0 &#x3D; 32 + 8 + 4 + 1 &#x3D; 45)<br>结果为 <strong>+45</strong>。</p></li><li><p><strong>负数补码</strong>：<code>1110 1011</code><br>符号位为1，需转换：</p><ol><li><strong>取反补码</strong>：<code>0001 0100</code>  </li><li><strong>加1</strong>：<code>0001 0101</code>（十进制为21）  </li><li><strong>添加符号</strong>：结果为 <strong>-21</strong>。</li></ol></li></ul><hr><h3 id="方法-2：逐位权重计算法"><a href="#方法-2：逐位权重计算法" class="headerlink" title="方法 2：逐位权重计算法"></a><strong>方法 2：逐位权重计算法</strong></h3><p>直接根据二进制位的权重计算，符号位单独处理：</p><ul><li><strong>公式</strong>：<br>[<br>\text{十进制值} &#x3D; - (\text{符号位} \times 2^{n-1}) + \sum_{i&#x3D;0}^{n-2} (\text{bit}_i \times 2^i)<br>]<ul><li>(n)：总位数（如32位、8位等）。</li></ul></li></ul><h4 id="示例（8位补码-1110-1011）"><a href="#示例（8位补码-1110-1011）" class="headerlink" title="示例（8位补码 1110 1011）"></a><strong>示例（8位补码 <code>1110 1011</code>）</strong></h4><ol><li><strong>符号位</strong>：最高位为1，权重为 (-2^7 &#x3D; -128)。</li><li><strong>数值位</strong>：剩余7位 <code>110 1011</code>，计算：<br>[<br>64 + 32 + 8 + 2 + 1 &#x3D; 107<br>]</li><li><strong>合并结果</strong>：<br>[<br>-128 + 107 &#x3D; -21<br>]</li></ol><hr><h3 id="方法-3：补码原码转换法"><a href="#方法-3：补码原码转换法" class="headerlink" title="方法 3：补码原码转换法"></a><strong>方法 3：补码原码转换法</strong></h3><p>通过补码与原码的关系计算：</p><ul><li><strong>步骤</strong>：<ol><li><strong>负数补码</strong>：符号位为1时，补码 &#x3D; 原码取反 + 1。</li><li><strong>恢复原码</strong>：将补码减1后取反，得到原码，再计算十进制值。</li></ol></li></ul><h4 id="示例（8位补码-1110-1011）-1"><a href="#示例（8位补码-1110-1011）-1" class="headerlink" title="示例（8位补码 1110 1011）"></a><strong>示例（8位补码 <code>1110 1011</code>）</strong></h4><ol><li><strong>减1</strong>：<code>1110 1010</code>  </li><li><strong>取反</strong>：<code>0001 0101</code>（十进制21）  </li><li><strong>添加符号</strong>：结果为 <strong>-21</strong>。</li></ol><hr><h3 id="特殊情况：最小值"><a href="#特殊情况：最小值" class="headerlink" title="特殊情况：最小值"></a><strong>特殊情况：最小值</strong></h3><p>对于n位补码，最小值为 (-2^{n-1})，此时数值位全为0，符号位为1。<br><strong>示例（8位补码 <code>1000 0000</code>）</strong>：<br>[<br>\text{十进制值} &#x3D; -2^7 &#x3D; -128<br>]</p><hr><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><table><thead><tr><th><strong>方法</strong></th><th><strong>适用场景</strong></th><th><strong>示例</strong></th></tr></thead><tbody><tr><td><strong>标准公式法</strong></td><td>正负数通用，直接计算</td><td><code>1110 1011</code> → -21</td></tr><tr><td><strong>逐位权重计算法</strong></td><td>编程实现或快速计算</td><td><code>1110 1011</code> → -21</td></tr><tr><td><strong>补码原码转换法</strong></td><td>手动验证或理解原理</td><td><code>1110 1011</code> → -21</td></tr><tr><td><strong>最小值特殊处理</strong></td><td>符号位为1且数值位全0的情况</td><td><code>1000 0000</code> → -128</td></tr></tbody></table><hr><h3 id="关键点"><a href="#关键点" class="headerlink" title="关键点"></a><strong>关键点</strong></h3><ol><li>补码的符号位决定了正负。</li><li>负数的补码需通过取反加1转换为原码。</li><li>最小值的补码形式为符号位1 + 数值位全0。</li></ol>]]></content>
-    
-    
-    <categories>
-      
-      <category>计算机基础</category>
-      
-    </categories>
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>DLNA库Platinum新增安卓64位so编译方法</title>
     <link href="/article/4339b418/"/>
     <url>/article/4339b418/</url>

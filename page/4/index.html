@@ -290,69 +290,6 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
-        <a href="/article/5867f171/" target="_self">
-          安卓系统应用的卸载和恢复(非data分区)
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/article/5867f171/" target="_self">
-        <div>
-          安卓系统应用的卸载和恢复(非data分区)Uninstall and Restore Android System Apps (non-data partition)网上已经有很多预装应用卸载的方法了，但是他们基本都是设法在第一次开机的时候安装到data分区。 本文需要达到的目标是预装在system分区的应用能够被卸载，且能恢复安装。 命令行方法安卓5.0开始可以针对用户卸载系统应用 卸载系统应用
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-05-03 19:50" pubdate>
-              2023-05-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/AndroidFrameworkFeature/" class="category-chain-item">AndroidFrameworkFeature</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Android/">#Android</a>
-            
-              <a href="/tags/PackageMangerService/">#PackageMangerService</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
         <a href="/article/8fa06fb4/" target="_self">
           安卓帧率FPS计算原理
         </a>
@@ -907,6 +844,69 @@
               <a href="/tags/Android/">#Android</a>
             
               <a href="/tags/PackageManagerService/">#PackageManagerService</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/article/f453e195/" target="_self">
+          Linux网络函数send()出错导致进程退出
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/article/f453e195/" target="_self">
+        <div>
+          在Linux系统编写socket网络通信程序的时候，如果程序执行send函数，遇到了一个关闭的socket，系统就会抛出一个SIGPIPE信号。这个信号的缺省处理方法是退出当前进程，重新定义这个信号的处理方式可以避免这个情况。 12345//定义一个空函数void signal_send()&#123;  &#125; //注册信号处理方式signal(SIGPIPE, signal_send);
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-12-06 20:01" pubdate>
+              2020-12-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Linux/" class="category-chain-item">Linux</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/socket/">#socket</a>
             
           </div>
         
