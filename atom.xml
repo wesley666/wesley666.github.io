@@ -6,7 +6,7 @@
   <link href="https://iwesley.top/atom.xml" rel="self"/>
   
   <link href="https://iwesley.top/"/>
-  <updated>2025-01-18T11:12:45.426Z</updated>
+  <updated>2025-03-02T09:48:16.287Z</updated>
   <id>https://iwesley.top/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>二进制基础知识</title>
+    <link href="https://iwesley.top/article/d633df5c/"/>
+    <id>https://iwesley.top/article/d633df5c/</id>
+    <published>2025-02-16T07:04:15.000Z</published>
+    <updated>2025-03-02T09:48:16.287Z</updated>
+    
+    <content type="html"><![CDATA[<p>将补码（Two’s Complement）转换为十进制的方法主要有以下几种。以下是详细的推导和示例：</p><hr><h3 id="方法-1：标准公式法"><a href="#方法-1：标准公式法" class="headerlink" title="方法 1：标准公式法"></a><strong>方法 1：标准公式法</strong></h3><p>补码的十进制值由符号位和数值位共同决定：</p><ul><li><strong>公式</strong>：<br>[<br>\text{十进制值} &#x3D; (-1)^{\text{符号位}} \times \left( \text{数值位的二进制值} \right)<br>]</li><li><strong>步骤</strong>：<ol><li><strong>判断符号位</strong>：最高位为符号位（0表示正数，1表示负数）。</li><li><strong>计算数值位</strong>：<ul><li><strong>正数</strong>：符号位为0，直接按二进制转十进制。</li><li><strong>负数</strong>：符号位为1，需将补码转换为原码，再计算十进制值。</li></ul></li></ol></li></ul><h4 id="示例（8位补码）"><a href="#示例（8位补码）" class="headerlink" title="示例（8位补码）"></a><strong>示例（8位补码）</strong></h4><ul><li><p><strong>正数补码</strong>：<code>0010 1101</code><br>符号位为0，直接计算数值位：<br>(2^5 + 2^3 + 2^2 + 2^0 &#x3D; 32 + 8 + 4 + 1 &#x3D; 45)<br>结果为 <strong>+45</strong>。</p></li><li><p><strong>负数补码</strong>：<code>1110 1011</code><br>符号位为1，需转换：</p><ol><li><strong>取反补码</strong>：<code>0001 0100</code>  </li><li><strong>加1</strong>：<code>0001 0101</code>（十进制为21）  </li><li><strong>添加符号</strong>：结果为 <strong>-21</strong>。</li></ol></li></ul><hr><h3 id="方法-2：逐位权重计算法"><a href="#方法-2：逐位权重计算法" class="headerlink" title="方法 2：逐位权重计算法"></a><strong>方法 2：逐位权重计算法</strong></h3><p>直接根据二进制位的权重计算，符号位单独处理：</p><ul><li><strong>公式</strong>：<br>[<br>\text{十进制值} &#x3D; - (\text{符号位} \times 2^{n-1}) + \sum_{i&#x3D;0}^{n-2} (\text{bit}_i \times 2^i)<br>]<ul><li>(n)：总位数（如32位、8位等）。</li></ul></li></ul><h4 id="示例（8位补码-1110-1011）"><a href="#示例（8位补码-1110-1011）" class="headerlink" title="示例（8位补码 1110 1011）"></a><strong>示例（8位补码 <code>1110 1011</code>）</strong></h4><ol><li><strong>符号位</strong>：最高位为1，权重为 (-2^7 &#x3D; -128)。</li><li><strong>数值位</strong>：剩余7位 <code>110 1011</code>，计算：<br>[<br>64 + 32 + 8 + 2 + 1 &#x3D; 107<br>]</li><li><strong>合并结果</strong>：<br>[<br>-128 + 107 &#x3D; -21<br>]</li></ol><hr><h3 id="方法-3：补码原码转换法"><a href="#方法-3：补码原码转换法" class="headerlink" title="方法 3：补码原码转换法"></a><strong>方法 3：补码原码转换法</strong></h3><p>通过补码与原码的关系计算：</p><ul><li><strong>步骤</strong>：<ol><li><strong>负数补码</strong>：符号位为1时，补码 &#x3D; 原码取反 + 1。</li><li><strong>恢复原码</strong>：将补码减1后取反，得到原码，再计算十进制值。</li></ol></li></ul><h4 id="示例（8位补码-1110-1011）-1"><a href="#示例（8位补码-1110-1011）-1" class="headerlink" title="示例（8位补码 1110 1011）"></a><strong>示例（8位补码 <code>1110 1011</code>）</strong></h4><ol><li><strong>减1</strong>：<code>1110 1010</code>  </li><li><strong>取反</strong>：<code>0001 0101</code>（十进制21）  </li><li><strong>添加符号</strong>：结果为 <strong>-21</strong>。</li></ol><hr><h3 id="特殊情况：最小值"><a href="#特殊情况：最小值" class="headerlink" title="特殊情况：最小值"></a><strong>特殊情况：最小值</strong></h3><p>对于n位补码，最小值为 (-2^{n-1})，此时数值位全为0，符号位为1。<br><strong>示例（8位补码 <code>1000 0000</code>）</strong>：<br>[<br>\text{十进制值} &#x3D; -2^7 &#x3D; -128<br>]</p><hr><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><table><thead><tr><th><strong>方法</strong></th><th><strong>适用场景</strong></th><th><strong>示例</strong></th></tr></thead><tbody><tr><td><strong>标准公式法</strong></td><td>正负数通用，直接计算</td><td><code>1110 1011</code> → -21</td></tr><tr><td><strong>逐位权重计算法</strong></td><td>编程实现或快速计算</td><td><code>1110 1011</code> → -21</td></tr><tr><td><strong>补码原码转换法</strong></td><td>手动验证或理解原理</td><td><code>1110 1011</code> → -21</td></tr><tr><td><strong>最小值特殊处理</strong></td><td>符号位为1且数值位全0的情况</td><td><code>1000 0000</code> → -128</td></tr></tbody></table><hr><h3 id="关键点"><a href="#关键点" class="headerlink" title="关键点"></a><strong>关键点</strong></h3><ol><li>补码的符号位决定了正负。</li><li>负数的补码需通过取反加1转换为原码。</li><li>最小值的补码形式为符号位1 + 数值位全0。</li></ol>]]></content>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;将补码（Two’s Complement）转换为十进制的方法主要有以下几种。以下是详细的推导和示例：&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&quot;方法-1：标准公式法&quot;&gt;&lt;a href=&quot;#方法-1：标准公式法&quot; class=&quot;headerlink&quot; title=&quot;方法</summary>
+        
+      
+    
+    
+    
+    <category term="计算机基础" scheme="https://iwesley.top/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>DLNA库Platinum新增安卓64位so编译方法</title>
@@ -582,36 +609,6 @@
     <category term="aosp编译" scheme="https://iwesley.top/tags/aosp%E7%BC%96%E8%AF%91/"/>
     
     <category term="Android.mk" scheme="https://iwesley.top/tags/Android-mk/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>jadx内存不足和反编译失败官方解决办法</title>
-    <link href="https://iwesley.top/article/5ee2a33b/"/>
-    <id>https://iwesley.top/article/5ee2a33b/</id>
-    <published>2024-09-22T09:41:04.000Z</published>
-    <updated>2025-01-04T13:30:54.174Z</updated>
-    
-    <content type="html"><![CDATA[<p>如果搜索引擎搜索了好久都解决不了问题，建议到官方文档看一下。</p><p><a href="https://github.com/skylot/jadx/wiki/Troubleshooting-Q&A#decompilation-issues">Troubleshooting Q&amp;A · skylot&#x2F;jadx Wiki</a></p><h3 id="内存不足问题"><a href="#内存不足问题" class="headerlink" title="内存不足问题"></a>内存不足问题</h3><h4 id="方法一：在反编译设置里减少处理线程数"><a href="#方法一：在反编译设置里减少处理线程数" class="headerlink" title="方法一：在反编译设置里减少处理线程数"></a>方法一：在反编译设置里减少处理线程数</h4><h4 id="方法二：在反编译设置里排除不需要的包"><a href="#方法二：在反编译设置里排除不需要的包" class="headerlink" title="方法二：在反编译设置里排除不需要的包"></a>方法二：在反编译设置里排除不需要的包</h4><h4 id="方法三：在设置中启用磁盘缓存"><a href="#方法三：在设置中启用磁盘缓存" class="headerlink" title="方法三：在设置中启用磁盘缓存"></a>方法三：在设置中启用磁盘缓存</h4><h4 id="方法四：为-Jadx-分配更多内存"><a href="#方法四：为-Jadx-分配更多内存" class="headerlink" title="方法四：为 Jadx 分配更多内存"></a>方法四：为 Jadx 分配更多内存</h4><p>方法一：编辑脚本<code>bin/jadx-gui</code>或<code>bin/jadx-gui.bat</code> (Windows) 并通过修改<code>DEFAULT_JVM_OPTS</code>的定义将最大堆内存从 4 ( <code>-Xmx4g</code> ) 更改为 8 GB ( <code>-Xmx8g</code> ) </p><p><code>DEFAULT_JVM_OPTS=&#39;&quot;-Xms128M&quot; &quot;-Xmx8g&quot; &quot;-Dawt.useSystemAAFontSettings=lcd&quot; &quot;-Dswing.aatext=true&quot; &quot;-XX:+UseG1GC&quot;&#39;</code></p><p>方法二：如果您使用的是 Windows 并使用<code>jadx-gui.exe</code>请在<code>jadx-gui.exe</code>所在的同一目录中创建一个文本文件<code>jadx-gui.l4j.ini</code> 。对于最大 8 GB 内存&#x2F;堆，请编辑该文本文件并将其内容设置为：</p><p><code>-Xmx8g</code></p><p>如果您使用的是不稳定版本或 Jadx 或者您已重命名<code>jadx-gui.exe</code> ，则还必须调整<code>.l4j.ini</code>文件名。</p><p>例子：</p><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ini">Jadx file-name:        jadx-gui-1.1.0-b1279-2207cd7b.exe<br>Jadx config file name: jadx-gui-1.1.0-b1279-2207cd7b.l4j.ini.<br></code></pre></td></tr></table></figure><h3 id="反编译失败"><a href="#反编译失败" class="headerlink" title="反编译失败"></a>反编译失败</h3><p>勾选反编译-显示不一致的代码 <code>Show inconsistent code</code> (<code>--show-bad-code</code> in jadx-cli)</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><br><span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UnsupportedOperationException</span>(<span class="hljs-string">&quot;Method not decompiled:xxxxxxxxxxx&quot;</span>)<br></code></pre></td></tr></table></figure>]]></content>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;如果搜索引擎搜索了好久都解决不了问题，建议到官方文档看一下。&lt;/p&gt;
-&lt;p&gt;&lt;a</summary>
-        
-      
-    
-    
-    
-    <category term="安卓安全和逆向" scheme="https://iwesley.top/categories/%E5%AE%89%E5%8D%93%E5%AE%89%E5%85%A8%E5%92%8C%E9%80%86%E5%90%91/"/>
-    
-    
-    <category term="jadx" scheme="https://iwesley.top/tags/jadx/"/>
-    
-    <category term="反编译" scheme="https://iwesley.top/tags/%E5%8F%8D%E7%BC%96%E8%AF%91/"/>
     
   </entry>
   
