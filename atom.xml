@@ -6,7 +6,7 @@
   <link href="https://iwesley.top/atom.xml" rel="self"/>
   
   <link href="https://iwesley.top/"/>
-  <updated>2025-03-03T12:42:15.461Z</updated>
+  <updated>2025-03-04T13:33:04.322Z</updated>
   <id>https://iwesley.top/</id>
   
   <author>
@@ -15,6 +15,38 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</title>
+    <link href="https://iwesley.top/article/f148a913/"/>
+    <id>https://iwesley.top/article/f148a913/</id>
+    <published>2025-03-04T13:10:58.000Z</published>
+    <updated>2025-03-04T13:33:04.322Z</updated>
+    
+    <content type="html"><![CDATA[<p>今天用着安卓 14 的板子的时候突然系统卡死。</p><p>查看日志发现launcher都被干掉了</p><blockquote><p>03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service</p><p>03-04 06:13:35.544 7872 8479 I ActivityManager: com.android.launcher3&#x2F;com.android.quickstep.TouchInteractionService&lt;&#x3D;Proc{8077:com.android.systemui&#x2F;u0a70}</p><p>03-04 06:13:36.155 277 277 I lowmemorykiller: Kill ‘com.android.launcher3’ (8407), uid 10071, oom_score_adj 100 to free 39504kB rss, 46224kB swap; reason: device is low on swap (91200kB &lt; 199552kB) and thrashing (200%)</p></blockquote><p>看<code>dumpsys meminfo</code>发现DMA-BUF占了3G多（4G设备），应用free ram基本没了。</p><p>刚开始以为是scrcpy的问题。后来经调查发现是android studio的屏幕镜像问题。</p><h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>开机一段时间后</p><blockquote><p>Total RAM: 3,991,080K (status normal)</p><p>Free RAM: 1,166,810K (  124,454K cached pss +   623,088K cached kernel +   419,268K free)</p><p><strong>DMA-BUF: 1,477,628K (      876K mapped + 1,476,752K unmapped)</strong></p><p>DMA-BUF Heaps: 1,477,628K</p><p>DMA-BUF Heaps pool:   249,088K</p><p>​      GPU:   202,320K</p><p> Used RAM: 2,763,593K (1,036,373K used pss + 1,727,220K kernel)</p><p> Lost RAM:   195,490K</p><p>​     ZRAM:    72,700K physical used for   215,296K in swap (1,995,536K total swap)</p><p>   Tuning: 192 (large 512), oom   322,560K, restore limit   107,520K (high-end-gfx)</p></blockquote><p><code>cat /sys/kernel/dmabuf/buffers/*/size</code>，发现有好多483328字节的 inode</p><p><code>cat /sys/kernel/dmabuf/buffers/*/size  | grep 483328 | wc -l</code></p><p>有2957个，计算：2957*483328&#x3D;1429200896&#x3D;1.4G，和上面的结果差不多。</p><p>随便查看一个inode</p><blockquote><p>roc_rk3588s_pc:&#x2F; # lsof | grep -w 7248</p><p><a href="mailto:&#99;&#50;&#64;&#49;&#x2e;&#49;&#x2d;&#x73;&#x65;&#114;&#118;&#105;&#x63;&#101;">&#99;&#50;&#64;&#49;&#x2e;&#49;&#x2d;&#x73;&#x65;&#114;&#118;&#105;&#x63;&#101;</a>   543 mediacodec 2553u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p><p>main       4146       root 5088u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p><p>main       4146       root 5089u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p></blockquote><p><code>lsof | grep &quot;4146&quot; | grep dmabuf  | wc -l</code></p><p>有2958条这样的条目</p><p><code>main       4146       root 5973u     0000                0,8       0t0       7690 /dmabuf:system</code></p><p>和上面的数目一一对应</p><p>查看是哪一个程序</p><blockquote><p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;543&#x2F;cmdline</p><p>&#x2F;vendor&#x2F;bin&#x2F;hw&#x2F;<a href="mailto:&#97;&#110;&#100;&#x72;&#111;&#105;&#100;&#46;&#x68;&#97;&#x72;&#100;&#x77;&#x61;&#114;&#x65;&#x2e;&#109;&#x65;&#x64;&#105;&#97;&#46;&#x63;&#x32;&#x40;&#49;&#x2e;&#49;&#45;&#115;&#101;&#114;&#118;&#105;&#x63;&#x65;">&#97;&#110;&#100;&#x72;&#111;&#105;&#100;&#46;&#x68;&#97;&#x72;&#100;&#x77;&#x61;&#114;&#x65;&#x2e;&#109;&#x65;&#x64;&#105;&#97;&#46;&#x63;&#x32;&#x40;&#49;&#x2e;&#49;&#45;&#115;&#101;&#114;&#118;&#105;&#x63;&#x65;</a></p><p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;4146&#x2F;cmdline</p><p>app_process&#x2F;data&#x2F;local&#x2F;tmp&#x2F;.studiocom.android.tools.screensharing.Main–socket&#x3D;screen-sharing-agent-8055–flags&#x3D;16roc_rk3588s_pc:&#x2F; #</p></blockquote><p>发现是android studio镜像导致的：应该是因为一直黑屏导致反复申请内存导致DMA-BUF泄露。</p><p>关闭Android Studio的Device Mirroring功能后，后面使用设备就正常了。</p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png" alt="img"></p><h2 id="dmabuf-dump"><a href="#dmabuf-dump" class="headerlink" title="dmabuf_dump"></a>dmabuf_dump</h2><p>通过dmabuf_dump命令可以更快地查看异常程序</p><blockquote><p>roc_rk3588s_pc:&#x2F; # dmabuf_dump -h</p><p>Usage: dmabuf_dump [-abh] [per-process&#x2F;per-buffer stats]</p><p>-a       show all dma buffers (ion) in big table, [buffer x process] grid</p><p>-b       show DMA-BUF per-buffer, per-exporter and per-device statistics</p><p>-h       show this help</p><p>​         If PID is supplied, the dmabuf information for that process is shown.</p><p>​         Per-buffer DMA-BUF stats do not take an argument.</p></blockquote><p>通过<code>dmabuf_dump</code>就可以查看各个程序DMA-BUF的占用情况（包含程序名字、pid、inode等等）或者加其他参数输出不同结果。</p><blockquote><p>roc_rk3588s_pc:&#x2F; # dmabuf_dump 4146</p><p>​            main:4146</p><p>​                  Name              Rss              Pss         nr_procs            Inode</p><p>​                system           472 kB           472 kB                1             4735</p><p>​                system           472 kB           472 kB                1             4736</p><p>​                system           472 kB           472 kB                1             4737</p><p>​               </p><p>​               ——————（省略几千行）—————-</p><p>​          </p><p>​                system           472 kB           472 kB                1             7688</p><p>​                system           472 kB           472 kB                1             7689</p><p>​                system           472 kB           472 kB                1             7690</p><p>​         PROCESS TOTAL       1395232 kB       1395232 kB</p><p>-———————</p><p>dmabuf total: 1477628 kB kernel_rss: 82396 kB userspace_rss: 1395232 kB userspace_pss: 1395232 kB</p></blockquote><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://source.android.com/docs/core/graphics/implement-dma-buf-gpu-mem">Implement DMABUF and GPU memory accounting in Android 12  |  Android Open Source Project</a></p>]]></content>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;今天用着安卓 14 的板子的时候突然系统卡死。&lt;/p&gt;
+&lt;p&gt;查看日志发现launcher都被干掉了&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740:</summary>
+        
+      
+    
+    
+    
+    <category term="Android性能优化" scheme="https://iwesley.top/categories/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
+    
+    
+    <category term="内存" scheme="https://iwesley.top/tags/%E5%86%85%E5%AD%98/"/>
+    
+    <category term="性能优化" scheme="https://iwesley.top/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
+    
+  </entry>
   
   <entry>
     <title>安卓组件化之动态依赖功能模块</title>
@@ -290,9 +322,9 @@
     <category term="安卓APP" scheme="https://iwesley.top/categories/%E5%AE%89%E5%8D%93APP/"/>
     
     
-    <category term="AndroidAPPUI" scheme="https://iwesley.top/tags/AndroidAPPUI/"/>
-    
     <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
+    
+    <category term="AndroidAPPUI" scheme="https://iwesley.top/tags/AndroidAPPUI/"/>
     
   </entry>
   
@@ -581,38 +613,6 @@
     <category term="android ipc" scheme="https://iwesley.top/tags/android-ipc/"/>
     
     <category term="android rpc" scheme="https://iwesley.top/tags/android-rpc/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>安卓源码环境:Android.mk如何编译aar包?</title>
-    <link href="https://iwesley.top/article/797e1cc1/"/>
-    <id>https://iwesley.top/article/797e1cc1/</id>
-    <published>2024-11-10T02:56:10.000Z</published>
-    <updated>2024-11-10T02:56:10.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在安卓源码top目录执行编译命令：（注意：下面的Android.mk要被include进去）</p><p><code>make test_aar out/target/common/obj/JAVA_LIBRARIES/test_aar_intermediates/javalib.aar</code></p><p>通用格式：<code>make &lt;module-name&gt; out/target/common/obj/JAVA_LIBRARIES/&lt;module-name&gt;_intermediates/javalib.aar</code></p><p>把<module-name>替换成LOCAL_MODULE的名字。</p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs makefile">LOCAL_PATH := <span class="hljs-variable">$(<span class="hljs-built_in">call</span> my-<span class="hljs-built_in">dir</span>)</span><br><span class="hljs-keyword">include</span> <span class="hljs-variable">$(CLEAR_VARS)</span><br><br>LOCAL_MODULE_TAGS := optional<br><br>LOCAL_MODULE := test_aar<br><br>LOCAL_STATIC_JAVA_LIBRARIES :=android-common \<br>    android-support-v4 \<br><br><span class="hljs-comment"># LOCAL_STATIC_JAVA_AAR_LIBRARIES:= abc</span><br><br>LOCAL_SRC_FILES := <span class="hljs-variable">$(<span class="hljs-built_in">call</span> all-java-files-under, java)</span><br><br>res_dirs := res \<br><br>LOCAL_RESOURCE_DIR := <span class="hljs-variable">$(<span class="hljs-built_in">addprefix</span> <span class="hljs-variable">$(LOCAL_PATH)</span>/, <span class="hljs-variable">$(res_dirs)</span>)</span> \<br>    prebuilts/sdk/current/support/v7/cardview/res \<br>    prebuilts/sdk/current/support/v7/appcompat/res \<br>    prebuilts/sdk/current/support/design/res \<br><br>LOCAL_AAPT_FLAGS := \<br>    --auto-add-overlay \<br>    --extra-packages android.support.v7.cardview \<br>    --extra-packages android.support.v7.appcompat \<br>    --extra-packages android.support.design \<br>    --extra-packages com.abc.abc<br><br><br>LOCAL_JACK_ENABLED := disabled <br>LOCAL_PROGUARD_ENABLED := disabled <br><br><span class="hljs-keyword">include</span> <span class="hljs-variable">$(BUILD_STATIC_JAVA_LIBRARY)</span><br></code></pre></td></tr></table></figure><p><a href="https://android.googlesource.com/platform/build/+/master/core/static_java_library.mk#133">https://android.googlesource.com/platform/build/+/master/core/static_java_library.mk#133</a></p><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-comment"># Rule to build AAR, archive including classes.jar, resource, etc.</span><br>built_aar := $(intermediates.COMMON)/javalib.aar<br><span class="hljs-variable">$(built_aar)</span>: PRIVATE_MODULE := <span class="hljs-variable">$(LOCAL_MODULE)</span><br><span class="hljs-variable">$(built_aar)</span>: PRIVATE_ANDROID_MANIFEST := <span class="hljs-variable">$(full_android_manifest)</span><br><span class="hljs-variable">$(built_aar)</span>: PRIVATE_CLASSES_JAR := <span class="hljs-variable">$(aar_classes_jar)</span><br><span class="hljs-variable">$(built_aar)</span>: PRIVATE_RESOURCE_DIR := <span class="hljs-variable">$(LOCAL_RESOURCE_DIR)</span><br><span class="hljs-variable">$(built_aar)</span>: PRIVATE_R_TXT := $(intermediates.COMMON)/R.txt<br><span class="hljs-variable">$(built_aar)</span>: <span class="hljs-variable">$(JAR_ARGS)</span><br><span class="hljs-variable">$(built_aar)</span> : <span class="hljs-variable">$(aar_classes_jar)</span> <span class="hljs-variable">$(full_android_manifest)</span> $(intermediates.COMMON)/R.txt<br>@echo <span class="hljs-string">&quot;target AAR:  <span class="hljs-variable">$(PRIVATE_MODULE)</span> (<span class="hljs-variable">$@</span>)&quot;</span><br><span class="hljs-variable">$(hide)</span> rm -rf <span class="hljs-variable">$(<span class="hljs-built_in">dir</span> <span class="hljs-variable">$@</span>)</span>aar &amp;&amp; mkdir -p <span class="hljs-variable">$(<span class="hljs-built_in">dir</span> <span class="hljs-variable">$@</span>)</span>aar/res<br><span class="hljs-variable">$(hide)</span> cp <span class="hljs-variable">$(PRIVATE_ANDROID_MANIFEST)</span> <span class="hljs-variable">$(<span class="hljs-built_in">dir</span> <span class="hljs-variable">$@</span>)</span>aar/AndroidManifest.xml<br><span class="hljs-variable">$(hide)</span> cp <span class="hljs-variable">$(PRIVATE_CLASSES_JAR)</span> <span class="hljs-variable">$(<span class="hljs-built_in">dir</span> <span class="hljs-variable">$@</span>)</span>aar/classes.jar<br><span class="hljs-comment"># Note: Use &quot;cp -n&quot; to honor the resource overlay rules, if multiple res dirs exist.</span><br><span class="hljs-variable">$(hide)</span> <span class="hljs-variable">$(<span class="hljs-built_in">foreach</span> res,<span class="hljs-variable">$(PRIVATE_RESOURCE_DIR)</span>,cp -Rfn <span class="hljs-variable">$(res)</span>/* $(<span class="hljs-built_in">dir</span> <span class="hljs-variable">$@</span>)</span>aar/res;)<br><span class="hljs-variable">$(hide)</span> cp <span class="hljs-variable">$(PRIVATE_R_TXT)</span> <span class="hljs-variable">$(<span class="hljs-built_in">dir</span> <span class="hljs-variable">$@</span>)</span>aar/R.txt<br><span class="hljs-variable">$(hide)</span> <span class="hljs-variable">$(JAR)</span> -cMf <span class="hljs-variable">$@</span> \<br>  <span class="hljs-variable">$(<span class="hljs-built_in">call</span> jar-args-sorted-files-in-directory,$(<span class="hljs-built_in">dir</span> <span class="hljs-variable">$@</span>)</span>aar)<br><br></code></pre></td></tr></table></figure><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p>how to create AAR archive file from Android.mk - Stack Overflow: <a href="https://stackoverflow.com/questions/42070123/how-to-create-aar-archive-file-from-android-mk">https://stackoverflow.com/questions/42070123/how-to-create-aar-archive-file-from-android-mk</a></p><p>Build AAR package as part of AOSP build: <a href="https://groups.google.com/g/android-building/c/htNXz9Lkq7E?pli=1">https://groups.google.com/g/android-building/c/htNXz9Lkq7E?pli=1</a></p>]]></content>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;在安卓源码top目录执行编译命令：（注意：下面的Android.mk要被include进去）&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;make test_aar</summary>
-        
-      
-    
-    
-    
-    <category term="Android Build System" scheme="https://iwesley.top/categories/Android-Build-System/"/>
-    
-    
-    <category term="Android" scheme="https://iwesley.top/tags/Android/"/>
-    
-    <category term="aosp编译" scheme="https://iwesley.top/tags/aosp%E7%BC%96%E8%AF%91/"/>
-    
-    <category term="Android.mk" scheme="https://iwesley.top/tags/Android-mk/"/>
     
   </entry>
   

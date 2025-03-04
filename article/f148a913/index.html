@@ -19,25 +19,27 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="Screen compatibility: https:&#x2F;&#x2F;developer.android.com&#x2F;guide&#x2F;practices&#x2F;screens_support.html App resources: https:&#x2F;&#x2F;developer.android.com&#x2F;guide&#x2F;topics&#x2F;resources&#x2F;providing-resources.html#AlternativeResourc">
+    <meta name="description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android APP drawable不同文件夹的用法">
-<meta property="og:url" content="https://iwesley.top/article/b1dcee32/index.html">
+<meta property="og:title" content="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露">
+<meta property="og:url" content="https://iwesley.top/article/f148a913/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="Screen compatibility: https:&#x2F;&#x2F;developer.android.com&#x2F;guide&#x2F;practices&#x2F;screens_support.html App resources: https:&#x2F;&#x2F;developer.android.com&#x2F;guide&#x2F;topics&#x2F;resources&#x2F;providing-resources.html#AlternativeResourc">
+<meta property="og:description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-11-17T10:33:19.000Z">
-<meta property="article:modified_time" content="2025-01-04T13:32:28.888Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
+<meta property="article:published_time" content="2025-03-04T13:10:58.000Z">
+<meta property="article:modified_time" content="2025-03-04T13:33:04.322Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="Android">
-<meta property="article:tag" content="AndroidAPPUI">
+<meta property="article:tag" content="内存">
+<meta property="article:tag" content="性能优化">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
   
   
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>Android APP drawable不同文件夹的用法 - Wesley&#39;s Blog</title>
+  <title>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -261,7 +263,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Android APP drawable不同文件夹的用法"></span>
+            <span id="subtitle" data-typed-text="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露"></span>
           
         </div>
 
@@ -277,8 +279,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-11-17 18:33" pubdate>
-          2024年11月17日 晚上
+        <time datetime="2025-03-04 21:10" pubdate>
+          2025年3月4日 晚上
         </time>
       </span>
     
@@ -289,7 +291,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          395 字
+          557 字
         
       </span>
     
@@ -300,7 +302,7 @@
         
         
         
-          4 分钟
+          5 分钟
         
       </span>
     
@@ -337,12 +339,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Android APP drawable不同文件夹的用法</h1>
+            <h1 id="seo-header">安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年1月4日 晚上
+                    本文最后更新于：2025年3月4日 晚上
                   
                 
               </p>
@@ -350,26 +352,81 @@
             
               <div class="markdown-body">
                 
-                <p>Screen compatibility: <a target="_blank" rel="noopener" href="https://developer.android.com/guide/practices/screens_support.html">https://developer.android.com/guide/practices/screens_support.html</a></p>
-<p>App resources: <a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/resources/providing-resources.html#AlternativeResources">https://developer.android.com/guide/topics/resources/providing-resources.html#AlternativeResources</a></p>
-<p>Support different pixel densities: <a target="_blank" rel="noopener" href="https://developer.android.com/training/multiscreen/screendensities">https://developer.android.com/training/multiscreen/screendensities</a></p>
-<p>Drawable resources : <a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/resources/drawable-resource">https://developer.android.com/guide/topics/resources/drawable-resource</a></p>
-<p>res&#x2F;drawable&#x2F; is a legacy synonym for res&#x2F;drawable-mdpi&#x2F;, indicating that the drawables in that directory are set for mdpi density. If the device is running another density, those images will be downsampled (to ldpi) or upsampled (to anything else) to match the device density.</p>
-<p>res&#x2F;drawable-nodpi&#x2F; says “these drawables should not be resampled for any density, but instead should be used as-is on all densities”.</p>
-<p>drawable-nodpi will bypass scaling and drawable will use the default scaling:</p>
-<p>mdpi &#x3D; 1x<br>hdpi &#x3D; 1.5x<br>xhdpi &#x3D; 2x<br>xxhdpi &#x3D; 3x<br>xxxhdpi &#x3D; 4x<br>drawable-nodpi is efficient if your code will be doing its own scaling (or no scaling) and you don’t want the image pre-scaled by Android.</p>
-<p>There is also drawable-anydpi, just to make things more confusing.</p>
-<p>drawable with no specifications will be used if an exact match on density and screen specifications does not exist. drawable-nodpi will be used after drawable.</p>
-<p>UPDATE If you have both drawable and drawble-nodpi, the select order is either a more complex rule not documented or Android is broken. Through experimentation I confirmed that devices with screen density &lt; xhdpi will correctly select the drawable image. Devices with screen density &gt;&#x3D; xhdpi will select the drawable-nodpi.</p>
-<p>Selection rule: 1. Pick match to screen density, one of these:</p>
-<p>drawable-ldpi<br>drawable-mdpi<br>drawable-hdpi<br>drawable-xhdpi<br>drawable-xxhdpi<br>drawable-xxxhdpi<br>If no match on density, then select one of these<br>drawable (automatic scaling mdpi&#x3D;none… xxxhdpi&#x3D;4x)<br>drawable-nodpi (no scaling)<br>drawable-tvdpi<br>drawable-anydpi (no scaling)</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>android - Will a density qualified drawable folder or drawable-nodpi take precedence? - Stack Overflow: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/24682094/will-a-density-qualified-drawable-folder-or-drawable-nodpi-take-precedence">https://stackoverflow.com/questions/24682094/will-a-density-qualified-drawable-folder-or-drawable-nodpi-take-precedence</a></p>
-<p>android - What is the difference between putting images in drawable and drawable-nodpi folder? - Stack Overflow: <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/33631995/what-is-the-difference-between-putting-images-in-drawable-and-drawable-nodpi-fol">https://stackoverflow.com/questions/33631995/what-is-the-difference-between-putting-images-in-drawable-and-drawable-nodpi-fol</a></p>
-<p>玩转Android drawable图片适配 - 漫思 - 博客园: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/sexintercourse/p/17020569.html">https://www.cnblogs.com/sexintercourse/p/17020569.html</a></p>
-<p>Android 适配（drawable文件夹）图片适配（二） - 张亚楠 - 博客园: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/huihuizhang/p/9473698.html">https://www.cnblogs.com/huihuizhang/p/9473698.html</a></p>
-<p>android（drawable文件夹）图片适配_drawable是什么文件-CSDN博客: <a target="_blank" rel="noopener" href="https://blog.csdn.net/xuaho0907/article/details/72848520#:~:text=%E5%A6%82%E6%9E%9C%E5%9B%BE%E7%89%87%E6%89%80%E5%9C%A8%E7%9B%AE%E5%BD%95%E4%B8%BA,%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F%EF%BC%8C%E4%B8%8D%E8%BF%9B%E8%A1%8C%E7%BC%A9%E6%94%BE%E3%80%82&text=drawable%2Dnodpi%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E8%BF%99%E4%B8%AA,%E5%B0%B1%E4%BC%9A%E5%AE%9E%E9%99%85%E5%B1%95%E7%A4%BA%E5%A4%9A%E5%A4%A7%E3%80%82">https://blog.csdn.net/xuaho0907/article/details/72848520#:~:text=%E5%A6%82%E6%9E%9C%E5%9B%BE%E7%89%87%E6%89%80%E5%9C%A8%E7%9B%AE%E5%BD%95%E4%B8%BA,%E5%9B%BE%E7%89%87%E5%A4%A7%E5%B0%8F%EF%BC%8C%E4%B8%8D%E8%BF%9B%E8%A1%8C%E7%BC%A9%E6%94%BE%E3%80%82&amp;text=drawable%2Dnodpi%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E8%BF%99%E4%B8%AA,%E5%B0%B1%E4%BC%9A%E5%AE%9E%E9%99%85%E5%B1%95%E7%A4%BA%E5%A4%9A%E5%A4%A7%E3%80%82</a></p>
-<p>Android知识体系之drawable文件夹顺序 - 作业部落 Cmd Markdown 编辑阅读器: <a target="_blank" rel="noopener" href="https://www.zybuluo.com/TryLoveCatch/note/590965">https://www.zybuluo.com/TryLoveCatch/note/590965</a></p>
-<p>Android drawable文件夹那些事_安卓drawable文件夹的作用-CSDN博客: <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34341338/article/details/86706751">https://blog.csdn.net/qq_34341338/article/details/86706751</a></p>
+                <p>今天用着安卓 14 的板子的时候突然系统卡死。</p>
+<p>查看日志发现launcher都被干掉了</p>
+<blockquote>
+<p>03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service</p>
+<p>03-04 06:13:35.544 7872 8479 I ActivityManager: com.android.launcher3&#x2F;com.android.quickstep.TouchInteractionService&lt;&#x3D;Proc{8077:com.android.systemui&#x2F;u0a70}</p>
+<p>03-04 06:13:36.155 277 277 I lowmemorykiller: Kill ‘com.android.launcher3’ (8407), uid 10071, oom_score_adj 100 to free 39504kB rss, 46224kB swap; reason: device is low on swap (91200kB &lt; 199552kB) and thrashing (200%)</p>
+</blockquote>
+<p>看<code>dumpsys meminfo</code>发现DMA-BUF占了3G多（4G设备），应用free ram基本没了。</p>
+<p>刚开始以为是scrcpy的问题。后来经调查发现是android studio的屏幕镜像问题。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>开机一段时间后</p>
+<blockquote>
+<p>Total RAM: 3,991,080K (status normal)</p>
+<p>Free RAM: 1,166,810K (  124,454K cached pss +   623,088K cached kernel +   419,268K free)</p>
+<p><strong>DMA-BUF: 1,477,628K (      876K mapped + 1,476,752K unmapped)</strong></p>
+<p>DMA-BUF Heaps: 1,477,628K</p>
+<p>DMA-BUF Heaps pool:   249,088K</p>
+<p>​      GPU:   202,320K</p>
+<p> Used RAM: 2,763,593K (1,036,373K used pss + 1,727,220K kernel)</p>
+<p> Lost RAM:   195,490K</p>
+<p>​     ZRAM:    72,700K physical used for   215,296K in swap (1,995,536K total swap)</p>
+<p>   Tuning: 192 (large 512), oom   322,560K, restore limit   107,520K (high-end-gfx)</p>
+</blockquote>
+<p><code>cat /sys/kernel/dmabuf/buffers/*/size</code>，发现有好多483328字节的 inode</p>
+<p><code>cat /sys/kernel/dmabuf/buffers/*/size  | grep 483328 | wc -l</code></p>
+<p>有2957个，计算：2957*483328&#x3D;1429200896&#x3D;1.4G，和上面的结果差不多。</p>
+<p>随便查看一个inode</p>
+<blockquote>
+<p>roc_rk3588s_pc:&#x2F; # lsof | grep -w 7248</p>
+<p><a href="mailto:&#99;&#50;&#64;&#49;&#x2e;&#49;&#x2d;&#x73;&#x65;&#114;&#118;&#105;&#x63;&#101;">&#99;&#50;&#64;&#49;&#x2e;&#49;&#x2d;&#x73;&#x65;&#114;&#118;&#105;&#x63;&#101;</a>   543 mediacodec 2553u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
+<p>main       4146       root 5088u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
+<p>main       4146       root 5089u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
+</blockquote>
+<p><code>lsof | grep &quot;4146&quot; | grep dmabuf  | wc -l</code></p>
+<p>有2958条这样的条目</p>
+<p><code>main       4146       root 5973u     0000                0,8       0t0       7690 /dmabuf:system</code></p>
+<p>和上面的数目一一对应</p>
+<p>查看是哪一个程序</p>
+<blockquote>
+<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;543&#x2F;cmdline</p>
+<p>&#x2F;vendor&#x2F;bin&#x2F;hw&#x2F;<a href="mailto:&#97;&#110;&#100;&#x72;&#111;&#105;&#100;&#46;&#x68;&#97;&#x72;&#100;&#x77;&#x61;&#114;&#x65;&#x2e;&#109;&#x65;&#x64;&#105;&#97;&#46;&#x63;&#x32;&#x40;&#49;&#x2e;&#49;&#45;&#115;&#101;&#114;&#118;&#105;&#x63;&#x65;">&#97;&#110;&#100;&#x72;&#111;&#105;&#100;&#46;&#x68;&#97;&#x72;&#100;&#x77;&#x61;&#114;&#x65;&#x2e;&#109;&#x65;&#x64;&#105;&#97;&#46;&#x63;&#x32;&#x40;&#49;&#x2e;&#49;&#45;&#115;&#101;&#114;&#118;&#105;&#x63;&#x65;</a></p>
+<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;4146&#x2F;cmdline</p>
+<p>app_process&#x2F;data&#x2F;local&#x2F;tmp&#x2F;.studiocom.android.tools.screensharing.Main–socket&#x3D;screen-sharing-agent-8055–flags&#x3D;16roc_rk3588s_pc:&#x2F; #</p>
+</blockquote>
+<p>发现是android studio镜像导致的：应该是因为一直黑屏导致反复申请内存导致DMA-BUF泄露。</p>
+<p>关闭Android Studio的Device Mirroring功能后，后面使用设备就正常了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="dmabuf-dump"><a href="#dmabuf-dump" class="headerlink" title="dmabuf_dump"></a>dmabuf_dump</h2><p>通过dmabuf_dump命令可以更快地查看异常程序</p>
+<blockquote>
+<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump -h</p>
+<p>Usage: dmabuf_dump [-abh] [per-process&#x2F;per-buffer stats]</p>
+<p>-a       show all dma buffers (ion) in big table, [buffer x process] grid</p>
+<p>-b       show DMA-BUF per-buffer, per-exporter and per-device statistics</p>
+<p>-h       show this help</p>
+<p>​         If PID is supplied, the dmabuf information for that process is shown.</p>
+<p>​         Per-buffer DMA-BUF stats do not take an argument.</p>
+</blockquote>
+<p>通过<code>dmabuf_dump</code>就可以查看各个程序DMA-BUF的占用情况（包含程序名字、pid、inode等等）或者加其他参数输出不同结果。</p>
+<blockquote>
+<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump 4146</p>
+<p>​            main:4146</p>
+<p>​                  Name              Rss              Pss         nr_procs            Inode</p>
+<p>​                system           472 kB           472 kB                1             4735</p>
+<p>​                system           472 kB           472 kB                1             4736</p>
+<p>​                system           472 kB           472 kB                1             4737</p>
+<p>​               </p>
+<p>​               ——————（省略几千行）—————-</p>
+<p>​          </p>
+<p>​                system           472 kB           472 kB                1             7688</p>
+<p>​                system           472 kB           472 kB                1             7689</p>
+<p>​                system           472 kB           472 kB                1             7690</p>
+<p>​         PROCESS TOTAL       1395232 kB       1395232 kB</p>
+<p>-———————</p>
+<p>dmabuf total: 1477628 kB kernel_rss: 82396 kB userspace_rss: 1395232 kB userspace_pss: 1395232 kB</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://source.android.com/docs/core/graphics/implement-dma-buf-gpu-mem">Implement DMABUF and GPU memory accounting in Android 12  |  Android Open Source Project</a></p>
 
                 
               </div>
@@ -388,7 +445,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%AE%89%E5%8D%93APP/" class="category-chain-item">安卓APP</a>
+  <a href="/categories/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="category-chain-item">Android性能优化</a>
   
   
 
@@ -403,9 +460,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Android/" class="print-no-link">#Android</a>
+        <a href="/tags/%E5%86%85%E5%AD%98/" class="print-no-link">#内存</a>
       
-        <a href="/tags/AndroidAPPUI/" class="print-no-link">#AndroidAPPUI</a>
+        <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="print-no-link">#性能优化</a>
       
     </div>
   
@@ -417,8 +474,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Android APP drawable不同文件夹的用法</div>
-      <div>https://iwesley.top/article/b1dcee32/</div>
+      <div>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</div>
+      <div>https://iwesley.top/article/f148a913/</div>
     </div>
     <div class="license-meta">
       
@@ -430,7 +487,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年11月17日</div>
+          <div>2025年3月4日</div>
         </div>
       
       
@@ -462,18 +519,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/article/eaba12cd/" title="Android.mk基础知识">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Android.mk基础知识</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/article/dfa112ac/" title="Android ADB 常用命令">
-                        <span class="hidden-mobile">Android ADB 常用命令</span>
+                      <a href="/article/67ca89d4/" title="安卓组件化之动态依赖功能模块">
+                        <span class="hidden-mobile">安卓组件化之动态依赖功能模块</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
