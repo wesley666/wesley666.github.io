@@ -19,27 +19,30 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+    <meta name="description" content="先看一下在设置点击屏保预览后的调用链（Android 14） sequenceDiagram     participant User     participant MaterialButton     participant View     participant DreamSettings     participant DreamBackend      User-&gt;&gt;Mat">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露">
-<meta property="og:url" content="https://iwesley.top/article/f148a913/index.html">
+<meta property="og:title" content="安卓屏保调试">
+<meta property="og:url" content="https://iwesley.top/article/98c55340/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+<meta property="og:description" content="先看一下在设置点击屏保预览后的调用链（Android 14） sequenceDiagram     participant User     participant MaterialButton     participant View     participant DreamSettings     participant DreamBackend      User-&gt;&gt;Mat">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
-<meta property="article:published_time" content="2025-03-04T13:10:58.000Z">
-<meta property="article:modified_time" content="2025-03-04T13:40:23.876Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803024.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803153.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803189.png">
+<meta property="article:published_time" content="2025-03-15T06:37:37.000Z">
+<meta property="article:modified_time" content="2025-03-16T09:32:33.235Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="内存">
-<meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="DreamManagerService">
+<meta property="article:tag" content="Framework">
+<meta property="article:tag" content="屏保">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803024.png">
   
   
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露 - Wesley&#39;s Blog</title>
+  <title>安卓屏保调试 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -263,7 +266,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露"></span>
+            <span id="subtitle" data-typed-text="安卓屏保调试"></span>
           
         </div>
 
@@ -279,8 +282,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-04 21:10" pubdate>
-          2025年3月4日 晚上
+        <time datetime="2025-03-15 14:37" pubdate>
+          2025年3月15日 下午
         </time>
       </span>
     
@@ -291,7 +294,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          555 字
+          367 字
         
       </span>
     
@@ -302,7 +305,7 @@
         
         
         
-          5 分钟
+          4 分钟
         
       </span>
     
@@ -339,12 +342,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</h1>
+            <h1 id="seo-header">安卓屏保调试</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年3月4日 晚上
+                    本文最后更新于：2025年3月16日 下午
                   
                 
               </p>
@@ -352,81 +355,50 @@
             
               <div class="markdown-body">
                 
-                <p>今天用着安卓 14 的板子的时候突然系统卡死。</p>
-<p>查看日志发现launcher都被干掉了</p>
+                <p>先看一下在设置点击屏保预览后的调用链（Android 14）</p>
+<pre><code class=" mermaid">sequenceDiagram
+    participant User
+    participant MaterialButton
+    participant View
+    participant DreamSettings
+    participant DreamBackend
+
+    User-&gt;&gt;MaterialButton: 点击按钮（ performClick()）
+    MaterialButton-&gt;&gt;View: performClick()
+    View-&gt;&gt;DreamSettings: 触发 onClick() (lambda 表达式)
+    DreamSettings-&gt;&gt;DreamBackend: 调用 preview()
+</code></pre>
+
+
+
+<p>DreamController的打印信息</p>
 <blockquote>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service</p>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: com.android.launcher3&#x2F;com.android.quickstep.TouchInteractionService&lt;&#x3D;Proc{8077:com.android.systemui&#x2F;u0a70}</p>
-<p>03-04 06:13:36.155 277 277 I lowmemorykiller: Kill ‘com.android.launcher3’ (8407), uid 10071, oom_score_adj 100 to free 39504kB rss, 46224kB swap; reason: device is low on swap (91200kB &lt; 199552kB) and thrashing (200%)</p>
+<p>Starting dream: name&#x3D;ComponentInfo{com.google.android.apps.tv.dreamx&#x2F;com.google.android.apps.tv.dreamx.service.Backdrop}, <strong>isPreviewMode&#x3D;true</strong>, canDoze&#x3D;false, userId&#x3D;0, reason&#x3D;’test dream’</p>
 </blockquote>
-<p>看<code>dumpsys meminfo</code>发现DMA-BUF占了3G多（4G设备），应用free ram基本没了。</p>
-<p>刚开始以为是scrcpy的问题。后来经调查发现是android studio的屏幕镜像问题。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>开机一段时间后</p>
-<blockquote>
-<p>Total RAM: 3,991,080K (status normal)</p>
-<p>Free RAM: 1,166,810K (  124,454K cached pss +   623,088K cached kernel +   419,268K free)</p>
-<p><strong>DMA-BUF: 1,477,628K (      876K mapped + 1,476,752K unmapped)</strong></p>
-<p>DMA-BUF Heaps: 1,477,628K</p>
-<p>DMA-BUF Heaps pool:   249,088K</p>
-<p>​      GPU:   202,320K</p>
-<p> Used RAM: 2,763,593K (1,036,373K used pss + 1,727,220K kernel)</p>
-<p> Lost RAM:   195,490K</p>
-<p>​     ZRAM:    72,700K physical used for   215,296K in swap (1,995,536K total swap)</p>
-<p>   Tuning: 192 (large 512), oom   322,560K, restore limit   107,520K (high-end-gfx)</p>
+<p>DreamActivity是一个不需要注册的Activity，运行在各个屏保进程。</p>
+<p>屏保应用实现DreamService即可。</p>
+<p>屏保状态时，后台起应用会进入 onStop 状态（该例子 onStop 里面调用了 finish）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803024.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="退出屏保的方法"><a href="#退出屏保的方法" class="headerlink" title="退出屏保的方法"></a>退出屏保的方法</h2><h3 id="1、有触摸或者按键输入"><a href="#1、有触摸或者按键输入" class="headerlink" title="1、有触摸或者按键输入"></a>1、有触摸或者按键输入</h3><h3 id="2、配置config-dismissDreamOnActivityStart-为-true-则会在新-activity-起来后退出屏保"><a href="#2、配置config-dismissDreamOnActivityStart-为-true-则会在新-activity-起来后退出屏保" class="headerlink" title="2、配置config_dismissDreamOnActivityStart 为 true 则会在新 activity 起来后退出屏保"></a>2、配置config_dismissDreamOnActivityStart 为 true 则会在新 activity 起来后退出屏保</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"> <span class="hljs-comment">&lt;!-- Whether to dismiss the active dream when an activity is started. Doesn&#x27;t apply to</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">          assistant activities (ACTIVITY_TYPE_ASSISTANT) --&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">bool</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;config_dismissDreamOnActivityStart&quot;</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803153.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803189.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="3、跨进程调用DreamManagerService-的awaken（需要系统签名）"><a href="#3、跨进程调用DreamManagerService-的awaken（需要系统签名）" class="headerlink" title="3、跨进程调用DreamManagerService 的awaken（需要系统签名）"></a>3、跨进程调用DreamManagerService 的awaken（需要系统签名）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> android.os.IBinder<br><span class="hljs-keyword">import</span> androidx.annotation.RequiresPermission<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DreamManager</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">val</span> <span class="hljs-variable">TAG</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;DreamManager&quot;</span><br>    <span class="hljs-comment">//private var mDreamManager: Any? = context.getSystemService(&quot;dream&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> mDreamManager: Any? = <span class="hljs-literal">null</span><br><br>    init &#123;<br>        mDreamManager = <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">val</span> <span class="hljs-variable">dream</span> <span class="hljs-operator">=</span> Reflector.on(<span class="hljs-string">&quot;android.os.ServiceManager&quot;</span>).method(<span class="hljs-string">&quot;getService&quot;</span>, String::class.java).call&lt;Any&gt;(<span class="hljs-string">&quot;dreams&quot;</span>)<br>            Reflector.on(<span class="hljs-string">&quot;android.service.dreams.IDreamManager\$Stub&quot;</span>).method(<span class="hljs-string">&quot;asInterface&quot;</span>, IBinder::class.java).call&lt;Any&gt;(dream)<br>        &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>            <span class="hljs-literal">null</span><br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@RequiresPermission(&quot;android.permission.READ_DREAM_STATE&quot;)</span><br>    fun <span class="hljs-title function_">isDreaming</span><span class="hljs-params">()</span>: Boolean &#123;<br>        <span class="hljs-keyword">if</span> (mDreamManager == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">try</span> &#123;<br>            Reflector.with(mDreamManager!!).method(<span class="hljs-string">&quot;isDreaming&quot;</span>).call()<br>        &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>            <span class="hljs-literal">false</span><br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@RequiresPermission(&quot;android.permission.WRITE_DREAM_STATE&quot;)</span><br>    fun <span class="hljs-title function_">stopDream</span><span class="hljs-params">()</span> &#123;<br>        mDreamManager?.let &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                Reflector.with(it).method(<span class="hljs-string">&quot;awaken&quot;</span>).call&lt;Unit&gt;()<br>            &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="屏保调试命令：cmd-dreams"><a href="#屏保调试命令：cmd-dreams" class="headerlink" title="屏保调试命令：cmd dreams"></a>屏保调试命令：cmd dreams</h2><blockquote>
+<p>roc_rk3588s_pc:&#x2F; # cmd dreams -h</p>
+<p>Dream manager (dreams) commands:</p>
+<p>  help</p>
+<p>​      Print this help text.</p>
+<p>  start-dreaming</p>
+<p>​      Start the currently configured dream.</p>
+<p>  stop-dreaming</p>
+<p>​      Stops any active dream</p>
 </blockquote>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size</code>，发现有好多483328字节的 inode</p>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size  | grep 483328 | wc -l</code></p>
-<p>有2957个，计算：2957*483328&#x3D;1429200896&#x3D;1.4G，和上面的结果差不多。</p>
-<p>随便查看一个inode</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # lsof | grep -w 7248</p>
-<p><a href="mailto:&#x63;&#x32;&#x40;&#x31;&#x2e;&#x31;&#45;&#x73;&#101;&#x72;&#118;&#x69;&#x63;&#101;">&#x63;&#x32;&#x40;&#x31;&#x2e;&#x31;&#45;&#x73;&#101;&#x72;&#118;&#x69;&#x63;&#101;</a>   543 mediacodec 2553u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5088u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5089u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-</blockquote>
-<p><code>lsof | grep &quot;4146&quot; | grep dmabuf  | wc -l</code></p>
-<p>有2958条这样的条目</p>
-<p><code>main       4146       root 5973u     0000                0,8       0t0       7690 /dmabuf:system</code></p>
-<p>和上面的数目一一对应</p>
-<p>查看是哪一个程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;543&#x2F;cmdline</p>
-<p>&#x2F;vendor&#x2F;bin&#x2F;hw&#x2F;<a href="mailto:&#97;&#x6e;&#x64;&#114;&#x6f;&#x69;&#100;&#46;&#104;&#97;&#x72;&#100;&#x77;&#x61;&#114;&#101;&#46;&#x6d;&#101;&#100;&#105;&#97;&#x2e;&#99;&#50;&#x40;&#x31;&#x2e;&#x31;&#x2d;&#x73;&#x65;&#x72;&#x76;&#105;&#99;&#101;">&#97;&#x6e;&#x64;&#114;&#x6f;&#x69;&#100;&#46;&#104;&#97;&#x72;&#100;&#x77;&#x61;&#114;&#101;&#46;&#x6d;&#101;&#100;&#105;&#97;&#x2e;&#99;&#50;&#x40;&#x31;&#x2e;&#x31;&#x2d;&#x73;&#x65;&#x72;&#x76;&#105;&#99;&#101;</a></p>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;4146&#x2F;cmdline</p>
-<p>app_process&#x2F;data&#x2F;local&#x2F;tmp&#x2F;.studiocom.android.tools.screensharing.Main–socket&#x3D;screen-sharing-agent-8055–flags&#x3D;16</p>
-</blockquote>
-<p>发现是android studio镜像导致的：应该是因为一直黑屏导致反复申请内存导致DMA-BUF泄露。</p>
-<p>关闭Android Studio的Device Mirroring功能后，后面使用设备就正常了。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<h2 id="dmabuf-dump"><a href="#dmabuf-dump" class="headerlink" title="dmabuf_dump"></a>dmabuf_dump</h2><p>通过dmabuf_dump命令可以更快地查看异常程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump -h</p>
-<p>Usage: dmabuf_dump [-abh] [per-process&#x2F;per-buffer stats]</p>
-<p>-a       show all dma buffers (ion) in big table, [buffer x process] grid</p>
-<p>-b       show DMA-BUF per-buffer, per-exporter and per-device statistics</p>
-<p>-h       show this help</p>
-<p>​         If PID is supplied, the dmabuf information for that process is shown.</p>
-<p>​         Per-buffer DMA-BUF stats do not take an argument.</p>
-</blockquote>
-<p>通过<code>dmabuf_dump</code>就可以查看各个程序DMA-BUF的占用情况（包含程序名字、pid、inode等等）或者加其他参数输出不同结果。</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump 4146</p>
-<p>​            main:4146</p>
-<p>​                  Name              Rss              Pss         nr_procs            Inode</p>
-<p>​                system           472 kB           472 kB                1             4735</p>
-<p>​                system           472 kB           472 kB                1             4736</p>
-<p>​                system           472 kB           472 kB                1             4737</p>
-<p>​               </p>
-<p>​               ——————（省略几千行）—————-</p>
-<p>​          </p>
-<p>​                system           472 kB           472 kB                1             7688</p>
-<p>​                system           472 kB           472 kB                1             7689</p>
-<p>​                system           472 kB           472 kB                1             7690</p>
-<p>​         PROCESS TOTAL       1395232 kB       1395232 kB</p>
-<p>-———————</p>
-<p>dmabuf total: 1477628 kB kernel_rss: 82396 kB userspace_rss: 1395232 kB userspace_pss: 1395232 kB</p>
-</blockquote>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://source.android.com/docs/core/graphics/implement-dma-buf-gpu-mem">Implement DMABUF and GPU memory accounting in Android 12  |  Android Open Source Project</a></p>
+<p>cmd dreams start-dreaming</p>
+<p>cmd dreams stop-dreaming</p>
 
                 
               </div>
@@ -445,7 +417,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="category-chain-item">Android性能优化</a>
+  <a href="/categories/AndroidFrameworkFeature/" class="category-chain-item">AndroidFrameworkFeature</a>
   
   
 
@@ -460,9 +432,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%86%85%E5%AD%98/" class="print-no-link">#内存</a>
+        <a href="/tags/DreamManagerService/" class="print-no-link">#DreamManagerService</a>
       
-        <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="print-no-link">#性能优化</a>
+        <a href="/tags/Framework/" class="print-no-link">#Framework</a>
+      
+        <a href="/tags/%E5%B1%8F%E4%BF%9D/" class="print-no-link">#屏保</a>
       
     </div>
   
@@ -474,8 +448,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</div>
-      <div>https://iwesley.top/article/f148a913/</div>
+      <div>安卓屏保调试</div>
+      <div>https://iwesley.top/article/98c55340/</div>
     </div>
     <div class="license-meta">
       
@@ -487,7 +461,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月4日</div>
+          <div>2025年3月15日</div>
         </div>
       
       
@@ -519,18 +493,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/article/98c55340/" title="安卓屏保调试">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">安卓屏保调试</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/article/67ca89d4/" title="安卓组件化之动态依赖功能模块">
-                        <span class="hidden-mobile">安卓组件化之动态依赖功能模块</span>
+                      <a href="/article/f148a913/" title="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露">
+                        <span class="hidden-mobile">安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -620,6 +588,21 @@
 
   
 
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
 
 
 
