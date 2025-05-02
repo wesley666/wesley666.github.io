@@ -19,27 +19,28 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+    <meta name="description" content="记于 2022 年 6 月 24 日  注意：目前仅限于macos和linux使用 btrace&#x2F;README.zh-CN.md at master · bytedance&#x2F;btrace · GitHub btrace(又名 RheaTrace) 是一个基于 Systrace 实现的高性能 Android trace 工具，它支持在 App 编译期间自动注入自定义事件，并使用">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露">
-<meta property="og:url" content="https://iwesley.top/article/f148a913/index.html">
+<meta property="og:title" content="btrace1.0使用方法">
+<meta property="og:url" content="https://iwesley.top/article/69f32e87/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+<meta property="og:description" content="记于 2022 年 6 月 24 日  注意：目前仅限于macos和linux使用 btrace&#x2F;README.zh-CN.md at master · bytedance&#x2F;btrace · GitHub btrace(又名 RheaTrace) 是一个基于 Systrace 实现的高性能 Android trace 工具，它支持在 App 编译期间自动注入自定义事件，并使用">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
-<meta property="article:published_time" content="2025-03-04T13:10:58.000Z">
-<meta property="article:modified_time" content="2025-03-04T13:40:23.876Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250502163842049.png">
+<meta property="article:published_time" content="2025-05-02T08:35:23.000Z">
+<meta property="article:modified_time" content="2025-05-02T09:30:00.285Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="内存">
 <meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="btrace">
+<meta property="article:tag" content="systrace">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250502163842049.png">
   
   
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露 - Wesley&#39;s Blog</title>
+  <title>btrace1.0使用方法 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -263,7 +264,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露"></span>
+            <span id="subtitle" data-typed-text="btrace1.0使用方法"></span>
           
         </div>
 
@@ -279,8 +280,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-04 21:10" pubdate>
-          2025年3月4日 晚上
+        <time datetime="2025-05-02 16:35" pubdate>
+          2025年5月2日 下午
         </time>
       </span>
     
@@ -291,7 +292,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          555 字
+          814 字
         
       </span>
     
@@ -302,7 +303,7 @@
         
         
         
-          5 分钟
+          7 分钟
         
       </span>
     
@@ -339,12 +340,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</h1>
+            <h1 id="seo-header">btrace1.0使用方法</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年3月4日 晚上
+                    本文最后更新于：2025年5月2日 下午
                   
                 
               </p>
@@ -352,81 +353,38 @@
             
               <div class="markdown-body">
                 
-                <p>今天用着安卓 14 的板子的时候突然系统卡死。</p>
-<p>查看日志发现launcher都被干掉了</p>
-<blockquote>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service</p>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: com.android.launcher3&#x2F;com.android.quickstep.TouchInteractionService&lt;&#x3D;Proc{8077:com.android.systemui&#x2F;u0a70}</p>
-<p>03-04 06:13:36.155 277 277 I lowmemorykiller: Kill ‘com.android.launcher3’ (8407), uid 10071, oom_score_adj 100 to free 39504kB rss, 46224kB swap; reason: device is low on swap (91200kB &lt; 199552kB) and thrashing (200%)</p>
+                <blockquote>
+<p>记于 2022 年 6 月 24 日</p>
 </blockquote>
-<p>看<code>dumpsys meminfo</code>发现DMA-BUF占了3G多（4G设备），应用free ram基本没了。</p>
-<p>刚开始以为是scrcpy的问题。后来经调查发现是android studio的屏幕镜像问题。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>开机一段时间后</p>
-<blockquote>
-<p>Total RAM: 3,991,080K (status normal)</p>
-<p>Free RAM: 1,166,810K (  124,454K cached pss +   623,088K cached kernel +   419,268K free)</p>
-<p><strong>DMA-BUF: 1,477,628K (      876K mapped + 1,476,752K unmapped)</strong></p>
-<p>DMA-BUF Heaps: 1,477,628K</p>
-<p>DMA-BUF Heaps pool:   249,088K</p>
-<p>​      GPU:   202,320K</p>
-<p> Used RAM: 2,763,593K (1,036,373K used pss + 1,727,220K kernel)</p>
-<p> Lost RAM:   195,490K</p>
-<p>​     ZRAM:    72,700K physical used for   215,296K in swap (1,995,536K total swap)</p>
-<p>   Tuning: 192 (large 512), oom   322,560K, restore limit   107,520K (high-end-gfx)</p>
-</blockquote>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size</code>，发现有好多483328字节的 inode</p>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size  | grep 483328 | wc -l</code></p>
-<p>有2957个，计算：2957*483328&#x3D;1429200896&#x3D;1.4G，和上面的结果差不多。</p>
-<p>随便查看一个inode</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # lsof | grep -w 7248</p>
-<p><a href="mailto:&#x63;&#x32;&#64;&#x31;&#46;&#49;&#45;&#x73;&#x65;&#x72;&#x76;&#x69;&#x63;&#x65;">&#x63;&#x32;&#64;&#x31;&#46;&#49;&#45;&#x73;&#x65;&#x72;&#x76;&#x69;&#x63;&#x65;</a>   543 mediacodec 2553u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5088u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5089u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-</blockquote>
-<p><code>lsof | grep &quot;4146&quot; | grep dmabuf  | wc -l</code></p>
-<p>有2958条这样的条目</p>
-<p><code>main       4146       root 5973u     0000                0,8       0t0       7690 /dmabuf:system</code></p>
-<p>和上面的数目一一对应</p>
-<p>查看是哪一个程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;543&#x2F;cmdline</p>
-<p>&#x2F;vendor&#x2F;bin&#x2F;hw&#x2F;<a href="mailto:&#97;&#x6e;&#x64;&#x72;&#111;&#105;&#100;&#x2e;&#104;&#x61;&#x72;&#100;&#119;&#97;&#114;&#x65;&#x2e;&#109;&#x65;&#100;&#105;&#x61;&#46;&#x63;&#50;&#x40;&#49;&#x2e;&#49;&#x2d;&#x73;&#101;&#114;&#x76;&#105;&#x63;&#101;">&#97;&#x6e;&#x64;&#x72;&#111;&#105;&#100;&#x2e;&#104;&#x61;&#x72;&#100;&#119;&#97;&#114;&#x65;&#x2e;&#109;&#x65;&#100;&#105;&#x61;&#46;&#x63;&#50;&#x40;&#49;&#x2e;&#49;&#x2d;&#x73;&#101;&#114;&#x76;&#105;&#x63;&#101;</a></p>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;4146&#x2F;cmdline</p>
-<p>app_process&#x2F;data&#x2F;local&#x2F;tmp&#x2F;.studiocom.android.tools.screensharing.Main–socket&#x3D;screen-sharing-agent-8055–flags&#x3D;16</p>
-</blockquote>
-<p>发现是android studio镜像导致的：应该是因为一直黑屏导致反复申请内存导致DMA-BUF泄露。</p>
-<p>关闭Android Studio的Device Mirroring功能后，后面使用设备就正常了。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<h2 id="dmabuf-dump"><a href="#dmabuf-dump" class="headerlink" title="dmabuf_dump"></a>dmabuf_dump</h2><p>通过dmabuf_dump命令可以更快地查看异常程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump -h</p>
-<p>Usage: dmabuf_dump [-abh] [per-process&#x2F;per-buffer stats]</p>
-<p>-a       show all dma buffers (ion) in big table, [buffer x process] grid</p>
-<p>-b       show DMA-BUF per-buffer, per-exporter and per-device statistics</p>
-<p>-h       show this help</p>
-<p>​         If PID is supplied, the dmabuf information for that process is shown.</p>
-<p>​         Per-buffer DMA-BUF stats do not take an argument.</p>
-</blockquote>
-<p>通过<code>dmabuf_dump</code>就可以查看各个程序DMA-BUF的占用情况（包含程序名字、pid、inode等等）或者加其他参数输出不同结果。</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump 4146</p>
-<p>​            main:4146</p>
-<p>​                  Name              Rss              Pss         nr_procs            Inode</p>
-<p>​                system           472 kB           472 kB                1             4735</p>
-<p>​                system           472 kB           472 kB                1             4736</p>
-<p>​                system           472 kB           472 kB                1             4737</p>
-<p>​               </p>
-<p>​               ——————（省略几千行）—————-</p>
-<p>​          </p>
-<p>​                system           472 kB           472 kB                1             7688</p>
-<p>​                system           472 kB           472 kB                1             7689</p>
-<p>​                system           472 kB           472 kB                1             7690</p>
-<p>​         PROCESS TOTAL       1395232 kB       1395232 kB</p>
-<p>-———————</p>
-<p>dmabuf total: 1477628 kB kernel_rss: 82396 kB userspace_rss: 1395232 kB userspace_pss: 1395232 kB</p>
-</blockquote>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://source.android.com/docs/core/graphics/implement-dma-buf-gpu-mem">Implement DMABUF and GPU memory accounting in Android 12  |  Android Open Source Project</a></p>
+<p><strong>注意：目前仅限于macos和linux使用</strong></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bytedance/btrace/blob/master/README.zh-CN.md">btrace&#x2F;README.zh-CN.md at master · bytedance&#x2F;btrace · GitHub</a></p>
+<p>btrace(又名 RheaTrace) 是一个基于 <a target="_blank" rel="noopener" href="https://developer.android.com/topic/performance/tracing">Systrace</a> 实现的高性能 Android trace 工具，它支持在 App 编译期间自动注入自定义事件，并使用 <a target="_blank" rel="noopener" href="https://github.com/bytedance/bhook">bhook</a> 额外提供 IO 等 native 事件。</p>
+<h2 id="关键特征"><a href="#关键特征" class="headerlink" title="关键特征"></a>关键特征</h2><p>支持自动注入自定义事件，在编译 Apk 期间为 App 方法自动注入Trace#beginSection(String) 和 Trace#endSection()。</p>
+<p>提供额外 IO 等 native 事件，方便定位耗时原因。</p>
+<p>支持仅采集主线程 trace 事件。</p>
+<p>使用便捷，稳定性高，性能优于 Systrace。</p>
+<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p><strong>注意：存储权限要申请</strong></p>
+<p>自定义的application必须有以下代码，否则会导致btrace插入初始化代码失败</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@OverRide</span><br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">attachBaseContext</span><span class="hljs-params">(Context base)</span> &#123;<br>     <span class="hljs-built_in">super</span>.attachBaseContext(base);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在您项目根目录下 build.gradle 文件中增加 rhea-gradle-plugin 作为依赖。</p>
+<p>注意：btrace版本号可以在这里查询：<a target="_blank" rel="noopener" href="https://search.maven.org/">https://search.maven.org/</a> 如果打不开可以在阿里云查询：<a target="_blank" rel="noopener" href="https://developer.aliyun.com/mvn/search">https://developer.aliyun.com/mvn/search</a></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250502163842049.png" srcset="/img/loading.gif" lazyload alt="image-20250502163841997"></p>
+<p>目前版本号是1.0.2</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs Groovy">buildscript &#123;<br>    repositories &#123;<br>        ...<br>        mavenCentral()<br>        ...<br>    &#125;<br>    dependencies &#123;<br>        classpath <span class="hljs-string">&#x27;com.bytedance.btrace:rhea-gradle-plugin:1.0.2&#x27;</span><br>    &#125;<br>&#125;<br><br>allprojects &#123;<br>    repositories &#123;<br>        ...<br>        mavenCentral()<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接着在 app&#x2F;build.gradle 文件中应用如下所示插件和依赖。</p>
+<h3 id="androidx项目"><a href="#androidx项目" class="headerlink" title="androidx项目"></a>androidx项目</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs Groovy">dependencies &#123;<br>    <span class="hljs-comment">//rheatrace core lib</span><br>    implementation <span class="hljs-string">&quot;com.bytedance.btrace:rhea-core:1.0.2&quot;</span><br>&#125;<br><br>apply <span class="hljs-attr">plugin:</span> <span class="hljs-string">&#x27;com.bytedance.rhea-trace&#x27;</span><br>rheaTrace &#123;<br><br>   compilation &#123;<br>      <span class="hljs-comment">//为减少 APK 体积, 你可以为 App 中需要跟踪的方法设置 id 以此来跟踪此自定义事件, 默认值 false。</span><br>      traceWithMethodID = <span class="hljs-literal">false</span> <br>      <span class="hljs-comment">//该文件配置决定哪些方法您不希望跟踪, 默认值 null。</span><br>      traceFilterFilePath = <span class="hljs-string">&quot;$&#123;project.rootDir&#125;/rhea-trace/traceFilter.txt&quot;</span><br>      <span class="hljs-comment">//用特指定方法 id 来设置自定义事件名称, 默认值 null。</span><br>      applyMethodMappingFilePath = <span class="hljs-string">&quot;$&#123;project.rootDir&#125;/rhea-trace/keep-method-id.txt&quot;</span><br>  &#125;<br><br>   runtime &#123;<br>      <span class="hljs-comment">//仅在主线程抓取跟踪事件, 默认值 false。</span><br>      mainThreadOnly <span class="hljs-literal">true</span> <br>      <span class="hljs-comment">//在 App 启动之初开始抓取跟踪事件, 默认值 true。</span><br>      startWhenAppLaunch <span class="hljs-literal">true</span><br>      <span class="hljs-comment">//指定内存存储 atrace 数据 ring buffer 的大小。</span><br>      atraceBufferSize <span class="hljs-string">&quot;500000&quot;</span><br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="android-support项目"><a href="#android-support项目" class="headerlink" title="android-support项目"></a>android-support项目</h3><p><strong>本地需要依赖的文件：</strong> <a target="_blank" rel="noopener" href="https://github.com/wesley666/source/blob/main/btrace-Android-support.zip">https://github.com/wesley666/source/blob/main/btrace-Android-support.zip</a></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs Groovy">dependencies &#123;<br>    <span class="hljs-comment">//rheatrace core lib</span><br>    implementation <span class="hljs-string">&quot;org.jetbrains.kotlin:kotlin-stdlib:1.3.72&quot;</span><br>    implementation files(<span class="hljs-string">&#x27;libs/rhea-common-1.0.2.jar&#x27;</span>)<br>    implementation files(<span class="hljs-string">&#x27;libs/rhea-core-release.aar&#x27;</span>)<br>    implementation files(<span class="hljs-string">&#x27;libs/rhea-atrace-release.aar&#x27;</span>)<br>    implementation <span class="hljs-string">&quot;com.bytedance:bytehook:1.0.3&quot;</span><br>&#125;<br><br>apply <span class="hljs-attr">plugin:</span> <span class="hljs-string">&#x27;com.bytedance.rhea-trace&#x27;</span><br>rheaTrace &#123;<br><br>   compilation &#123;<br>      <span class="hljs-comment">//为减少 APK 体积, 你可以为 App 中需要跟踪的方法设置 id 以此来跟踪此自定义事件, 默认值 false。</span><br>      traceWithMethodID = <span class="hljs-literal">false</span> <br>      <span class="hljs-comment">//该文件配置决定哪些方法您不希望跟踪, 默认值 null。</span><br>      traceFilterFilePath = <span class="hljs-string">&quot;$&#123;project.rootDir&#125;/rhea-trace/traceFilter.txt&quot;</span><br>      <span class="hljs-comment">//用特指定方法 id 来设置自定义事件名称, 默认值 null。</span><br>      applyMethodMappingFilePath = <span class="hljs-string">&quot;$&#123;project.rootDir&#125;/rhea-trace/keep-method-id.txt&quot;</span><br>  &#125;<br><br>   runtime &#123;<br>      <span class="hljs-comment">//仅在主线程抓取跟踪事件, 默认值 false。</span><br>      mainThreadOnly <span class="hljs-literal">true</span> <br>      <span class="hljs-comment">//在 App 启动之初开始抓取跟踪事件, 默认值 true。</span><br>      startWhenAppLaunch <span class="hljs-literal">true</span><br>      <span class="hljs-comment">//指定内存存储 atrace 数据 ring buffer 的大小。</span><br>      atraceBufferSize <span class="hljs-string">&quot;500000&quot;</span><br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>关于 <code>rheaTrace </code>，从<a target="_blank" rel="noopener" href="https://github.com/bytedance/btrace/blob/master/GRADLE_CONFIG.zh-CN.MD">RheaTrace Gradle Config</a>中了解更多信息。</p>
+<p>最后，检测您电脑 python 版本，由于 Systrace 的关系 RheaTrace 仅支持 python 2.7 版本，请将 systrace 环境变量配置在 <em>~&#x2F;.bash_profile</em> 文件中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Shell">export PATH=$&#123;PATH&#125;:/Users/$&#123;user_name&#125;/Library/Android/sdk/platform-tools/systrace<br></code></pre></td></tr></table></figure>
+
+<p>RheaTrace使用方法请参考：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bytedance/btrace/blob/master/README.zh-CN.md">btrace&#x2F;README.zh-CN.md at master · bytedance&#x2F;btrace · GitHub</a></p>
 
                 
               </div>
@@ -460,9 +418,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%86%85%E5%AD%98/" class="print-no-link">#内存</a>
-      
         <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="print-no-link">#性能优化</a>
+      
+        <a href="/tags/btrace/" class="print-no-link">#btrace</a>
+      
+        <a href="/tags/systrace/" class="print-no-link">#systrace</a>
       
     </div>
   
@@ -474,8 +434,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</div>
-      <div>https://iwesley.top/article/f148a913/</div>
+      <div>btrace1.0使用方法</div>
+      <div>https://iwesley.top/article/69f32e87/</div>
     </div>
     <div class="license-meta">
       
@@ -487,7 +447,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月4日</div>
+          <div>2025年5月2日</div>
         </div>
       
       
@@ -519,18 +479,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/article/98c55340/" title="安卓屏保调试">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">安卓屏保调试</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/article/67ca89d4/" title="安卓组件化之动态依赖功能模块">
-                        <span class="hidden-mobile">安卓组件化之动态依赖功能模块</span>
+                      <a href="/article/36f6f986/" title="音视频缓存数学模型">
+                        <span class="hidden-mobile">音视频缓存数学模型</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
