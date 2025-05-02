@@ -19,28 +19,27 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="记于 2022 年 6 月 24 日  注意：目前仅限于macos和linux使用 btrace&#x2F;README.zh-CN.md at master · bytedance&#x2F;btrace · GitHub btrace(又名 RheaTrace) 是一个基于 Systrace 实现的高性能 Android trace 工具，它支持在 App 编译期间自动注入自定义事件，并使用">
+    <meta name="description" content="2022 年我研究安卓性能优化的时候，写过一篇：btrace1.0使用方法 - Wesley’s Blog，现在 brace 进化到 2.0 了，让我们一起来看看如何使用。 具体的接入流程可以看官方文档： bytedance&#x2F;btrace: 🔥🔥 btrace(AKA RheaTrace) is a high performance Android trace tool which">
 <meta property="og:type" content="article">
-<meta property="og:title" content="btrace1.0使用方法">
-<meta property="og:url" content="https://iwesley.top/article/69f32e87/index.html">
+<meta property="og:title" content="btrace2.0使用方法">
+<meta property="og:url" content="https://iwesley.top/article/788e44fe/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="记于 2022 年 6 月 24 日  注意：目前仅限于macos和linux使用 btrace&#x2F;README.zh-CN.md at master · bytedance&#x2F;btrace · GitHub btrace(又名 RheaTrace) 是一个基于 Systrace 实现的高性能 Android trace 工具，它支持在 App 编译期间自动注入自定义事件，并使用">
+<meta property="og:description" content="2022 年我研究安卓性能优化的时候，写过一篇：btrace1.0使用方法 - Wesley’s Blog，现在 brace 进化到 2.0 了，让我们一起来看看如何使用。 具体的接入流程可以看官方文档： bytedance&#x2F;btrace: 🔥🔥 btrace(AKA RheaTrace) is a high performance Android trace tool which">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250502163842049.png">
-<meta property="article:published_time" content="2025-05-02T08:35:23.000Z">
-<meta property="article:modified_time" content="2025-05-02T09:30:00.285Z">
+<meta property="article:published_time" content="2025-05-02T09:32:42.000Z">
+<meta property="article:modified_time" content="2025-05-02T09:49:15.528Z">
 <meta property="article:author" content="Wesley">
 <meta property="article:tag" content="性能优化">
 <meta property="article:tag" content="btrace">
 <meta property="article:tag" content="systrace">
+<meta property="article:tag" content="perfetto">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250502163842049.png">
   
   
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>btrace1.0使用方法 - Wesley&#39;s Blog</title>
+  <title>btrace2.0使用方法 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -264,7 +263,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="btrace1.0使用方法"></span>
+            <span id="subtitle" data-typed-text="btrace2.0使用方法"></span>
           
         </div>
 
@@ -280,7 +279,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-05-02 16:35" pubdate>
+        <time datetime="2025-05-02 17:32" pubdate>
           2025年5月2日 下午
         </time>
       </span>
@@ -292,7 +291,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          814 字
+          492 字
         
       </span>
     
@@ -303,7 +302,7 @@
         
         
         
-          7 分钟
+          5 分钟
         
       </span>
     
@@ -340,7 +339,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">btrace1.0使用方法</h1>
+            <h1 id="seo-header">btrace2.0使用方法</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
@@ -353,38 +352,37 @@
             
               <div class="markdown-body">
                 
-                <blockquote>
-<p>记于 2022 年 6 月 24 日</p>
+                <p>2022 年我研究安卓性能优化的时候，写过一篇：<a href="https://iwesley.top/article/69f32e87/">btrace1.0使用方法 - Wesley’s Blog</a>，现在 brace 进化到 2.0 了，让我们一起来看看如何使用。</p>
+<p>具体的接入流程可以看官方文档：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bytedance/btrace">bytedance&#x2F;btrace: 🔥🔥 btrace(AKA RheaTrace) is a high performance Android trace tool which is based on Perfetto, it support to define custom events automatically during building apk and using bhook to provider more native events like Render&#x2F;Binder&#x2F;IO etc.</a></p>
+<p>我这里主要记录一下接入的一些报错问题：</p>
+<p>目前最新版本是2.0.3-rc03</p>
+<p>项目的gradle版本是7.0.2，gradle plugin是7.0.0</p>
+<h2 id="编译报错"><a href="#编译报错" class="headerlink" title="编译报错"></a>编译报错</h2><blockquote>
+<p>org.gradle.workers.WorkerExecutionException: There was a failure while executing work items</p>
+<p>​	at org.gradle.workers.internal.DefaultWorkerExecutor.workerExecutionException(DefaultWorkerExecutor.java:270)</p>
+<p>​	at org.gradle.workers.internal.DefaultWorkerExecutor.await(DefaultWorkerExecutor.java:252)</p>
+<p>​	at com.android.build.gradle.internal.tasks.DexArchiveBuilderTaskDelegate.doProcess(DexArchiveBuilderTaskDelegate.kt:227)</p>
+<p>​	at com.android.build.gradle.internal.tasks.DexArchiveBuilderTask.doTaskAction(DexArchiveBuilderTask.kt:256)</p>
+<p>​	at com.android.build.gradle.internal.tasks.NewIncrementalTask$taskAction$$inlined$recordTaskAction$1.invoke(BaseTask.kt:66)</p>
+<p>​	at com.android.build.gradle.internal.tasks.Blocks.recordSpan(Blocks.java:51)</p>
+<p>Caused by: com.android.tools.r8.CompilationFailedException: <strong>Compilation failed to complete</strong>, position: Lcom&#x2F;xxx&#x2F;web&#x2F;CommonHeader;<init>()V, origin: D:\Project\p_dev\app\build\intermediates\transforms\analyticsTrack\Production\release\720.jar:com&#x2F;xxx&#x2F;web&#x2F;CommonHeader.class</p>
 </blockquote>
-<p><strong>注意：目前仅限于macos和linux使用</strong></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/bytedance/btrace/blob/master/README.zh-CN.md">btrace&#x2F;README.zh-CN.md at master · bytedance&#x2F;btrace · GitHub</a></p>
-<p>btrace(又名 RheaTrace) 是一个基于 <a target="_blank" rel="noopener" href="https://developer.android.com/topic/performance/tracing">Systrace</a> 实现的高性能 Android trace 工具，它支持在 App 编译期间自动注入自定义事件，并使用 <a target="_blank" rel="noopener" href="https://github.com/bytedance/bhook">bhook</a> 额外提供 IO 等 native 事件。</p>
-<h2 id="关键特征"><a href="#关键特征" class="headerlink" title="关键特征"></a>关键特征</h2><p>支持自动注入自定义事件，在编译 Apk 期间为 App 方法自动注入Trace#beginSection(String) 和 Trace#endSection()。</p>
-<p>提供额外 IO 等 native 事件，方便定位耗时原因。</p>
-<p>支持仅采集主线程 trace 事件。</p>
-<p>使用便捷，稳定性高，性能优于 Systrace。</p>
-<h2 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h2><p><strong>注意：存储权限要申请</strong></p>
-<p>自定义的application必须有以下代码，否则会导致btrace插入初始化代码失败</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@OverRide</span><br><span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">attachBaseContext</span><span class="hljs-params">(Context base)</span> &#123;<br>     <span class="hljs-built_in">super</span>.attachBaseContext(base);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>需要关注<strong>Compilation failed to complete</strong>后面的类</p>
+<p>如果哪个类报错就可以加入下面的配置，路径”${project.rootDir}&#x2F;trace-filter&#x2F;traceFilter.txt”</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/bytedance/btrace/blob/master/GRADLE_CONFIG.MD">btrace&#x2F;GRADLE_CONFIG.MD at master · bytedance&#x2F;btrace</a></p>
+<p>注意：allowpackage必须先配置，blockpackage必须在其子包下面，可以是类或者包名</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs yaml">[<span class="hljs-string">package</span>]<br><span class="hljs-string">-allowpackage</span> <span class="hljs-string">com</span><br><span class="hljs-string">-allowpackage</span> <span class="hljs-string">org</span><br><span class="hljs-string">-allowpackage</span> <span class="hljs-string">androidx</span><br><br><span class="hljs-string">-blockpackage</span> <span class="hljs-string">androidx/exifinterface/media</span><br><span class="hljs-string">-blockpackage</span> <span class="hljs-string">com/google/android/exoplayer2/ui</span><br><span class="hljs-string">-blockpackage</span> <span class="hljs-string">com/xxx/web/CommonHeader</span><br><span class="hljs-string">-blockpackage</span> <span class="hljs-string">org/bouncycastle/jcajce/provider/asymmetric/x509</span><br><span class="hljs-string">-blockpackage</span> <span class="hljs-string">org/bouncycastle/jcajce/provider/asymmetric/dh</span><br><span class="hljs-string">-blockpackage</span> <span class="hljs-string">com/nineoldandroids/util</span><br><span class="hljs-string">-blockpackage</span> <span class="hljs-string">org/bouncycastle/jce/provider/JCEDHPublicKey</span><br><span class="hljs-comment"># org/bouncycastle/jce/provider/X509CertificateObject</span><br><span class="hljs-string">-blockpackage</span> <span class="hljs-string">org/bouncycastle/jce/provider</span><br></code></pre></td></tr></table></figure>
 
-<p>在您项目根目录下 build.gradle 文件中增加 rhea-gradle-plugin 作为依赖。</p>
-<p>注意：btrace版本号可以在这里查询：<a target="_blank" rel="noopener" href="https://search.maven.org/">https://search.maven.org/</a> 如果打不开可以在阿里云查询：<a target="_blank" rel="noopener" href="https://developer.aliyun.com/mvn/search">https://developer.aliyun.com/mvn/search</a></p>
-<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250502163842049.png" srcset="/img/loading.gif" lazyload alt="image-20250502163841997"></p>
-<p>目前版本号是1.0.2</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs Groovy">buildscript &#123;<br>    repositories &#123;<br>        ...<br>        mavenCentral()<br>        ...<br>    &#125;<br>    dependencies &#123;<br>        classpath <span class="hljs-string">&#x27;com.bytedance.btrace:rhea-gradle-plugin:1.0.2&#x27;</span><br>    &#125;<br>&#125;<br><br>allprojects &#123;<br>    repositories &#123;<br>        ...<br>        mavenCentral()<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h3 id="特别注意"><a href="#特别注意" class="headerlink" title="特别注意"></a>特别注意</h3><p>如果是windows用户，traceFilter.txt换行符必须改为LF</p>
+<h4 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h4><p>com&#x2F;bytedance&#x2F;rheatrace&#x2F;plugin&#x2F;compiling&#x2F;filter&#x2F;RheaTraceMethodFilter.kt</p>
+<p>parseTraceFilterFile</p>
+<p>methodKeepStr.trim { it &lt;&#x3D; ‘ ‘ }.replace(“&#x2F;“, “.”).split(“\n”).toTypedArray()</p>
+<p>这里只替换了\n，没有替换\r，会导致解析出来的包名带有\r，导致checkPath失败。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">checkPath</span><span class="hljs-params">()</span></span> &#123;<br>    <span class="hljs-keyword">if</span> (allowPackages.isEmpty()) &#123;<br>        <span class="hljs-keyword">return</span><br>    &#125;<br>    <span class="hljs-keyword">for</span> (blockPath <span class="hljs-keyword">in</span> blockPackages) &#123;<br>        <span class="hljs-keyword">var</span> isContain = <span class="hljs-literal">false</span><br>        <span class="hljs-keyword">for</span> (allowPackage <span class="hljs-keyword">in</span> allowPackages) &#123;<br>            <span class="hljs-keyword">if</span> (blockPath == allowPackage) &#123;<br>                RheaLog.e(TAG, <span class="hljs-string">&quot;blockpackage cannot be equal to allowpackage:%s&quot;</span>, blockPath)<br>            &#125;<br>            <span class="hljs-keyword">if</span> (blockPath.startsWith(allowPackage)) &#123;<br>                isContain = <span class="hljs-literal">true</span><br>                <span class="hljs-keyword">break</span><br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (!isContain) &#123;<br>            <span class="hljs-keyword">throw</span> GradleException(<span class="hljs-string">&quot;allowpackage do not contains <span class="hljs-variable">$blockPath</span>&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>接着在 app&#x2F;build.gradle 文件中应用如下所示插件和依赖。</p>
-<h3 id="androidx项目"><a href="#androidx项目" class="headerlink" title="androidx项目"></a>androidx项目</h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs Groovy">dependencies &#123;<br>    <span class="hljs-comment">//rheatrace core lib</span><br>    implementation <span class="hljs-string">&quot;com.bytedance.btrace:rhea-core:1.0.2&quot;</span><br>&#125;<br><br>apply <span class="hljs-attr">plugin:</span> <span class="hljs-string">&#x27;com.bytedance.rhea-trace&#x27;</span><br>rheaTrace &#123;<br><br>   compilation &#123;<br>      <span class="hljs-comment">//为减少 APK 体积, 你可以为 App 中需要跟踪的方法设置 id 以此来跟踪此自定义事件, 默认值 false。</span><br>      traceWithMethodID = <span class="hljs-literal">false</span> <br>      <span class="hljs-comment">//该文件配置决定哪些方法您不希望跟踪, 默认值 null。</span><br>      traceFilterFilePath = <span class="hljs-string">&quot;$&#123;project.rootDir&#125;/rhea-trace/traceFilter.txt&quot;</span><br>      <span class="hljs-comment">//用特指定方法 id 来设置自定义事件名称, 默认值 null。</span><br>      applyMethodMappingFilePath = <span class="hljs-string">&quot;$&#123;project.rootDir&#125;/rhea-trace/keep-method-id.txt&quot;</span><br>  &#125;<br><br>   runtime &#123;<br>      <span class="hljs-comment">//仅在主线程抓取跟踪事件, 默认值 false。</span><br>      mainThreadOnly <span class="hljs-literal">true</span> <br>      <span class="hljs-comment">//在 App 启动之初开始抓取跟踪事件, 默认值 true。</span><br>      startWhenAppLaunch <span class="hljs-literal">true</span><br>      <span class="hljs-comment">//指定内存存储 atrace 数据 ring buffer 的大小。</span><br>      atraceBufferSize <span class="hljs-string">&quot;500000&quot;</span><br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h3 id="android-support项目"><a href="#android-support项目" class="headerlink" title="android-support项目"></a>android-support项目</h3><p><strong>本地需要依赖的文件：</strong> <a target="_blank" rel="noopener" href="https://github.com/wesley666/source/blob/main/btrace-Android-support.zip">https://github.com/wesley666/source/blob/main/btrace-Android-support.zip</a></p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs Groovy">dependencies &#123;<br>    <span class="hljs-comment">//rheatrace core lib</span><br>    implementation <span class="hljs-string">&quot;org.jetbrains.kotlin:kotlin-stdlib:1.3.72&quot;</span><br>    implementation files(<span class="hljs-string">&#x27;libs/rhea-common-1.0.2.jar&#x27;</span>)<br>    implementation files(<span class="hljs-string">&#x27;libs/rhea-core-release.aar&#x27;</span>)<br>    implementation files(<span class="hljs-string">&#x27;libs/rhea-atrace-release.aar&#x27;</span>)<br>    implementation <span class="hljs-string">&quot;com.bytedance:bytehook:1.0.3&quot;</span><br>&#125;<br><br>apply <span class="hljs-attr">plugin:</span> <span class="hljs-string">&#x27;com.bytedance.rhea-trace&#x27;</span><br>rheaTrace &#123;<br><br>   compilation &#123;<br>      <span class="hljs-comment">//为减少 APK 体积, 你可以为 App 中需要跟踪的方法设置 id 以此来跟踪此自定义事件, 默认值 false。</span><br>      traceWithMethodID = <span class="hljs-literal">false</span> <br>      <span class="hljs-comment">//该文件配置决定哪些方法您不希望跟踪, 默认值 null。</span><br>      traceFilterFilePath = <span class="hljs-string">&quot;$&#123;project.rootDir&#125;/rhea-trace/traceFilter.txt&quot;</span><br>      <span class="hljs-comment">//用特指定方法 id 来设置自定义事件名称, 默认值 null。</span><br>      applyMethodMappingFilePath = <span class="hljs-string">&quot;$&#123;project.rootDir&#125;/rhea-trace/keep-method-id.txt&quot;</span><br>  &#125;<br><br>   runtime &#123;<br>      <span class="hljs-comment">//仅在主线程抓取跟踪事件, 默认值 false。</span><br>      mainThreadOnly <span class="hljs-literal">true</span> <br>      <span class="hljs-comment">//在 App 启动之初开始抓取跟踪事件, 默认值 true。</span><br>      startWhenAppLaunch <span class="hljs-literal">true</span><br>      <span class="hljs-comment">//指定内存存储 atrace 数据 ring buffer 的大小。</span><br>      atraceBufferSize <span class="hljs-string">&quot;500000&quot;</span><br>   &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>关于 <code>rheaTrace </code>，从<a target="_blank" rel="noopener" href="https://github.com/bytedance/btrace/blob/master/GRADLE_CONFIG.zh-CN.MD">RheaTrace Gradle Config</a>中了解更多信息。</p>
-<p>最后，检测您电脑 python 版本，由于 Systrace 的关系 RheaTrace 仅支持 python 2.7 版本，请将 systrace 环境变量配置在 <em>~&#x2F;.bash_profile</em> 文件中。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Shell">export PATH=$&#123;PATH&#125;:/Users/$&#123;user_name&#125;/Library/Android/sdk/platform-tools/systrace<br></code></pre></td></tr></table></figure>
-
-<p>RheaTrace使用方法请参考：</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/bytedance/btrace/blob/master/README.zh-CN.md">btrace&#x2F;README.zh-CN.md at master · bytedance&#x2F;btrace · GitHub</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7350256387161047077">BTrace和Perfetto如何分析性能手把手教你使用BTrace和Perfetto分析性能 高级android开发工 - 掘金</a></p>
+<p><a target="_blank" rel="noopener" href="https://mvnrepository.com/artifact/com.bytedance.btrace/rhea-gradle-plugin">Maven Repository: com.bytedance.btrace » rhea-gradle-plugin</a></p>
 
                 
               </div>
@@ -424,6 +422,8 @@
       
         <a href="/tags/systrace/" class="print-no-link">#systrace</a>
       
+        <a href="/tags/perfetto/" class="print-no-link">#perfetto</a>
+      
     </div>
   
 </div>
@@ -434,8 +434,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>btrace1.0使用方法</div>
-      <div>https://iwesley.top/article/69f32e87/</div>
+      <div>btrace2.0使用方法</div>
+      <div>https://iwesley.top/article/788e44fe/</div>
     </div>
     <div class="license-meta">
       
@@ -479,18 +479,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/article/788e44fe/" title="btrace2.0使用方法">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">btrace2.0使用方法</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/article/36f6f986/" title="音视频缓存数学模型">
-                        <span class="hidden-mobile">音视频缓存数学模型</span>
+                      <a href="/article/69f32e87/" title="btrace1.0使用方法">
+                        <span class="hidden-mobile">btrace1.0使用方法</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
