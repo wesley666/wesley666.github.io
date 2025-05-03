@@ -1,0 +1,814 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="写于 2022 年 6 月 24 日  dd方法测试cat proc&#x2F;meminfo  12345678910111213141516171819202122232425262728293031323334353637383940console:&#x2F; # cat proc&#x2F;meminfo MemTotal:        3858576 kBMemFree:          67532">
+<meta property="og:type" content="article">
+<meta property="og:title" content="内存性能测试方法">
+<meta property="og:url" content="https://iwesley.top/article/f42b9418/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="写于 2022 年 6 月 24 日  dd方法测试cat proc&#x2F;meminfo  12345678910111213141516171819202122232425262728293031323334353637383940console:&#x2F; # cat proc&#x2F;meminfo MemTotal:        3858576 kBMemFree:          67532">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-02T15:10:34.000Z">
+<meta property="article:modified_time" content="2025-05-03T09:06:17.159Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="内存">
+<meta property="article:tag" content="性能工具">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>内存性能测试方法 - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_4814891_uhrho08g34.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":"https://leancloud.iwesley.top","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Wesley's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="内存性能测试方法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-02 23:10" pubdate>
+          2025年5月2日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          573 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          5 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">内存性能测试方法</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于：2025年5月3日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>写于 2022 年 6 月 24 日</p>
+</blockquote>
+<h2 id="dd方法测试"><a href="#dd方法测试" class="headerlink" title="dd方法测试"></a>dd方法测试</h2><p>cat proc&#x2F;meminfo </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs Shell">console:/ # cat proc/meminfo <br>MemTotal:        3858576 kB<br>MemFree:          675328 kB<br>MemAvailable:    1142452 kB<br>Buffers:           65280 kB<br>Cached:           992252 kB<br>SwapCached:           40 kB<br>Active:          1144480 kB<br>Inactive:         923220 kB<br>Active(anon):     875244 kB<br>Inactive(anon):   667400 kB<br>Active(file):     269236 kB<br>Inactive(file):   255820 kB<br>Unevictable:        4436 kB<br>Mlocked:            4436 kB<br>SwapTotal:        614396 kB<br>SwapFree:         601596 kB<br>Dirty:                 4 kB<br>Writeback:             0 kB<br>AnonPages:       1014744 kB<br>Mapped:           301460 kB<br>Shmem:            530712 kB<br>KReclaimable:      39912 kB<br>Slab:             142104 kB<br>SReclaimable:      39912 kB<br>SUnreclaim:       102192 kB<br>KernelStack:       33088 kB<br>ShadowCallStack:    2078 kB<br>PageTables:        39964 kB<br>NFS_Unstable:          0 kB<br>Bounce:                0 kB<br>WritebackTmp:          0 kB<br>CommitLimit:     2263732 kB<br>Committed_AS:   47064316 kB<br>VmallocTotal:   262930368 kB<br>VmallocUsed:       56632 kB<br>VmallocChunk:          0 kB<br>Percpu:             2768 kB<br>CmaTotal:        1921024 kB<br>CmaFree:          158092 kB<br></code></pre></td></tr></table></figure>
+
+<p>剩1.1G左右，所以，我们创建一个挂载在内存上面的分区，大小为可用内存的一半左右。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Shell">mount -o rw,remount /<br>mkdir memtest<br>mount -t tmpfs tmpfs /memtest  -o size=600m<br></code></pre></td></tr></table></figure>
+
+<h3 id="内存写测试"><a href="#内存写测试" class="headerlink" title="内存写测试"></a>内存写测试</h3><p>dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;&#x2F;memtest&#x2F;testfile bs&#x3D;1M count&#x3D;500</p>
+<p>dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;&#x2F;memtest&#x2F;testfile bs&#x3D;500M count&#x3D;1</p>
+<p>dd if&#x3D;&#x2F;dev&#x2F;zero of&#x3D;&#x2F;memtest&#x2F;testfile bs&#x3D;512K count&#x3D;1000</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs Shell">console:/ # dd if=/dev/zero of=/memtest/testfile bs=1M count=500<br>500+0 records in<br>500+0 records out<br>524288000 bytes (500 M) copied, 0.782312 s, 639 M/s<br>console:/ # dd if=/dev/zero of=/memtest/testfile bs=500M count=1<br>1+0 records in<br>1+0 records out<br>524288000 bytes (500 M) copied, 1.272919 s, 393 M/s<br>console:/ # dd if=/dev/zero of=/memtest/testfile bs=512K count=1000<br>1000+0 records in<br>1000+0 records out<br>524288000 bytes (500 M) copied, 0.794319 s, 629 M/s<br></code></pre></td></tr></table></figure>
+
+<h3 id="内存读测试"><a href="#内存读测试" class="headerlink" title="内存读测试"></a>内存读测试</h3><p>dd if&#x3D;&#x2F;memtest&#x2F;testfile  of&#x3D;&#x2F;dev&#x2F;null bs&#x3D;1M count&#x3D;500 </p>
+<p>dd if&#x3D;&#x2F;memtest&#x2F;testfile  of&#x3D;&#x2F;dev&#x2F;null bs&#x3D;500M count&#x3D;1       </p>
+<p>dd if&#x3D;&#x2F;memtest&#x2F;testfile  of&#x3D;&#x2F;dev&#x2F;null bs&#x3D;512K count&#x3D;1000      </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs Shell">console:/ # dd if=/memtest/testfile  of=/dev/null bs=1M count=500              <br>500+0 records in<br>500+0 records out<br>524288000 bytes (500 M) copied, 0.340277 s, 1.4 G/s<br>console:/ # dd if=/memtest/testfile  of=/dev/null bs=500M count=1                          &lt;<br>1+0 records in<br>1+0 records out<br>524288000 bytes (500 M) copied, 0.682501 s, 733 M/s<br>console:/ # dd if=/memtest/testfile  of=/dev/null bs=512K count=1000                       &lt;<br>1000+0 records in<br>1000+0 records out<br>524288000 bytes (500 M) copied, 0.226277 s, 2.1 G/s<br></code></pre></td></tr></table></figure>
+
+<h2 id="Steam-benchmark（推荐）"><a href="#Steam-benchmark（推荐）" class="headerlink" title="Steam benchmark（推荐）"></a>Steam benchmark（推荐）</h2><p><a target="_blank" rel="noopener" href="https://github.com/wesley666/source/blob/main/stream_benchmark">source&#x2F;stream_benchmark at main · wesley666&#x2F;source</a></p>
+<p>Adb push到data&#x2F;local&#x2F;tmp目录，赋予执行权限</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs Shell">console:/data/local/tmp # ./stream_benchmark                                   <br>-------------------------------------------------------------<br>STREAM version $Revision: 5.10 $<br>-------------------------------------------------------------<br>This system uses 8 bytes per array element.<br>-------------------------------------------------------------<br>Array size = 10000000 (elements), Offset = 0 (elements)<br>Memory per array = 76.3 MiB (= 0.1 GiB).<br>Total memory required = 228.9 MiB (= 0.2 GiB).<br>Each kernel will be executed 10 times.<br> The *best* time for each kernel (excluding the first iteration)<br> will be used to compute the reported bandwidth.<br>-------------------------------------------------------------<br>Your clock granularity/precision appears to be 1 microseconds.<br>Each test below will take on the order of 21376 microseconds.<br>   (= 21376 clock ticks)<br>Increase the size of the arrays if this shows that<br>you are not getting at least 20 clock ticks per test.<br>-------------------------------------------------------------<br>WARNING -- The above is only a rough guideline.<br>For best results, please be sure you know the<br>precision of your system timer.<br>-------------------------------------------------------------<br>Function    Best Rate MB/s  Avg time     Min time     Max time<br>Copy:           10748.4     0.015937     0.014886     0.017156<br>Scale:           8149.9     0.020030     0.019632     0.020463<br>Add:             9070.6     0.027085     0.026459     0.028024<br>Triad:           8255.9     0.029891     0.029070     0.030490<br>-------------------------------------------------------------<br>Solution Validates: avg error less than 1.000000e-13 on all three arrays<br>-------------------------------------------------------------<br></code></pre></td></tr></table></figure>
+
+<p>Copy操作最为简单，它先访问一个内存单元读出其中的值，再将值写入到另一个内存单元。</p>
+<p>Scale操作先从内存单元读出其中的值，作一个乘法运算，再将结果写入到另一个内存单元。</p>
+<p>Add操作先从内存单元读出两个值，做加法运算， 再将结果写入到另一个内存单元。</p>
+<p>Triad的中文含义是将三个组合起来，在本测试中表示的意思是将Copy、Scale、Add三种操作组合起来进行测试。具体操作方式是：先从内存单元中中读两个值a、b，对其进行乘加混合运算（a + 因子 * b ） ，将运算结果写入到另一个内存单元。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="category-chain-item">Android性能优化</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%86%85%E5%AD%98/" class="print-no-link">#内存</a>
+      
+        <a href="/tags/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/" class="print-no-link">#性能工具</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>内存性能测试方法</div>
+      <div>https://iwesley.top/article/f42b9418/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年5月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/article/9e5c606d/" title="好用软件推荐">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">好用软件推荐</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/7cf0bd29/" title="EMMC存储性能测试方法">
+                        <span class="hidden-mobile">EMMC存储性能测试方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline-server-eight.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-rss"></i> <a href="https://iwesley.top/atom.xml" target="_blank" rel="nofollow noopener"><span>RSS</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <div style="font-size: 0.85rem"> <script defer src="https://cn.vercount.one/js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/stars.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

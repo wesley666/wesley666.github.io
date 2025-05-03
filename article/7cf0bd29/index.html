@@ -1,0 +1,863 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="记于 2022 年 9 月 15 日  参考Android-emmc性能测试 | 一叶知秋进行实践操作 dd 命令页面缓存为了测试 emmc 的真实读写性能，我们需要先把页面缓存给清理： 1234567891011121314151617echo 1 &gt; &#x2F;proc&#x2F;sys&#x2F;vm&#x2F;drop_cachesconsole:&#x2F; # echo 1 &gt; &#x2F;proc&#x2F;sys&#x2F;vm&#x2F;drop_ca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EMMC存储性能测试方法">
+<meta property="og:url" content="https://iwesley.top/article/7cf0bd29/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="记于 2022 年 9 月 15 日  参考Android-emmc性能测试 | 一叶知秋进行实践操作 dd 命令页面缓存为了测试 emmc 的真实读写性能，我们需要先把页面缓存给清理： 1234567891011121314151617echo 1 &gt; &#x2F;proc&#x2F;sys&#x2F;vm&#x2F;drop_cachesconsole:&#x2F; # echo 1 &gt; &#x2F;proc&#x2F;sys&#x2F;vm&#x2F;drop_ca">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-02T15:10:23.000Z">
+<meta property="article:modified_time" content="2025-05-03T09:28:09.185Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="EMMC">
+<meta property="article:tag" content="性能工具">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>EMMC存储性能测试方法 - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_4814891_uhrho08g34.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":"https://leancloud.iwesley.top","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Wesley's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="EMMC存储性能测试方法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-02 23:10" pubdate>
+          2025年5月2日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">EMMC存储性能测试方法</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于：2025年5月3日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <blockquote>
+<p>记于 2022 年 9 月 15 日</p>
+</blockquote>
+<p>参考<a target="_blank" rel="noopener" href="https://qiushao.net/2020/02/12/Android/emmc-performance-test/index.html">Android-emmc性能测试 | 一叶知秋</a>进行实践操作</p>
+<h1 id="dd-命令"><a href="#dd-命令" class="headerlink" title="dd 命令"></a>dd 命令</h1><h2 id="页面缓存"><a href="#页面缓存" class="headerlink" title="页面缓存"></a>页面缓存</h2><p>为了测试 emmc 的真实读写性能，我们需要先把页面缓存给清理：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs Shell">echo 1 &gt; /proc/sys/vm/drop_caches<br>console:/ # echo 1 &gt; /proc/sys/vm/drop_caches                                  <br>console:/ # busybox dd if=/dev/block/mmcblk0 of=/dev/null bs=1M count=512                          &lt;<br>512+0 records in<br>512+0 records out<br>536870912 bytes (512.0MB) copied, 2.491718 seconds, 205.5MB/s<br>console:/ # busybox dd if=/dev/block/mmcblk0 of=/dev/null bs=1M count=512                          &lt;<br>512+0 records in<br>512+0 records out<br>536870912 bytes (512.0MB) copied, 0.290948 seconds, 1.7GB/s<br><br>console:/ # echo 1 &gt; /proc/sys/vm/drop_caches <br>console:/ # busybox  dd if=/dev/block/mmcblk0 of=/dev/null bs=1M count=512                          &lt;<br>512+0 records in<br>512+0 records out<br>536870912 bytes (512.0MB) copied, 2.508393 seconds, 204.1MB/s<br>console:/ # <br></code></pre></td></tr></table></figure>
+
+<p>连续执行两次 <code>busybox  dd if=/dev/block/mmcblk0 of=/dev/null bs=1M count=512</code> ，从 &#x2F;dev&#x2F;block&#x2F;mmcblk0 (即emmc) 块设备中读取内容，写到 <code>/dev/null</code> 。</p>
+<p><code>/dev/null</code> 是一个虚拟设备，写入这个路径并不会保存数据，可以认为这个设备的写入速度无限大，也就是写入速度不会成为这个命令的瓶颈，我们这个命令主要是为了测试 emmc 的读取速度。可以看到第一次执行的结果是 205.5MB&#x2F;s，第二次执行的结果是 1.7GB&#x2F;s。从这个数据来看，页面缓存极大的提高了热点文件的读取速度。然后我们用 <code>echo 1 &gt; /proc/sys/vm/drop_caches</code>命令清除一下页面缓存，再执行同样的 <code>dd</code>命令，发现速度跟第一次差不多了。</p>
+<h2 id="写入性能测试"><a href="#写入性能测试" class="headerlink" title="写入性能测试"></a>写入性能测试</h2><h3 id="写入块设备"><a href="#写入块设备" class="headerlink" title="写入块设备"></a>写入块设备</h3><p>cache 分区一般是用来存放 OTA 升级包的，正常状态下挂载失败也不影响系统的正常运行，所以我们拿 cache 分区来作写入测试，先找到 cache 对应的块设备文件（df -h命令显示异常的话，可以执行<code>ls -l /dev/block/platform/*/by-name/cache</code>）</p>
+<p><strong>注意：本测试方法可能会损坏cache分区导致ota失败，出现这种情况建议恢复出厂设置或者线刷。</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs Shell">console:/ # df -h<br>Filesystem            Size  Used Avail Use% Mounted on<br>tmpfs                 1.5G  892K  1.5G   1% /dev<br>tmpfs                 1.5G     0  1.5G   0% /mnt<br>/dev/block/mmcblk0p26  14M  168K   14M   2% /metadata<br>/dev/block/dm-1       1.1G  0.9G  199M  84% /<br>/dev/block/mmcblk0p40 379M   24M  356M   7% /wesley<br>/dev/block/mmcblk0p38 379M  154M  226M  41% /factory<br>/dev/block/mmcblk0p39  18M  1.3M   17M   8% /atv<br>/dev/block/mmcblk0p36 9.1M   24K  9.0M   1% /oem<br>/dev/block/dm-2       340M  240M  100M  71% /vendor<br>/dev/block/dm-0       167M   84K  167M   1% /mnt/scratch<br>overlay               167M   84K  167M   1% /system_ext<br>overlay               167M   84K  167M   1% /product<br>overlay               167M   84K  167M   1% /odm<br>tmpfs                 1.5G     0  1.5G   0% /apex<br>tmpfs                 1.5G  248K  1.5G   1% /linkerconfig<br>tmpfs                  20M  1.0M   19M   6% /mnt/vendor/rtdlog<br>tmpfs                  20M  8.0K   20M   1% /tmp<br>/dev/block/mmcblk0p23 1.4G  3.9M  1.4G   1% /cache<br>/dev/block/mmcblk0p31 236M   12M  224M   6% /mnt/vendor/tvconfigs<br>/dev/block/mmcblk0p32  26M   84K   26M   1% /mnt/vendor/tvdata<br>/dev/block/mmcblk0p33  18M   36K   18M   1% /mnt/vendor/impdata<br>/dev/block/mmcblk0p4  976K  228K  748K  24% /mnt/vendor/factory<br>/dev/block/mmcblk0p6  976K   28K  948K   3% /mnt/vendor/factory_ro<br>tmpfs                  20M     0   20M   0% /shm<br>tmpfs                 8.0M     0  8.0M   0% /mnt/EPGdb<br>/dev/block/mmcblk0p42 107G  4.8G  102G   5% /data<br>tmpfs                 1.5G     0  1.5G   0% /data_mirror<br>/dev/fuse             107G  4.8G  102G   5% /mnt/user/0/emulated<br>console:/ # <br></code></pre></td></tr></table></figure>
+
+<p>cache分区的块设备文件为&#x2F;dev&#x2F;block&#x2F;mmcblk0p23。</p>
+<p>写入测试：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs Shell">console:/ #  echo 1 &gt; /proc/sys/vm/drop_caches    <br>console:/ #  busybox dd if=/dev/zero of=/dev/block/mmcblk0p23 bs=1M count=1024 conv=fsync<br>1024+0 records in<br>1024+0 records out<br>1073741824 bytes (1.0GB) copied, 11.371810 seconds, 90.0MB/s<br></code></pre></td></tr></table></figure>
+
+<p>输入文件为 &#x2F;dev&#x2F;zero，是一个虚拟设备，我们可以认为这个设备的读取速度无限大，也就是读取速度不会影响到写入的速度。</p>
+<p>bs&#x3D;1M : 一次写入 1M</p>
+<p>count&#x3D;1024 : 写入 1024 次，也就是写入的数据总量为 1G</p>
+<p>conv&#x3D;fsync : dd 结束前，把数据同步到 emmc，如果没加这个参数的话，数据可能还在缓存之中。为了确保数据准确，一定要加这个参数。</p>
+<p>可以重复测试几次</p>
+<h3 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs Shell">console:/ # echo 1 &gt; /proc/sys/vm/drop_caches<br>console:/ # busybox dd if=/dev/zero of=/data/ddtest.bin bs=1M count=1024 conv=fsync                   <br>1024+0 records in<br>1024+0 records out<br>1073741824 bytes (1.0GB) copied, 15.211609 seconds, 67.3MB/s<br>console:/ #<br></code></pre></td></tr></table></figure>
+
+<p>要重复测试几次。相对直接写块设备文件慢了 30M&#x2F;s 左右。这可能是文件系统带来的影响。</p>
+<h2 id="读取测试"><a href="#读取测试" class="headerlink" title="读取测试"></a>读取测试</h2><h3 id="读取块设备"><a href="#读取块设备" class="headerlink" title="读取块设备"></a>读取块设备</h3><p>直接用我们上面介绍清除缓存的例子就行，这里就不再重复了。</p>
+<p>从上面的例子得到的数据为 205M&#x2F;s 左右。</p>
+<h3 id="读取文件"><a href="#读取文件" class="headerlink" title="读取文件"></a>读取文件</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs Shell">console:/ # echo 1 &gt; /proc/sys/vm/drop_caches        <br>console:/ # busybox dd if=/data/ddtest.bin of=/dev/null bs=1M count=1024<br>1024+0 records in<br>1024+0 records out<br>1073741824 bytes (1.0GB) copied, 5.464306 seconds, 187.4MB/s<br>console:/ # <br></code></pre></td></tr></table></figure>
+
+<p>直接拿测试写入速度时生成的文件，重复测试几次，速度基本上在 187MB&#x2F;s 左右。</p>
+<h1 id="iozone"><a href="#iozone" class="headerlink" title="iozone"></a>iozone</h1><p>Android 系统源码中并没有 iozone，我们从官网上下载编译，我下载时最新版本为iozone3_493，这个版本已经有 Android.mk 在代码里面了，将源码放到 Android系统源码里面 mm 即可。下面已经是我编译好的文件。对应不同硬件使用对应版本即可，把文件push到&#x2F;data&#x2F;local&#x2F;tmp&#x2F;，并赋予执行权限。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/wesley666/source/blob/main/izone.zip">source&#x2F;izone.zip at main · wesley666&#x2F;source</a></p>
+<h2 id="随机读写测试"><a href="#随机读写测试" class="headerlink" title="随机读写测试"></a>随机读写测试</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs Shell">console: echo 1 &gt; /proc/sys/vm/drop_caches                                              &lt;<br>console:/data/local/tmp # ./iozone -azecI -+n -L64 -S32 -r1m -s1024m -i0 -i1 -i2 -w -f /data/iozonetest.bin <br>        Iozone: Performance Test of File I/O<br>                Version $Revision: 3.493 $<br>                Compiled for 32 bit mode.<br>                Build: linux-arm <br><br>        Contributors:William Norcott, Don Capps, Isom Crawford, Kirby Collins<br>                     Al Slater, Scott Rhine, Mike Wisner, Ken Goss<br>                     Steve Landherr, Brad Smith, Mark Kelly, Dr. Alain CYR,<br>                     Randy Dunlap, Mark Montague, Dan Million, Gavin Brebner,<br>                     Jean-Marc Zucconi, Jeff Blomberg, Benny Halevy, Dave Boone,<br>                     Erik Habbinga, Kris Strecker, Walter Wong, Joshua Root,<br>                     Fabrice Bacchella, Zhenghua Xue, Qin Li, Darren Sawyer,<br>                     Vangel Bojaxhi, Ben England, Vikentsi Lapa,<br>                     Alexey Skidanov, Sudhir Kumar.<br><br>        Run began: Fri Jun 10 19:34:04 2022<br><br>        Auto Mode<br>        Cross over of record size disabled.<br>        Include fsync in write timing<br>        Include close in write timing<br>        O_DIRECT feature enabled<br>        No retest option selected<br>        Record Size 1024 kB<br>        File size set to 1048576 kB<br>        Setting no_unlink<br>        Command line used: ./iozone -azecI -+n -L64 -S32 -r1m -s1024m -i0 -i1 -i2 -w -f /data/iozonetest.bin<br>        Output is in kBytes/sec<br>        Time Resolution = 0.000001 seconds.<br>        Processor cache size set to 32 kBytes.<br>        Processor cache line size set to 64 bytes.<br>        File stride size set to 17 * record size.<br>                                                              random    random     bkwd    record    stride                                    <br>              kB  reclen    write  rewrite    read    reread    read     write     read   rewrite      read   fwrite frewrite    fread  freread<br>         1048576    1024   150737        0   210429        0   208681   173348                                                                <br><br>iozone test complete.<br>console:/data/local/tmp # <br></code></pre></td></tr></table></figure>
+
+<p>从结果来看，写速度为150MB&#x2F;s，读速度为210MB&#x2F;s，随机读速度为208MB&#x2F;s。　随机写速度为 173MB&#x2F;s。</p>
+<p>重复测试几次结果差不多，读的速度基本跟 dd 的一致。写入比 dd 的快了一倍几，这里面的差距待研究，可能跟参数设置有关。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./iozone -azecI -+n -L64 -S32 -r1m -s1024m -i0 -i1 -i2 -w -f /data/iozonetest.bin [-Rb /sdcard/emmc_test.xls] <br></code></pre></td></tr></table></figure>
+
+<p>各个参数定义如下：</p>
+<p>a: 使用全自动模式。生成涵盖所有测试操作的输出，记录大小为4k到16M，文件大小为64k到512M。</p>
+<p>z: 与-a一起使用以测试所有可能的记录大小。通常，Iozone在全自动模式下使用时会忽略对非常大的文件的小记录大小的测试。此选项强制iozone在自动测试中也包括小记录大小。</p>
+<p>e: 在时间计算中包括flush（fsync，fflush）</p>
+<p>c: 在计时计算中包括close（）。 仅当您怀疑当前正在测试的操作系统中的close（）被破坏时，这才有用。 它对于NFS3测试也很有用，可以帮助识别nfs3_commit是否运行良好。</p>
+<p>I: 对所有文件操作使用DIRECT I&#x2F;O. 告诉文件系统所有操作都绕过缓冲区缓存并直接转到磁盘。 这也将在VxFS上使用VX_DIRECT，在Linux上使用O_DIRECT，在Solaris上使用directio（）。</p>
+<p>-+n: 没有选择重新测试。使用此选项可防止重新测试运行。</p>
+<p>L64: Set processor cache line size to 64 Bytes</p>
+<p>S32: Set processor cache size to 32KBytes</p>
+<p>r2m: block size 指定一次写入&#x2F;读出的块大小：1M</p>
+<p>s1024m: 用于指定要测试的文件的大小：1024M</p>
+<p>-i N 用来选择测试项, 比如Read&#x2F;Write&#x2F;Random 比较常用的是0 1 2,可以指定成-i 0 -i 1 -i2.这些别的详细内容请查man</p>
+<p>  0&#x3D;write&#x2F;rewrite</p>
+<p>  1&#x3D;read&#x2F;re-read</p>
+<p>  2&#x3D;random-read&#x2F;write</p>
+<p>  3&#x3D;Read-backwards</p>
+<p>  4&#x3D;Re-write-record</p>
+<p>  5&#x3D;stride-read</p>
+<p>  6&#x3D;fwrite&#x2F;re-fwrite</p>
+<p>  7&#x3D;fread&#x2F;Re-fread</p>
+<p>  8&#x3D;random mix</p>
+<p>  9&#x3D;pwrite&#x2F;Re-pwrite</p>
+<p>  10&#x3D;pread&#x2F;Re-pread</p>
+<p>  11&#x3D;pwritev&#x2F;Re-pwritev</p>
+<p>  12&#x3D;preadv&#x2F;Re-preadv</p>
+<p>-+b 400000,30000: burst size 400000KBytes,sleep between burst 30000ms</p>
+<p>w: 当临时文件使用完毕时不删除它们。把它们留在文件系统中。</p>
+<p>f: 指定测试文件的名字(这个文件必须指定你要测试的那个硬件中)</p>
+<p>可选参数：</p>
+<p>R: Generate Excel report</p>
+<p>b: Filename Create Excel worksheet file,emmc_test.xls</p>
+<p>注意：</p>
+<p>根据测试文件大小的不同，iozone 磁盘读写性能的测试方法主要包括1倍内存测试和2倍内存测试（避免缓存的影响）。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://qiushao.net/2020/02/12/Android/emmc-performance-test/index.html">Android-emmc性能测试 | 一叶知秋</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/axboe/fio">axboe&#x2F;fio: Flexible I&#x2F;O Tester</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/DevriesL/RaptorMark">DevriesL&#x2F;RaptorMark</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.iozone.org/">Iozone Filesystem Benchmark</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.iozone.org/src/current/">iozone: Index of &#x2F;src&#x2F;current</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="category-chain-item">Android性能优化</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/EMMC/" class="print-no-link">#EMMC</a>
+      
+        <a href="/tags/%E6%80%A7%E8%83%BD%E5%B7%A5%E5%85%B7/" class="print-no-link">#性能工具</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>EMMC存储性能测试方法</div>
+      <div>https://iwesley.top/article/7cf0bd29/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年5月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/article/f42b9418/" title="内存性能测试方法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">内存性能测试方法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/788e44fe/" title="btrace2.0使用方法">
+                        <span class="hidden-mobile">btrace2.0使用方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline-server-eight.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-rss"></i> <a href="https://iwesley.top/atom.xml" target="_blank" rel="nofollow noopener"><span>RSS</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <div style="font-size: 0.85rem"> <script defer src="https://cn.vercount.one/js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/stars.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
