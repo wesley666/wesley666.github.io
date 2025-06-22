@@ -19,24 +19,24 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="纯 java 实现 管道实现 epoll fd 实现">
+    <meta name="description" content="在开发 sdk 时，内部一般会划分好几个模块。但当需要打包成一个模块发布时，往往需要依赖第三方插件。比如著名的 fat-aar：https:&#x2F;&#x2F;github.com&#x2F;kezong&#x2F;fat-aar-android，但该库不支持 AGP8.0 了，有其他开发者单独fork了一个仓库来进行维护，支持 AGP8.0+：aasitnikov&#x2F;fat-aar-android: Gradle plug">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android Handler 进化论">
-<meta property="og:url" content="https://iwesley.top/article/61a2129/index.html">
+<meta property="og:title" content="安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库">
+<meta property="og:url" content="https://iwesley.top/article/a43c0ba5/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="纯 java 实现 管道实现 epoll fd 实现">
+<meta property="og:description" content="在开发 sdk 时，内部一般会划分好几个模块。但当需要打包成一个模块发布时，往往需要依赖第三方插件。比如著名的 fat-aar：https:&#x2F;&#x2F;github.com&#x2F;kezong&#x2F;fat-aar-android，但该库不支持 AGP8.0 了，有其他开发者单独fork了一个仓库来进行维护，支持 AGP8.0+：aasitnikov&#x2F;fat-aar-android: Gradle plug">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-05-03T10:35:51.000Z">
-<meta property="article:modified_time" content="2025-05-11T13:26:37.659Z">
+<meta property="article:published_time" content="2025-06-22T06:21:49.000Z">
+<meta property="article:modified_time" content="2025-06-22T07:35:13.431Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="Android">
+<meta property="article:tag" content="gradle">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>Android Handler 进化论 - Wesley&#39;s Blog</title>
+  <title>安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -260,7 +260,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Android Handler 进化论"></span>
+            <span id="subtitle" data-typed-text="安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库"></span>
           
         </div>
 
@@ -276,8 +276,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-05-03 18:35" pubdate>
-          2025年5月3日 晚上
+        <time datetime="2025-06-22 14:21" pubdate>
+          2025年6月22日 下午
         </time>
       </span>
     
@@ -288,7 +288,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          10 字
+          734 字
         
       </span>
     
@@ -299,7 +299,7 @@
         
         
         
-          1 分钟
+          7 分钟
         
       </span>
     
@@ -336,12 +336,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Android Handler 进化论</h1>
+            <h1 id="seo-header">安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年5月11日 晚上
+                    本文最后更新于：2025年6月22日 下午
                   
                 
               </p>
@@ -349,9 +349,54 @@
             
               <div class="markdown-body">
                 
-                <p>纯 java 实现</p>
-<p>管道实现</p>
-<p>epoll fd 实现</p>
+                <p>在开发 sdk 时，内部一般会划分好几个模块。但当需要打包成一个模块发布时，往往需要依赖第三方插件。比如著名的 fat-aar：<a target="_blank" rel="noopener" href="https://github.com/kezong/fat-aar-android%EF%BC%8C%E4%BD%86%E8%AF%A5%E5%BA%93%E4%B8%8D%E6%94%AF%E6%8C%81">https://github.com/kezong/fat-aar-android，但该库不支持</a> AGP8.0 了，有其他开发者单独fork了一个仓库来进行维护，支持 AGP8.0+：<a target="_blank" rel="noopener" href="https://github.com/aasitnikov/fat-aar-android">aasitnikov&#x2F;fat-aar-android: Gradle plugin for merging android libraries (AAR)</a>。</p>
+<p>现在安卓官方终于支持将多个库打包成一个aar 了：<a target="_blank" rel="noopener" href="https://developer.android.com/build/publish-library/fused-library">Publish multiple Android libraries as one with Fused Library  |  Android Studio  |  Android Developers</a>。宣布从 AGP8.12 开始可以使用<code>com.android.fused-library</code>来进行合并多模块。不过从<a target="_blank" rel="noopener" href="https://mvnrepository.com/artifact/com.android.fused-library/com.android.fused-library.gradle.plugin">Maven Repository: com.android.fused-library » com.android.fused-library.gradle.plugin</a>上面可以看到，一些早期版本也可以支持的，不过可能有 bug，我试了 AGP8.10 也是可以的。</p>
+<p>相比 fat-aar 的优点是：</p>
+<ul>
+<li>官方支持</li>
+<li>合并模块时支持依赖传递，也就是子模块的依赖树会出现在 pom 文件里面。fat-aar 需要通过pom.withXml 来处理。</li>
+</ul>
+<p>缺点是：</p>
+<ul>
+<li>支持插件版本有限，官方表示是AGP8.12 开始才支持。</li>
+<li>传递依赖项不会打包。需要逐个指定打包进 aar 的依赖。</li>
+</ul>
+<p>后面还会继续说该库目前的问题，先看看怎么用。</p>
+<p>官方的工程示范：</p>
+<blockquote>
+<p>readme 的插件名称目前是写错了的：应该是<code>com.android.fused-library</code></p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://github.com/android/gradle-recipes/tree/agp-8.10/applyFusedLibraryPlugin">gradle-recipes&#x2F;applyFusedLibraryPlugin at agp-8.10 · android&#x2F;gradle-recipes</a></p>
+<p>可以参考这个进行插件引入：</p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/build/publish-library/fused-library">Publish multiple Android libraries as one with Fused Library  |  Android Studio  |  Android Developers</a></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="嵌套依赖不支持打包"><a href="#嵌套依赖不支持打包" class="headerlink" title="嵌套依赖不支持打包"></a>嵌套依赖不支持打包</h3><p>官方的例子是支持嵌套的：</p>
+<blockquote>
+<p><code>*</code> indicates an <code>include</code> dependency of the <code>:fusedLibrary</code> module</p>
+</blockquote>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs elixir">┌─────────────────────────────────────────┐<br>│             <span class="hljs-symbol">:app</span>                        │<br>│               ▲                         │<br>│               │                         │<br>│         <span class="hljs-symbol">:fusedLibrary</span>                   │<br>│         ▲           ▲                   │<br>│         │           │                   │<br>│    <span class="hljs-symbol">:androidLib2*</span>  <span class="hljs-symbol">:androidLib1*</span>         │<br>│         ▲            ▲                  │<br>│         │            │                  │<br>│ <span class="hljs-symbol">:androidLib3</span> <span class="hljs-symbol">com.google.code.gson:</span>gson* │<br>└─────────────────────────────────────────┘<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">dependencies &#123;<br>    include(project(<span class="hljs-string">&quot;:androidLib1&quot;</span>))<br>    include(project(<span class="hljs-string">&quot;:androidLib2&quot;</span>))<br>    include(<span class="hljs-string">&quot;com.google.code.gson:gson:2.10.1&quot;</span>)<br>    include(files(<span class="hljs-string">&quot;libs/simple-jar-with-A_DoIExist-class.jar&quot;</span>))<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>实际上androidLib3 没有被打包，变成了一个依赖fused-library-samples:androidLib3:unspecified：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;included&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>    <span class="hljs-string">&quot;project :androidLib1&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;project :androidLib2&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;com.google.code.gson:gson:2.10.1&quot;</span><br>  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;dependencies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>    <span class="hljs-string">&quot;org.jetbrains.kotlin:kotlin-stdlib:1.9.22&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;org.jetbrains:annotations:13.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;fused-library-samples:androidLib3:unspecified&quot;</span><br>  <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="有一些远程包暂时打包不了"><a href="#有一些远程包暂时打包不了" class="headerlink" title="有一些远程包暂时打包不了"></a>有一些远程包暂时打包不了</h3><p>A failure occurred while executing com.android.build.gradle.tasks.FusedLibraryMergeArtifactTask$FusedLibraryMergeArtifactWorkAction</p>
+<p>   &gt; java.lang.NullPointerException (no error message)</p>
+<h3 id="暂不支持携带源码发布"><a href="#暂不支持携带源码发布" class="headerlink" title="暂不支持携带源码发布"></a>暂不支持携带源码发布</h3><h3 id="暂不能混淆"><a href="#暂不能混淆" class="headerlink" title="暂不能混淆"></a>暂不能混淆</h3><h3 id="不支持Databinding"><a href="#不支持Databinding" class="headerlink" title="不支持Databinding"></a>不支持Databinding</h3><h3 id="无法在单个融合库中融合多个-build-类型和产品变种。需要为不同的变体创建单独的融合库。"><a href="#无法在单个融合库中融合多个-build-类型和产品变种。需要为不同的变体创建单独的融合库。" class="headerlink" title="无法在单个融合库中融合多个 build 类型和产品变种。需要为不同的变体创建单独的融合库。"></a>无法在单个融合库中融合多个 build 类型和产品变种。需要为不同的变体创建单独的融合库。</h3><h3 id="kotlin-module冲突"><a href="#kotlin-module冲突" class="headerlink" title="kotlin_module冲突"></a>kotlin_module冲突</h3><p>如果有两个base模块会产生冲突， base&#x2F;base ，feature&#x2F;base</p>
+<p>2 files found with path ‘META-INF&#x2F;base_release.kotlin_module’ from inputs:</p>
+<p>需要修改一下kotlin_module 的名字</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/44509608/duplicate-files-copied-in-apk-meta-inf-library-release-kotlin-module">android - Duplicate files copied in APK META-INF&#x2F;library_release.kotlin_module - Stack Overflow</a></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs groovy">ext &#123;<br>    GROUP_ID = <span class="hljs-string">&#x27;custom.group.id&#x27;</span><br>    ARTIFACT_ID = <span class="hljs-string">&#x27;artifactid&#x27;</span><br>&#125;<br><br>android &#123;<br>    compileSdkVersion <span class="hljs-number">25</span><br>    buildToolsVersion <span class="hljs-string">&quot;25.0.0&quot;</span><br><br>    compileOptions &#123;<br>        kotlinOptions.freeCompilerArgs += [<span class="hljs-string">&#x27;-module-name&#x27;</span>, <span class="hljs-string">&quot;$GROUP_ID.$ARTIFACT_ID&quot;</span>]<br>    &#125;<br><br>    defaultConfig &#123;<br>        ...<br>    &#125;<br>    buildTypes &#123;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="官方已知问题"><a href="#官方已知问题" class="headerlink" title="官方已知问题"></a>官方已知问题</h3><p>融合库是一个新插件，我们正在解决一些已知问题，以实现所有用例。</p>
+<ul>
+<li>合并的 AAR 中未包含 <code>lint.jar</code> 文件</li>
+<li>向其他 .aar 文件添加文件依赖项</li>
+<li>不支持合并 RenderScript 和 Prefab 工件</li>
+</ul>
+<p>期待官方进一步完善。</p>
 
                 
               </div>
@@ -360,6 +405,34 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AppBuild/" class="category-chain-item">AppBuild</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/gradle/" class="print-no-link">#gradle</a>
+      
+    </div>
   
 </div>
 
@@ -369,8 +442,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Android Handler 进化论</div>
-      <div>https://iwesley.top/article/61a2129/</div>
+      <div>安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库</div>
+      <div>https://iwesley.top/article/a43c0ba5/</div>
     </div>
     <div class="license-meta">
       
@@ -382,7 +455,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年5月3日</div>
+          <div>2025年6月22日</div>
         </div>
       
       
@@ -409,6 +482,23 @@
 
 
 
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/e6389157/" title="手机厂商的应用列表权限管控真的起效了吗">
+                        <span class="hidden-mobile">手机厂商的应用列表权限管控真的起效了吗</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
               
             </div>
 
