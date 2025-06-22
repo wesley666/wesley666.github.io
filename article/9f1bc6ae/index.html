@@ -19,15 +19,15 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="在开发 sdk 时，内部一般会划分好几个模块。但当需要打包成一个模块发布时，往往需要依赖第三方插件。比如著名的 fat-aar：https:&#x2F;&#x2F;github.com&#x2F;kezong&#x2F;fat-aar-android，但该库不支持 AGP8.0 了，有其他开发者单独fork了一个仓库来进行维护，支持 AGP8.0+：aasitnikov&#x2F;fat-aar-android: Gradle plug">
+    <meta name="description" content="最近新客户要求将软件的代码公开给他们，允许他们自己修改 UI，进行定制。由于我们工程包含其他核心模块，不能全部开放，所以需要将非 UI 模块进行整合并混淆再发布。 由于工程具有良好的模块化，所以一开始想到的是参考安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库 - Wesley’s Blog将非 UI 模块合并成一个 aar。 但有挑战：  依赖传递很难处">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库">
-<meta property="og:url" content="https://iwesley.top/article/a43c0ba5/index.html">
+<meta property="og:title" content="安卓对外发布工程源码:怎么做到仅UI层公布">
+<meta property="og:url" content="https://iwesley.top/article/9f1bc6ae/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="在开发 sdk 时，内部一般会划分好几个模块。但当需要打包成一个模块发布时，往往需要依赖第三方插件。比如著名的 fat-aar：https:&#x2F;&#x2F;github.com&#x2F;kezong&#x2F;fat-aar-android，但该库不支持 AGP8.0 了，有其他开发者单独fork了一个仓库来进行维护，支持 AGP8.0+：aasitnikov&#x2F;fat-aar-android: Gradle plug">
+<meta property="og:description" content="最近新客户要求将软件的代码公开给他们，允许他们自己修改 UI，进行定制。由于我们工程包含其他核心模块，不能全部开放，所以需要将非 UI 模块进行整合并混淆再发布。 由于工程具有良好的模块化，所以一开始想到的是参考安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库 - Wesley’s Blog将非 UI 模块合并成一个 aar。 但有挑战：  依赖传递很难处">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-06-22T06:21:49.000Z">
-<meta property="article:modified_time" content="2025-06-22T07:35:28.833Z">
+<meta property="article:published_time" content="2025-06-22T08:37:36.000Z">
+<meta property="article:modified_time" content="2025-06-22T11:59:20.441Z">
 <meta property="article:author" content="Wesley">
 <meta property="article:tag" content="gradle">
 <meta name="twitter:card" content="summary_large_image">
@@ -36,7 +36,7 @@
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库 - Wesley&#39;s Blog</title>
+  <title>安卓对外发布工程源码:怎么做到仅UI层公布 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -260,7 +260,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库"></span>
+            <span id="subtitle" data-typed-text="安卓对外发布工程源码:怎么做到仅UI层公布"></span>
           
         </div>
 
@@ -276,7 +276,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-06-22 14:21" pubdate>
+        <time datetime="2025-06-22 16:37" pubdate>
           2025年6月22日 下午
         </time>
       </span>
@@ -288,7 +288,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          734 字
+          1.6k 字
         
       </span>
     
@@ -299,7 +299,7 @@
         
         
         
-          7 分钟
+          14 分钟
         
       </span>
     
@@ -336,12 +336,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库</h1>
+            <h1 id="seo-header">安卓对外发布工程源码:怎么做到仅UI层公布</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年6月22日 下午
+                    本文最后更新于：2025年6月22日 晚上
                   
                 
               </p>
@@ -349,54 +349,87 @@
             
               <div class="markdown-body">
                 
-                <p>在开发 sdk 时，内部一般会划分好几个模块。但当需要打包成一个模块发布时，往往需要依赖第三方插件。比如著名的 fat-aar：<a target="_blank" rel="noopener" href="https://github.com/kezong/fat-aar-android%EF%BC%8C%E4%BD%86%E8%AF%A5%E5%BA%93%E4%B8%8D%E6%94%AF%E6%8C%81">https://github.com/kezong/fat-aar-android，但该库不支持</a> AGP8.0 了，有其他开发者单独fork了一个仓库来进行维护，支持 AGP8.0+：<a target="_blank" rel="noopener" href="https://github.com/aasitnikov/fat-aar-android">aasitnikov&#x2F;fat-aar-android: Gradle plugin for merging android libraries (AAR)</a>。</p>
-<p>现在安卓官方终于支持将多个库打包成一个aar 了：<a target="_blank" rel="noopener" href="https://developer.android.com/build/publish-library/fused-library">Publish multiple Android libraries as one with Fused Library  |  Android Studio  |  Android Developers</a>。宣布从 AGP8.12 开始可以使用<code>com.android.fused-library</code>来进行合并多模块。不过从<a target="_blank" rel="noopener" href="https://mvnrepository.com/artifact/com.android.fused-library/com.android.fused-library.gradle.plugin">Maven Repository: com.android.fused-library » com.android.fused-library.gradle.plugin</a>上面可以看到，一些早期版本也可以支持的，不过可能有 bug，我试了 AGP8.10 也是可以的。</p>
-<p>相比 fat-aar 的优点是：</p>
+                <p>最近新客户要求将软件的代码公开给他们，允许他们自己修改 UI，进行定制。由于我们工程包含其他核心模块，不能全部开放，所以需要将非 UI 模块进行整合并混淆再发布。</p>
+<p>由于工程具有良好的模块化，所以一开始想到的是参考<a href="https://iwesley.top/article/a43c0ba5/">安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库 - Wesley’s Blog</a>将非 UI 模块合并成一个 aar。</p>
+<p>但有挑战：</p>
 <ul>
-<li>官方支持</li>
-<li>合并模块时支持依赖传递，也就是子模块的依赖树会出现在 pom 文件里面。fat-aar 需要通过pom.withXml 来处理。</li>
+<li><p>依赖传递很难处理，就算处理了也不方便后续维护</p>
+</li>
+<li><p>存在部分内网 SDK 依赖</p>
+</li>
 </ul>
-<p>缺点是：</p>
-<ul>
-<li>支持插件版本有限，官方表示是AGP8.12 开始才支持。</li>
-<li>传递依赖项不会打包。需要逐个指定打包进 aar 的依赖。</li>
-</ul>
-<p>后面还会继续说该库目前的问题，先看看怎么用。</p>
-<p>官方的工程示范：</p>
+<p>为了不改变 maven 的管理方式，决定使用本地 maven 的方式。</p>
+<p>可以先用<code>gradlew build --scan</code>生成一棵依赖树，网页版方便查看 app 有哪些依赖，还可以定位内网的依赖来自于哪个地址。</p>
+<h2 id="实施"><a href="#实施" class="headerlink" title="实施"></a>实施</h2><p>在gradle.properties 定义本地 maven 路径</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs groovy">LOCAL_MAVEN_URL=maven_repo<br>GROUP_ID=com.wesley.test<br>SDK_VERSION=<span class="hljs-number">1.0</span><span class="hljs-number">.0</span> #统一控制所有模块版本<br></code></pre></td></tr></table></figure>
+<p>settings.gradle引入本地依赖</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs groovy">maven &#123;<br>            url = uri(<span class="hljs-string">&quot;file://$&#123;rootProject.projectDir&#125;/$&#123;LOCAL_MAVEN_URL&#125;&quot;</span>)<br><br>        &#125;<br></code></pre></td></tr></table></figure>
+
+<p>各自模块接入maven-publish</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs groovy">plugins &#123;<br>    alias(libs.plugins.android.library)<br>    alias(libs.plugins.kotlin.android)<br>    id <span class="hljs-string">&#x27;maven-publish&#x27;</span><br>&#125;<br><span class="hljs-keyword">def</span> ARTIFACT_ID=<span class="hljs-string">&#x27;base-base&#x27;</span><br>android &#123;<br>    <span class="hljs-comment">//不能发布源码给第三方</span><br>    publishing &#123;<br>        singleVariant(<span class="hljs-string">&#x27;release&#x27;</span>) <span class="hljs-comment">// 不生成 sources JAR</span><br>    &#125;<br><br>    ...............<br><br>     <span class="hljs-comment">//如果有模块重名，比如 feature:base, base:base, 需要定义</span><br>    compileOptions &#123;<br>        kotlinOptions.freeCompilerArgs += [<span class="hljs-string">&#x27;-module-name&#x27;</span>, <span class="hljs-string">&quot;$GROUP_ID.$ARTIFACT_ID&quot;</span>]<br>    &#125;<br>    <br>&#125;<br><br><br>publishing &#123;<br>    publications &#123;<br>        maven(MavenPublication) &#123;<br>            groupId GROUP_ID<br>            artifactId ARTIFACT_ID<br>            version SDK_VERSION<br><br>            afterEvaluate &#123;<br>                from components.release<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    repositories &#123;<br>        maven &#123;<br>            url rootProject.file(LOCAL_MAVEN_URL).toURI()<br>        &#125;<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>如果模块存在多个 flavor：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs groovy">plugins &#123;<br>    alias(libs.plugins.android.library)<br>    alias(libs.plugins.kotlin.android)<br>    id <span class="hljs-string">&#x27;maven-publish&#x27;</span><br>&#125;<br>android &#123;<br>    publishing &#123;<br>        multipleVariants &#123;<br>            allVariants()<br>            <span class="hljs-comment">//withJavadocJar()</span><br>        &#125;<br>    &#125;<br>&#125;<br><br>publishing &#123;<br>    publications &#123;<br>        maven(MavenPublication) &#123;<br>            groupId GROUP_ID<br>            artifactId <span class="hljs-string">&quot;feature-xxx&quot;</span><br>            version SDK_VERSION<br><br>            afterEvaluate &#123;<br>                from components.<span class="hljs-keyword">default</span><br>            &#125;<br>        &#125;<br>    &#125;<br><br>    repositories &#123;<br>        maven &#123;<br>            url rootProject.file(LOCAL_MAVEN_URL).toURI()<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果要在发布时控制某些代码不混淆或者依赖方式变更：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-comment">// 在根项目的 build.gradle 中</span><br>ext &#123;<br>    <span class="hljs-comment">// 定义判断是否是发布任务的方法</span><br>    isPublishTask = &#123; -&gt;<br>        gradle.startParameter.taskNames.any &#123;<br>            it.startsWith(<span class="hljs-string">&quot;publish&quot;</span>)<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs groovy"><span class="hljs-keyword">if</span> (isPublishTask()) &#123;<br>        <span class="hljs-comment">// 发布时将 aar 打包进 sdk</span><br>        println(<span class="hljs-string">&quot;wesley publish&quot;</span>)<br>        <span class="hljs-comment">//embed(project( &quot;:feature:testAAR&quot; ))</span><br>        <span class="hljs-comment">// id(&quot;com.kezong.fat-aar&quot;)</span><br>        embed project(<span class="hljs-attr">path:</span> <span class="hljs-string">&quot;:feature:testAAR&quot;</span>, <span class="hljs-attr">configuration:</span> <span class="hljs-string">&#x27;default&#x27;</span>)<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        implementation(project( <span class="hljs-string">&quot;:feature:testAAR&quot;</span> ))<br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>对于不携带 aar 包的模块，比如某 B 模块implementation(project( “:base:base” ))，如果:base:base 也配置了 publish 任务，依赖它的模块不需要修改成远程依赖方式。为什么呢？问了一下 AI：</p>
 <blockquote>
-<p>readme 的插件名称目前是写错了的：应该是<code>com.android.fused-library</code></p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://github.com/android/gradle-recipes/tree/agp-8.10/applyFusedLibraryPlugin">gradle-recipes&#x2F;applyFusedLibraryPlugin at agp-8.10 · android&#x2F;gradle-recipes</a></p>
-<p>可以参考这个进行插件引入：</p>
-<p><a target="_blank" rel="noopener" href="https://developer.android.com/build/publish-library/fused-library">Publish multiple Android libraries as one with Fused Library  |  Android Studio  |  Android Developers</a></p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="嵌套依赖不支持打包"><a href="#嵌套依赖不支持打包" class="headerlink" title="嵌套依赖不支持打包"></a>嵌套依赖不支持打包</h3><p>官方的例子是支持嵌套的：</p>
-<blockquote>
-<p><code>*</code> indicates an <code>include</code> dependency of the <code>:fusedLibrary</code> module</p>
-</blockquote>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs elixir">┌─────────────────────────────────────────┐<br>│             <span class="hljs-symbol">:app</span>                        │<br>│               ▲                         │<br>│               │                         │<br>│         <span class="hljs-symbol">:fusedLibrary</span>                   │<br>│         ▲           ▲                   │<br>│         │           │                   │<br>│    <span class="hljs-symbol">:androidLib2*</span>  <span class="hljs-symbol">:androidLib1*</span>         │<br>│         ▲            ▲                  │<br>│         │            │                  │<br>│ <span class="hljs-symbol">:androidLib3</span> <span class="hljs-symbol">com.google.code.gson:</span>gson* │<br>└─────────────────────────────────────────┘<br></code></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">dependencies &#123;<br>    include(project(<span class="hljs-string">&quot;:androidLib1&quot;</span>))<br>    include(project(<span class="hljs-string">&quot;:androidLib2&quot;</span>))<br>    include(<span class="hljs-string">&quot;com.google.code.gson:gson:2.10.1&quot;</span>)<br>    include(files(<span class="hljs-string">&quot;libs/simple-jar-with-A_DoIExist-class.jar&quot;</span>))<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>实际上androidLib3 没有被打包，变成了一个依赖fused-library-samples:androidLib3:unspecified：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>  <span class="hljs-attr">&quot;included&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>    <span class="hljs-string">&quot;project :androidLib1&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;project :androidLib2&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;com.google.code.gson:gson:2.10.1&quot;</span><br>  <span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span><br>  <span class="hljs-attr">&quot;dependencies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><br>    <span class="hljs-string">&quot;org.jetbrains.kotlin:kotlin-stdlib:1.9.22&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;org.jetbrains:annotations:13.0&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-string">&quot;fused-library-samples:androidLib3:unspecified&quot;</span><br>  <span class="hljs-punctuation">]</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
-
-<h3 id="有一些远程包暂时打包不了"><a href="#有一些远程包暂时打包不了" class="headerlink" title="有一些远程包暂时打包不了"></a>有一些远程包暂时打包不了</h3><p>A failure occurred while executing com.android.build.gradle.tasks.FusedLibraryMergeArtifactTask$FusedLibraryMergeArtifactWorkAction</p>
-<p>   &gt; java.lang.NullPointerException (no error message)</p>
-<h3 id="暂不支持携带源码发布"><a href="#暂不支持携带源码发布" class="headerlink" title="暂不支持携带源码发布"></a>暂不支持携带源码发布</h3><h3 id="暂不能混淆"><a href="#暂不能混淆" class="headerlink" title="暂不能混淆"></a>暂不能混淆</h3><h3 id="不支持Databinding"><a href="#不支持Databinding" class="headerlink" title="不支持Databinding"></a>不支持Databinding</h3><h3 id="无法在单个融合库中融合多个-build-类型和产品变种。需要为不同的变体创建单独的融合库。"><a href="#无法在单个融合库中融合多个-build-类型和产品变种。需要为不同的变体创建单独的融合库。" class="headerlink" title="无法在单个融合库中融合多个 build 类型和产品变种。需要为不同的变体创建单独的融合库。"></a>无法在单个融合库中融合多个 build 类型和产品变种。需要为不同的变体创建单独的融合库。</h3><h3 id="kotlin-module冲突"><a href="#kotlin-module冲突" class="headerlink" title="kotlin_module冲突"></a>kotlin_module冲突</h3><p>如果有两个base模块会产生冲突， base&#x2F;base ，feature&#x2F;base</p>
-<p>2 files found with path ‘META-INF&#x2F;base_release.kotlin_module’ from inputs:</p>
-<p>需要修改一下kotlin_module 的名字</p>
-<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/44509608/duplicate-files-copied-in-apk-meta-inf-library-release-kotlin-module">android - Duplicate files copied in APK META-INF&#x2F;library_release.kotlin_module - Stack Overflow</a></p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs groovy">ext &#123;<br>    GROUP_ID = <span class="hljs-string">&#x27;custom.group.id&#x27;</span><br>    ARTIFACT_ID = <span class="hljs-string">&#x27;artifactid&#x27;</span><br>&#125;<br><br>android &#123;<br>    compileSdkVersion <span class="hljs-number">25</span><br>    buildToolsVersion <span class="hljs-string">&quot;25.0.0&quot;</span><br><br>    compileOptions &#123;<br>        kotlinOptions.freeCompilerArgs += [<span class="hljs-string">&#x27;-module-name&#x27;</span>, <span class="hljs-string">&quot;$GROUP_ID.$ARTIFACT_ID&quot;</span>]<br>    &#125;<br><br>    defaultConfig &#123;<br>        ...<br>    &#125;<br>    buildTypes &#123;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<h3 id="官方已知问题"><a href="#官方已知问题" class="headerlink" title="官方已知问题"></a>官方已知问题</h3><p>融合库是一个新插件，我们正在解决一些已知问题，以实现所有用例。</p>
-<ul>
-<li>合并的 AAR 中未包含 <code>lint.jar</code> 文件</li>
-<li>向其他 .aar 文件添加文件依赖项</li>
-<li>不支持合并 RenderScript 和 Prefab 工件</li>
+<h3 id="核心原因：项目内依赖（Project-Dependency）-vs-Maven-依赖（Maven-Dependency）的转换"><a href="#核心原因：项目内依赖（Project-Dependency）-vs-Maven-依赖（Maven-Dependency）的转换" class="headerlink" title="核心原因：项目内依赖（Project Dependency） vs. Maven 依赖（Maven Dependency）的转换"></a>核心原因：项目内依赖（Project Dependency） vs. Maven 依赖（Maven Dependency）的转换</h3><ol>
+<li><strong>在模块 A 的构建期间： (<code>implementation project(&quot;:base:base&quot;)</code>)</strong><ul>
+<li>当 Gradle 构建你的 <code>A</code> 模块时，它看到了 <code>implementation project(&quot;:base:base&quot;)</code>。</li>
+<li>这里的 <code>project(...)</code> 告诉 Gradle：“这是一个<strong>项目内依赖</strong>。你不需要去远程仓库下载任何东西，直接在本次构建中找到 <code>:base:base</code> 模块，编译它，然后让 <code>A</code> 模块使用它的代码即可。”</li>
+<li>在这个阶段，一切都在你的本地项目中进行，与 Maven 仓库和版本 <code>1.1</code> 是否已发布<strong>完全无关</strong>。</li>
 </ul>
-<p>期待官方进一步完善。</p>
+</li>
+<li><strong>在发布模块 A 时：（生成 <code>pom.xml</code>）</strong><ul>
+<li>当你运行 <code>publish</code> 任务时，<code>maven-publish</code> 插件的职责是为模块 <code>A</code> 创建一个元数据文件，也就是 <code>pom.xml</code>。</li>
+<li>这个 POM 文件是给<strong>外部用户</strong>看的。外部用户（比如你的同事或者一个CI服务器）没有你项目的完整源码，他们需要通过 Maven 坐标（groupId:artifactId:version）来下载依赖。</li>
+<li>因此，<code>maven-publish</code> 插件必须将项目内依赖 <code>project(&quot;:base:base&quot;)</code> <strong>“翻译”</strong> 成一个外部用户可以理解的 Maven 依赖。</li>
+</ul>
+</li>
+</ol>
+<h3 id="“翻译”的过程是怎样的？"><a href="#“翻译”的过程是怎样的？" class="headerlink" title="“翻译”的过程是怎样的？"></a>“翻译”的过程是怎样的？</h3><p><code>maven-publish</code> 插件非常智能，它会执行以下操作：</p>
+<ol>
+<li><p>它发现 <code>A</code> 依赖于 <code>project(&quot;:base:base&quot;)</code>。</p>
+</li>
+<li><p>它会去检查 <code>:base:base</code> 模块的 <code>build.gradle.kts</code> 文件。</p>
+</li>
+<li><p>它在文件中找到了 </p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">publishing</span><br></code></pre></td></tr></table></figure>
+
+<p> 配置块，并读取了里面定义的 Maven 坐标：</p>
+<ul>
+<li><code>groupId: &quot;com.wesley.test&quot;</code></li>
+<li><code>artifactId: &quot;base-base&quot;</code></li>
+<li><code>version: &quot;1.1&quot;</code></li>
+</ul>
+</li>
+<li><p>然后，它将这些信息忠实地写入 <code>A</code> 模块的 <code>pom.xml</code> 文件中，生成了你看到的 <code>&lt;dependency&gt;</code> 块。</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>一个形象的比喻：</strong> 这就像你在写一份菜谱（发布模块 A）。你在菜谱里写到需要“我祖母的秘制酱料”（项目内依赖 <code>:base:base</code>）。为了让别人也能做出这道菜，你必须在菜谱的配料表上写清楚这种酱料在超市里的商品名和品牌（Maven坐标 <code>com.wesley.test:base-base:1.1</code>），而不是只写“我祖母的秘制酱料”。</p>
+<p><code>maven-publish</code> 就是那个负责把“我祖母的秘制酱料”翻译成商品名的角色。它并不关心此刻超市里到底有没有货（<code>1.1</code> 版本是否已发布），它只负责正确地翻译菜谱。</p>
+</blockquote>
+<hr>
+<h3 id="为什么它不关心-1-1-是否已发布？"><a href="#为什么它不关心-1-1-是否已发布？" class="headerlink" title="为什么它不关心 1.1 是否已发布？"></a>为什么它不关心 <code>1.1</code> 是否已发布？</h3><p><code>publish</code> 任务的职责是<strong>生成并上传当前模块的构件和元数据</strong>。它假设你（开发者）会确保所有声明的依赖项最终都是可用的。</p>
+<ul>
+<li><strong>后果的承担者是消费者：</strong> 如果你发布了 <code>A</code>，但没有发布 <code>:base:base</code> 的 <code>1.1</code> 版本，那么问题不会在你发布时出现，而是在<strong>别人使用你的 <code>A</code> 模块时</strong>出现。当他们的项目尝试根据 <code>A</code> 的 <code>pom.xml</code> 去下载 com.wesley.test:base-base:1.1&#96; 时，Maven 会因为找不到这个依赖而构建失败。</li>
+<li><strong>责任在你：</strong> Gradle 将保证依赖关系链正确的责任交给了开发者。你需要在发布 <code>A</code> 之前，先将它的所有依赖（如 <code>:base:base</code>）发布到 Maven 仓库。</li>
+</ul>
+</blockquote>
+<p>最后执行 publish任务，所有模块都发布到maven_repo 里面了，以后向客户更新这个目录就行。</p>
+<p>而对于内网 SDK，可以在网页版依赖树找到他们，然后通过类似</p>
+<p><code>wget -r -np -nH --cut-dirs=8 -R &quot;index.html*&quot;      http://172.20.135.19:8080/nexus/content/repositories/releases/com/wesley/sdk/protocol/2.1.8/</code>的命令下载，把文件丢进maven_repo（注意目录结构），这样依赖也可以正确传递了。（如果包含源码，可以考虑删除）</p>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><p>删掉工程签名文件。</p>
+<p>如果有些模块不能公开，混淆后不能发布源码。</p>
+<p>不能携带 .git 目录。</p>
+<p>注意处理 UI 模块依赖其他模块的方法或者类，不能混淆。</p>
+<p>注意处理一些配置信息或者关键代码，可以考虑转移到 native 层。</p>
 
                 
               </div>
@@ -442,8 +475,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库</div>
-      <div>https://iwesley.top/article/a43c0ba5/</div>
+      <div>安卓对外发布工程源码:怎么做到仅UI层公布</div>
+      <div>https://iwesley.top/article/9f1bc6ae/</div>
     </div>
     <div class="license-meta">
       
@@ -487,18 +520,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/article/9f1bc6ae/" title="安卓对外发布工程源码:怎么做到仅UI层公布">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">安卓对外发布工程源码:怎么做到仅UI层公布</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/article/e6389157/" title="手机厂商的应用列表权限管控真的起效了吗">
-                        <span class="hidden-mobile">手机厂商的应用列表权限管控真的起效了吗</span>
+                      <a href="/article/a43c0ba5/" title="安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库">
+                        <span class="hidden-mobile">安卓官方版fat-aar:使用Fused Library将多个Android库发布为一个库</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
