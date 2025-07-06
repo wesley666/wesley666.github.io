@@ -19,27 +19,26 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+    <meta name="description" content="翻看便签看到了一篇旧文，写于2017年9月16号下午1点35分  嗯……或者可以说是一次“假研究生”“假学长”的经历……，因为他们是准备读大三大四的真学长学姐…… 这个短学期主要是由我们实验室承担的一个pic单片机短学期学习任务，我们开始是给他们讲讲课，讲一些软件操作和一些基本问题，后来基本就是一个助教的角色，辅助他们解决一些问题，最后再负责验收一下就ok了…… 这期间发生了两次尴尬的事，一次是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露">
-<meta property="og:url" content="https://iwesley.top/article/f148a913/index.html">
+<meta property="og:title" content="说说9月8号以来的短学期">
+<meta property="og:url" content="https://iwesley.top/article/daa12744/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+<meta property="og:description" content="翻看便签看到了一篇旧文，写于2017年9月16号下午1点35分  嗯……或者可以说是一次“假研究生”“假学长”的经历……，因为他们是准备读大三大四的真学长学姐…… 这个短学期主要是由我们实验室承担的一个pic单片机短学期学习任务，我们开始是给他们讲讲课，讲一些软件操作和一些基本问题，后来基本就是一个助教的角色，辅助他们解决一些问题，最后再负责验收一下就ok了…… 这期间发生了两次尴尬的事，一次是">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
-<meta property="article:published_time" content="2025-03-04T13:10:58.000Z">
-<meta property="article:modified_time" content="2025-03-04T13:40:23.876Z">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250706225434744.jpg">
+<meta property="article:published_time" content="2025-07-06T14:45:52.000Z">
+<meta property="article:modified_time" content="2025-07-06T15:00:23.377Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="内存">
-<meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250706225434744.jpg">
   
   
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露 - Wesley&#39;s Blog</title>
+  <title>说说9月8号以来的短学期 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -263,7 +262,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露"></span>
+            <span id="subtitle" data-typed-text="说说9月8号以来的短学期"></span>
           
         </div>
 
@@ -279,8 +278,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-04 21:10" pubdate>
-          2025年3月4日 晚上
+        <time datetime="2025-07-06 22:45" pubdate>
+          2025年7月6日 晚上
         </time>
       </span>
     
@@ -291,7 +290,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          555 字
+          898 字
         
       </span>
     
@@ -302,7 +301,7 @@
         
         
         
-          5 分钟
+          8 分钟
         
       </span>
     
@@ -339,12 +338,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</h1>
+            <h1 id="seo-header">说说9月8号以来的短学期</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年3月4日 晚上
+                    本文最后更新于：2025年7月6日 晚上
                   
                 
               </p>
@@ -352,81 +351,19 @@
             
               <div class="markdown-body">
                 
-                <p>今天用着安卓 14 的板子的时候突然系统卡死。</p>
-<p>查看日志发现launcher都被干掉了</p>
-<blockquote>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service</p>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: com.android.launcher3&#x2F;com.android.quickstep.TouchInteractionService&lt;&#x3D;Proc{8077:com.android.systemui&#x2F;u0a70}</p>
-<p>03-04 06:13:36.155 277 277 I lowmemorykiller: Kill ‘com.android.launcher3’ (8407), uid 10071, oom_score_adj 100 to free 39504kB rss, 46224kB swap; reason: device is low on swap (91200kB &lt; 199552kB) and thrashing (200%)</p>
+                <blockquote>
+<p>翻看便签看到了一篇旧文，写于2017年9月16号下午1点35分</p>
 </blockquote>
-<p>看<code>dumpsys meminfo</code>发现DMA-BUF占了3G多（4G设备），应用free ram基本没了。</p>
-<p>刚开始以为是scrcpy的问题。后来经调查发现是android studio的屏幕镜像问题。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>开机一段时间后</p>
+<p>嗯……或者可以说是一次“假研究生”“假学长”的经历……，因为他们是准备读大三大四的真学长学姐……</p>
+<p>这个短学期主要是由我们实验室承担的一个pic单片机短学期学习任务，我们开始是给他们讲讲课，讲一些软件操作和一些基本问题，后来基本就是一个助教的角色，辅助他们解决一些问题，最后再负责验收一下就ok了……</p>
+<p>这期间发生了两次尴尬的事，一次是老师介绍我们时，说我们是研究生😂，当时的反应就是尴尬地笑笑……第二次尴尬发生在今天，有一位同学问我一些关于研究生导师的问题，我勉强说了一些，最后还是否认了这个身份，勉强地绕出去了，也没说是大一的……</p>
 <blockquote>
-<p>Total RAM: 3,991,080K (status normal)</p>
-<p>Free RAM: 1,166,810K (  124,454K cached pss +   623,088K cached kernel +   419,268K free)</p>
-<p><strong>DMA-BUF: 1,477,628K (      876K mapped + 1,476,752K unmapped)</strong></p>
-<p>DMA-BUF Heaps: 1,477,628K</p>
-<p>DMA-BUF Heaps pool:   249,088K</p>
-<p>​      GPU:   202,320K</p>
-<p> Used RAM: 2,763,593K (1,036,373K used pss + 1,727,220K kernel)</p>
-<p> Lost RAM:   195,490K</p>
-<p>​     ZRAM:    72,700K physical used for   215,296K in swap (1,995,536K total swap)</p>
-<p>   Tuning: 192 (large 512), oom   322,560K, restore limit   107,520K (high-end-gfx)</p>
+<p>嗯……让我想起了老罗的一个故事<br>我小的时候呢，脸皮厚叫“脸皮厚”，无耻叫“无耻”，现在都叫心理素质好。(lol…) 真奇怪！像我跟几个朋友去爬山，然后下来累了，在那个长凳上，我们5、6个坐成一排休息，然后大家拿了一些瓜子，然后拿了个塑料袋，嗑完了瓜子就扔到塑料袋里去了，但是吃完手不黑了吗？于是大家掏出一点纸巾，互相分，然后把手擦一擦。然后把那个就放到座位上了，结果一阵风一吹呢都刮地上了，不是故意扔地上的，被刮到地上去了，然后坐在那儿没走嘛，一懒，暂时就没拣，都下了山，挺累的。结果清洁人员就过来了，说“哎～这个纸是不是你们给扔的啊？”然后我脸一下就红了，然后他们几个都没事，(lol…) 然后我说“是”，然后他说“罚款”，我说“好”，然后我就把罚款交了，我又自己把那纸给拣起来了。然后那个罚款的人走了以后，他们几个人就看着我说“哎，老罗你怎么心理素质那么差？”(lol…) “不承认不就行了么？”但是你脸已经红了，所以你不承认也不行。“你怎么心理素质那么差？”好我就奇怪了，我才知道“心理素质”是这个意思。过去我们叫“无耻”，现在叫“心理素质”。明明是你干的，你怎么能心理素质那么好呢？(lol…) 好……这是……题还没讲呢！(lol…) 向大家郑重道歉！(lol…)</p>
 </blockquote>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size</code>，发现有好多483328字节的 inode</p>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size  | grep 483328 | wc -l</code></p>
-<p>有2957个，计算：2957*483328&#x3D;1429200896&#x3D;1.4G，和上面的结果差不多。</p>
-<p>随便查看一个inode</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # lsof | grep -w 7248</p>
-<p><a href="mailto:&#99;&#50;&#64;&#x31;&#46;&#x31;&#45;&#x73;&#101;&#x72;&#118;&#105;&#x63;&#101;">&#99;&#50;&#64;&#x31;&#46;&#x31;&#45;&#x73;&#101;&#x72;&#118;&#105;&#x63;&#101;</a>   543 mediacodec 2553u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5088u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5089u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-</blockquote>
-<p><code>lsof | grep &quot;4146&quot; | grep dmabuf  | wc -l</code></p>
-<p>有2958条这样的条目</p>
-<p><code>main       4146       root 5973u     0000                0,8       0t0       7690 /dmabuf:system</code></p>
-<p>和上面的数目一一对应</p>
-<p>查看是哪一个程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;543&#x2F;cmdline</p>
-<p>&#x2F;vendor&#x2F;bin&#x2F;hw&#x2F;<a href="mailto:&#x61;&#x6e;&#100;&#114;&#111;&#x69;&#100;&#x2e;&#104;&#97;&#x72;&#100;&#x77;&#x61;&#114;&#101;&#x2e;&#x6d;&#101;&#100;&#105;&#97;&#46;&#99;&#50;&#x40;&#x31;&#x2e;&#x31;&#45;&#x73;&#x65;&#x72;&#118;&#x69;&#99;&#101;">&#x61;&#x6e;&#100;&#114;&#111;&#x69;&#100;&#x2e;&#104;&#97;&#x72;&#100;&#x77;&#x61;&#114;&#101;&#x2e;&#x6d;&#101;&#100;&#105;&#97;&#46;&#99;&#50;&#x40;&#x31;&#x2e;&#x31;&#45;&#x73;&#x65;&#x72;&#118;&#x69;&#99;&#101;</a></p>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;4146&#x2F;cmdline</p>
-<p>app_process&#x2F;data&#x2F;local&#x2F;tmp&#x2F;.studiocom.android.tools.screensharing.Main–socket&#x3D;screen-sharing-agent-8055–flags&#x3D;16</p>
-</blockquote>
-<p>发现是android studio镜像导致的：应该是因为一直黑屏导致反复申请内存导致DMA-BUF泄露。</p>
-<p>关闭Android Studio的Device Mirroring功能后，后面使用设备就正常了。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<h2 id="dmabuf-dump"><a href="#dmabuf-dump" class="headerlink" title="dmabuf_dump"></a>dmabuf_dump</h2><p>通过dmabuf_dump命令可以更快地查看异常程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump -h</p>
-<p>Usage: dmabuf_dump [-abh] [per-process&#x2F;per-buffer stats]</p>
-<p>-a       show all dma buffers (ion) in big table, [buffer x process] grid</p>
-<p>-b       show DMA-BUF per-buffer, per-exporter and per-device statistics</p>
-<p>-h       show this help</p>
-<p>​         If PID is supplied, the dmabuf information for that process is shown.</p>
-<p>​         Per-buffer DMA-BUF stats do not take an argument.</p>
-</blockquote>
-<p>通过<code>dmabuf_dump</code>就可以查看各个程序DMA-BUF的占用情况（包含程序名字、pid、inode等等）或者加其他参数输出不同结果。</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump 4146</p>
-<p>​            main:4146</p>
-<p>​                  Name              Rss              Pss         nr_procs            Inode</p>
-<p>​                system           472 kB           472 kB                1             4735</p>
-<p>​                system           472 kB           472 kB                1             4736</p>
-<p>​                system           472 kB           472 kB                1             4737</p>
-<p>​               </p>
-<p>​               ——————（省略几千行）—————-</p>
-<p>​          </p>
-<p>​                system           472 kB           472 kB                1             7688</p>
-<p>​                system           472 kB           472 kB                1             7689</p>
-<p>​                system           472 kB           472 kB                1             7690</p>
-<p>​         PROCESS TOTAL       1395232 kB       1395232 kB</p>
-<p>-———————</p>
-<p>dmabuf total: 1477628 kB kernel_rss: 82396 kB userspace_rss: 1395232 kB userspace_pss: 1395232 kB</p>
-</blockquote>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://source.android.com/docs/core/graphics/implement-dma-buf-gpu-mem">Implement DMABUF and GPU memory accounting in Android 12  |  Android Open Source Project</a></p>
+<p>哎呀，诚实是一个奢侈的品质！</p>
+<p>短学期总体来说感觉还是不错的，虽然头三天可能是因为生物钟没调节过来，连续失眠，精神不好，但后来慢慢就很快睡着了……给他们讲课，辅助他们，有种回到高中帮别人解题的感觉，对，那种感觉特别美好！哈哈！</p>
+<p>哦，期间实验室举行了“孵化器杯”的第一届羽毛球比赛，那天是9月9号，那天由于一些人弃赛，我直接就跳过第一轮，直接晋级了……下午，连打了三局，都比较幸运惊险地获胜了，我都没想到得到了一等奖😜……虽然学了一学期的羽毛球，但感觉高远球这些都没怎么运用，还是任重道远……</p>
+<p>那些年，曾经在孵化器杯上走过这么一个血肉之躯……<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250706225434744.jpg" srcset="/img/loading.gif" lazyload alt="Notes_1751813220024"></p>
 
                 
               </div>
@@ -445,7 +382,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="category-chain-item">Android性能优化</a>
+  <a href="/categories/%E9%9A%8F%E7%AC%94/" class="category-chain-item">随笔</a>
   
   
 
@@ -460,9 +397,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%86%85%E5%AD%98/" class="print-no-link">#内存</a>
-      
-        <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="print-no-link">#性能优化</a>
+        <a href="/tags/%E9%9A%8F%E7%AC%94/" class="print-no-link">#随笔</a>
       
     </div>
   
@@ -474,8 +409,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</div>
-      <div>https://iwesley.top/article/f148a913/</div>
+      <div>说说9月8号以来的短学期</div>
+      <div>https://iwesley.top/article/daa12744/</div>
     </div>
     <div class="license-meta">
       
@@ -487,7 +422,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月4日</div>
+          <div>2025年7月6日</div>
         </div>
       
       
@@ -519,18 +454,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/article/98c55340/" title="安卓屏保调试">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">安卓屏保调试</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/article/67ca89d4/" title="安卓组件化之动态依赖功能模块">
-                        <span class="hidden-mobile">安卓组件化之动态依赖功能模块</span>
+                      <a href="/article/9f1bc6ae/" title="安卓对外发布工程源码:怎么做到仅UI层公布">
+                        <span class="hidden-mobile">安卓对外发布工程源码:怎么做到仅UI层公布</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
