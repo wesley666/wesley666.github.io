@@ -19,15 +19,15 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="toybox和busyboxtoybox 和 busybox 的作用 am monitor  可以持续监控App的包名，当切换应用时，如果包名有变化，就会在终端输出 Audio查看audio的全部信息（各音频流音量，焦点，策略等） dumpsys audio 音量按键方式12345678#增加input keyevent 24#减少input keyevent 25#静音input keyeven">
+    <meta name="description" content="无论哪个命令，都应该先看帮助文档             dumpsys 服务android调试——教你用dumpsys命令调试 - Weiwq的博客 | Weiwq Blog 使用adb命令判断Android屏幕是否横向或纵向_安卓手机关闭纵向adb-CSDN博客 包管理安装.apkm，.xapk和.apks 安装 - petercao - 博客园 多apk发布的And">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android ADB 常用命令">
 <meta property="og:url" content="https://iwesley.top/article/dfa112ac/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="toybox和busyboxtoybox 和 busybox 的作用 am monitor  可以持续监控App的包名，当切换应用时，如果包名有变化，就会在终端输出 Audio查看audio的全部信息（各音频流音量，焦点，策略等） dumpsys audio 音量按键方式12345678#增加input keyevent 24#减少input keyevent 25#静音input keyeven">
+<meta property="og:description" content="无论哪个命令，都应该先看帮助文档             dumpsys 服务android调试——教你用dumpsys命令调试 - Weiwq的博客 | Weiwq Blog 使用adb命令判断Android屏幕是否横向或纵向_安卓手机关闭纵向adb-CSDN博客 包管理安装.apkm，.xapk和.apks 安装 - petercao - 博客园 多apk发布的And">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-11-17T10:27:15.000Z">
-<meta property="article:modified_time" content="2025-01-19T09:08:40.979Z">
+<meta property="article:modified_time" content="2025-07-20T14:40:45.700Z">
 <meta property="article:author" content="Wesley">
 <meta property="article:tag" content="Android">
 <meta name="twitter:card" content="summary_large_image">
@@ -288,7 +288,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          162 字
+          1.5k 字
         
       </span>
     
@@ -299,7 +299,7 @@
         
         
         
-          2 分钟
+          13 分钟
         
       </span>
     
@@ -341,7 +341,7 @@
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年1月19日 下午
+                    本文最后更新于：2025年7月20日 晚上
                   
                 
               </p>
@@ -349,8 +349,176 @@
             
               <div class="markdown-body">
                 
-                <h2 id="toybox和busybox"><a href="#toybox和busybox" class="headerlink" title="toybox和busybox"></a>toybox和busybox</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44311012/article/details/130203207">toybox 和 busybox 的作用</a></p>
+                <div class="note note-success">
+            <p>无论哪个命令，都应该先看帮助文档</p>
+          </div>
+
+<h2 id="dumpsys-服务"><a href="#dumpsys-服务" class="headerlink" title="dumpsys 服务"></a>dumpsys 服务</h2><p><a target="_blank" rel="noopener" href="https://weiwangqiang.github.io/2020/03/16/dumpsys-debug-detail/">android调试——教你用dumpsys命令调试 - Weiwq的博客 | Weiwq Blog</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36514470/article/details/124276946">使用adb命令判断Android屏幕是否横向或纵向_安卓手机关闭纵向adb-CSDN博客</a></p>
+<h2 id="包管理"><a href="#包管理" class="headerlink" title="包管理"></a>包管理</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bluestorm/p/17602775.html">.apkm，.xapk和.apks 安装 - petercao - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/thl789/article/details/109350186">多apk发布的Android程序的adb安装</a></p>
+<p>xapk修改后缀为.rar, 然后解压，执行如下命令安装解压文件中主要的apk</p>
+<p><code>adb install-multiple &lt;path&gt;/org.benchmark.demo.apk &lt;path&gt;/config.xxhdpi.apk &lt;path&gt;/config.en.apk &lt;path&gt;/config.arm64_v8a.apk</code></p>
+<h2 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4d8ff33e6a3c">Android查看分区情况 - 简书</a></p>
+<h2 id="系统升级"><a href="#系统升级" class="headerlink" title="系统升级"></a>系统升级</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yutingliuyl/p/6916224.html">Android 的Recovery机制 - yutingliuyl - 博客园</a></p>
+<p>升级日志路径</p>
+<p>recovery mode： &#x2F;tmp&#x2F;recovery.log</p>
+<p>normal mode：&#x2F;cache&#x2F;recovery&#x2F;last_log</p>
+<h2 id="logcat"><a href="#logcat" class="headerlink" title="logcat"></a>logcat</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Tecinno4/article/details/107955881">Android logcat log输出控制_persist.log.tag-CSDN博客</a></p>
+<p>禁止所有 log 输出：   setprop persist.log.tag S</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cnjim/p/18443434">安卓Framework开发快速分析日志及定位源码 原创 - 清霜辰 - 博客园</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/learnframework/article/details/130233591">Android ProtoLog动态开启相关wm logging源码分析补充-CSDN博客</a></p>
+<h2 id="调试应用"><a href="#调试应用" class="headerlink" title="调试应用"></a>调试应用</h2><h3 id="Trace"><a href="#Trace" class="headerlink" title="Trace"></a>Trace</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lezhang123/article/details/117216140">抓取Systrace方法汇总_systrace抓取-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/161727868">Python解析systrace获取APP快速滑动界面的帧率 - 知乎</a></p>
+<p>atrace</p>
+<p>perfetto</p>
+<h3 id="打印堆栈"><a href="#打印堆栈" class="headerlink" title="打印堆栈"></a>打印堆栈</h3><p><a target="_blank" rel="noopener" href="https://gityuan.com/2017/07/09/android_debug/">Android打印Trace堆栈 - Gityuan博客 | 袁辉辉的技术博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/vrix/article/details/77940823">kill -3 pid打印trace原理笔记_android kill -3-CSDN博客</a></p>
+<ul>
+<li>kill -3 [pid] 打印 java 堆栈，生成trace文件保存在文件data&#x2F;anr&#x2F;traces.txt</li>
+<li>debuggerd -b [tid]  打印 native 堆栈到控制台，若不带参数则输出tombstones文件，保存到目录&#x2F;data&#x2F;tombstones</li>
+<li>cat &#x2F;proc&#x2F;[tid]&#x2F;stack  kernel 堆栈</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">类别</th>
+<th align="left">函数式</th>
+<th align="left">命令式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Java</td>
+<td align="left">Process.sendSignal(pid, Process.SIGNAL_QUIT)</td>
+<td align="left">kill -3 [pid]</td>
+</tr>
+<tr>
+<td align="left">Native</td>
+<td align="left">Debug.dumpNativeBacktraceToFile(pid, tracesPath)</td>
+<td align="left">debuggerd -b [pid]</td>
+</tr>
+<tr>
+<td align="left">Kernel</td>
+<td align="left">WD.dumpKernelStackTraces()</td>
+<td align="left">cat &#x2F;proc&#x2F;[tid]&#x2F;stack</td>
+</tr>
+</tbody></table>
+<p>分析异常时往往需要关注的重要目录：&#x2F;data&#x2F;anr&#x2F;traces.txt  &#x2F;data&#x2F;tombstones&#x2F;tombstone_X  &#x2F;data&#x2F;system&#x2F;dropbox&#x2F;</p>
+<p>有时候Kernel log的输出是由级别限制，可通过如下命令查看：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">adb</span> shell cat /proc/sys/kernel/printk  <br><span class="hljs-attribute">4</span>       <span class="hljs-number">4</span>       <span class="hljs-number">1</span>       <span class="hljs-number">7</span><br></code></pre></td></tr></table></figure>
+
+<p>参数解读：</p>
+<ul>
+<li>控制台日志级别：优先级高于该值的消息将被打印至控制台。</li>
+<li>缺省的消息日志级别：将用该值来打印没有优先级的消息。</li>
+<li>最低的控制台日志级别：控制台日志级别可能被设置的最小值。</li>
+<li>缺省的控制台日志级别：控制台日志级别的缺省值</li>
+</ul>
+<p>日志级别：</p>
+<table>
+<thead>
+<tr>
+<th align="left">级别</th>
+<th align="left">值</th>
+<th align="left">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">KERN_EMERG</td>
+<td align="left">0</td>
+<td align="left">致命错误</td>
+</tr>
+<tr>
+<td align="left">KERN_ALERT</td>
+<td align="left">1</td>
+<td align="left">报告消息</td>
+</tr>
+<tr>
+<td align="left">KERN_CRIT</td>
+<td align="left">2</td>
+<td align="left">严重异常</td>
+</tr>
+<tr>
+<td align="left">KERN_ERR</td>
+<td align="left">3</td>
+<td align="left">出错</td>
+</tr>
+<tr>
+<td align="left">KERN_WARNING</td>
+<td align="left">4</td>
+<td align="left">警告</td>
+</tr>
+<tr>
+<td align="left">KERN_NOTICE</td>
+<td align="left">5</td>
+<td align="left">通知</td>
+</tr>
+<tr>
+<td align="left">KERN_INFO</td>
+<td align="left">6</td>
+<td align="left">常规</td>
+</tr>
+<tr>
+<td align="left">KERN_DEBUG</td>
+<td align="left">7</td>
+<td align="left">调试</td>
+</tr>
+</tbody></table>
+<p>Log相关命令</p>
+<ul>
+<li>dmesg 或 cat &#x2F;proc&#x2F;kmsg</li>
+<li>logcat -L 或 cat &#x2F;proc&#x2F;last_kmsg</li>
+<li>logcat -b events -b system</li>
+</ul>
+<h3 id="addr2line"><a href="#addr2line" class="headerlink" title="addr2line"></a>addr2line</h3><p>addr2line功能是将函数地址解析为函数名，用来分析 native crash</p>
+<h4 id="Native地址转换"><a href="#Native地址转换" class="headerlink" title="Native地址转换"></a>Native地址转换</h4><p><strong>Step 1: 获取symbols表</strong></p>
+<p>先获取对应版本的symbols，即可找到对应的so库。（最好是对应版本addr2line，可确保完全匹配）</p>
+<p><strong>Step 2: 执行addr2line命令</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs bash">// 64位<br><span class="hljs-built_in">cd</span> prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin<br>./aarch64-linux-android-addr2line -f -C -e libxxx.so  &lt;addr1&gt;<br><br>//32位<br><span class="hljs-built_in">cd</span> /prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin<br>./arm-linux-androideabi-addr2line -f -C -e libxxx.so  &lt;addr1&gt;<br></code></pre></td></tr></table></figure>
+
+<p>另外，有兴趣可以研究下<code>development/scripts/stack</code>，地址批量转换工具。</p>
+<h4 id="kernel地址转换"><a href="#kernel地址转换" class="headerlink" title="kernel地址转换"></a>kernel地址转换</h4><p>addr2line也适用于调试分析Linux Kernel的问题。例如，查询如下命令所对应的代码行号</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs fsharp"><span class="hljs-meta">[&lt;<span class="hljs-number">0000000000000000</span>&gt;]</span> binder_thread_read<span class="hljs-operator">+</span><span class="hljs-number">0x2a0</span><span class="hljs-operator">/</span><span class="hljs-number">0x324</span><br></code></pre></td></tr></table></figure>
+
+<p><strong>Step 1: 获取符号地址</strong></p>
+<p>通过命令arm-eabi-nm从vmlinux找到目标方法的符号地址，其中nm和vmlinux所在目录：</p>
+<ul>
+<li>arm-eabi-nm位于目录prebuilts&#x2F;gcc&#x2F;linux-x86&#x2F;arm&#x2F;arm-eabi-4.8&#x2F;bin&#x2F;</li>
+<li>vmlinux位于目录out&#x2F;target&#x2F;product&#x2F;xxx&#x2F;obj&#x2F;KERNEL_OBJ&#x2F;</li>
+</ul>
+<p>执行如下命令：(需要带上绝对目录)</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim">arm-eabi-<span class="hljs-keyword">nm</span>  vmlinux |<span class="hljs-keyword">grep</span> binder_thread_read<br></code></pre></td></tr></table></figure>
+
+<p>则输出结果： <code>c02b2f28 T binder_thread_read</code>，可知binder_thread_read的符号地址为c02b2f28， 其偏移量为0x2a0，则计算后的目标符号地址&#x3D; c02b2f28 + 2a0，然后再采用addr2line转换得到方法所对应的行数</p>
+<p><strong>Step 2: 执行addr2line命令</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">./aarch64-linux-android-addr2line -f -C -e vmlinux [目标地址]<br></code></pre></td></tr></table></figure>
+
+<p>注意:对于kernel调用栈翻译过程都是通过vmlinux来获取的</p>
+<h2 id="toybox和busybox"><a href="#toybox和busybox" class="headerlink" title="toybox和busybox"></a>toybox和busybox</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44311012/article/details/130203207">toybox 和 busybox 的作用</a></p>
 <p>am monitor  可以持续监控App的包名，当切换应用时，如果包名有变化，就会在终端输出</p>
+<h2 id="显示系统"><a href="#显示系统" class="headerlink" title="显示系统"></a>显示系统</h2><p><a target="_blank" rel="noopener" href="https://source.android.com/docs/core/graphics/winscope/overview?hl=zh-cn">使用 Winscope 跟踪窗口转换  | Android Open Source Project</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/tkwxty/article/details/121209801?spm=1001.2014.3001.5502">Android dump渲染和合成图层GraphicBuffer指南_android dump图层-CSDN博客</a></p>
+<h2 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h2><p>appops help</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45649553/article/details/135110663">adb之多用户管理_adb 切换用户-CSDN博客</a></p>
+<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><h3 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h3><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wongbingming/p/13212306.html">全网最详细的 tcpdump 使用指南 - 王一白 - 博客园</a></p>
+<h3 id="wpa-cli"><a href="#wpa-cli" class="headerlink" title="wpa_cli"></a>wpa_cli</h3><h3 id="ip"><a href="#ip" class="headerlink" title="ip"></a>ip</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44008788/article/details/115833135">Android系统网络操作命令基础_andriod13设置路由-CSDN博客</a></p>
+<p>策略表—-开始数字越小，优先级越高<br>ip rule list<br>第0条规则为系统默认：0:from all lookup local，不可更改，表示所有的链接，首先遍历local表</p>
+<p>路由表：ip route list table[ID]<br>因为最高优先规则，所有的连接都会优先遍历local表<br>系统默认发三个路由表<br>253（default）、254（main）、255（local)</p>
+<p>local表内容<br>ip route list table local</p>
+<p>实际生效的路由信息<br>ip route list</p>
+<p>设置ip地址<br>ip addr add 192.168.0.193&#x2F;24 dev wlan0</p>
+<p>查看ip地址<br>ip addr show wlan</p>
+<p>删除ip地址<br>ip addr del 192.168.0.193&#x2F;24 dev wlan0</p>
+<p>列出路由表条目<br>ip route show</p>
+<p>查看某IP地址的路由包路径<br>ip route get 10.42.0.47</p>
+<p>更改默认路由<br>ip route add default via 192.168.0.196</p>
+<p>显示网络统计数据<br>ip -s link</p>
+<p>获取特定网络接口的信息（在网络接口名字后面添加选项ls即可。使用多个选项-s会给你这个特定接口更详细的信息）<br>ip -s -s link ls wlan0</p>
+<p>地址解析协议ARP：用于将一个ip地址转化为它对应的物理地址即MAC地址<br>查看接入设置的MAC地址<br>ip neighbour</p>
+<p>监控netlink消息：查看网络设备的状态REACHABLE&#x2F;STALE<br>ip monitor all</p>
+<p>激活网络接口<br>ip link set wlan0 up</p>
+<p>停止网络接口<br>ip link set wlan0 down</p>
+<p>获取帮助<br>ip route help</p>
 <h2 id="Audio"><a href="#Audio" class="headerlink" title="Audio"></a>Audio</h2><p>查看audio的全部信息（各音频流音量，焦点，策略等）</p>
 <p>dumpsys audio</p>
 <h3 id="音量"><a href="#音量" class="headerlink" title="音量"></a>音量</h3><h4 id="按键方式"><a href="#按键方式" class="headerlink" title="按键方式"></a>按键方式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">增加</span><br>input keyevent 24<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">减少</span><br>input keyevent 25<br><span class="hljs-meta prompt_"></span><br><span class="hljs-meta prompt_">#</span><span class="language-bash">静音</span><br>input keyevent 164<br></code></pre></td></tr></table></figure>

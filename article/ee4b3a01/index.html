@@ -19,24 +19,26 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="Android 浅度解析：mk预置AAR、SO文件、APP包和签名-阿里云开发者社区: https:&#x2F;&#x2F;developer.aliyun.com&#x2F;article&#x2F;1488469 android系统添加预置APP（so库自动释放) - 庚拓天下 - 博客园: https:&#x2F;&#x2F;www.cnblogs.com&#x2F;genggeng&#x2F;p&#x2F;10563585.html 使用@符号和不使用@符号的区别在Androi">
+    <meta name="description" content="参考PerfettoSQL standard library - Perfetto Tracing Docs CPU Scheduling events - Perfetto Tracing Docs Android性能优化–Perfetto用SQL性能分析 - 清霜安卓-博客 性能分析工具 之 Perfetto中SQL语句_perfetto sql-CSDN博客 Perfetto中如何使用SQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android.mk基础知识">
-<meta property="og:url" content="https://iwesley.top/article/eaba12cd/index.html">
+<meta property="og:title" content="Perfetto使用SQL进行性能分析">
+<meta property="og:url" content="https://iwesley.top/article/ee4b3a01/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="Android 浅度解析：mk预置AAR、SO文件、APP包和签名-阿里云开发者社区: https:&#x2F;&#x2F;developer.aliyun.com&#x2F;article&#x2F;1488469 android系统添加预置APP（so库自动释放) - 庚拓天下 - 博客园: https:&#x2F;&#x2F;www.cnblogs.com&#x2F;genggeng&#x2F;p&#x2F;10563585.html 使用@符号和不使用@符号的区别在Androi">
+<meta property="og:description" content="参考PerfettoSQL standard library - Perfetto Tracing Docs CPU Scheduling events - Perfetto Tracing Docs Android性能优化–Perfetto用SQL性能分析 - 清霜安卓-博客 性能分析工具 之 Perfetto中SQL语句_perfetto sql-CSDN博客 Perfetto中如何使用SQL">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-11-17T11:11:07.000Z">
-<meta property="article:modified_time" content="2025-07-20T14:23:46.227Z">
+<meta property="article:published_time" content="2025-07-20T13:49:45.000Z">
+<meta property="article:modified_time" content="2025-07-20T13:59:17.910Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="安卓Makefile">
+<meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="systrace">
+<meta property="article:tag" content="perfetto">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>Android.mk基础知识 - Wesley&#39;s Blog</title>
+  <title>Perfetto使用SQL进行性能分析 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -260,7 +262,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Android.mk基础知识"></span>
+            <span id="subtitle" data-typed-text="Perfetto使用SQL进行性能分析"></span>
           
         </div>
 
@@ -276,8 +278,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-11-17 19:11" pubdate>
-          2024年11月17日 晚上
+        <time datetime="2025-07-20 21:49" pubdate>
+          2025年7月20日 晚上
         </time>
       </span>
     
@@ -288,7 +290,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          401 字
+          52 字
         
       </span>
     
@@ -299,7 +301,7 @@
         
         
         
-          4 分钟
+          1 分钟
         
       </span>
     
@@ -336,7 +338,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Android.mk基础知识</h1>
+            <h1 id="seo-header">Perfetto使用SQL进行性能分析</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
@@ -349,24 +351,12 @@
             
               <div class="markdown-body">
                 
-                <p>Android 浅度解析：mk预置AAR、SO文件、APP包和签名-阿里云开发者社区: <a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1488469">https://developer.aliyun.com/article/1488469</a></p>
-<p>android系统添加预置APP（so库自动释放) - 庚拓天下 - 博客园: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/genggeng/p/10563585.html">https://www.cnblogs.com/genggeng/p/10563585.html</a></p>
-<p>使用@符号和不使用@符号的区别<br>在Android.mk中，使用@符号和不使用@符号有一些区别：<br>? 使用@符号可以提高性能，因为不需要解压和拷贝SO文件，也可以节省空间，因为不需要存储多余的SO文件。<br>? 不使用@符号可以提高兼容性，因为可以针对不同的平台提供相应的SO文件，而不需要考虑APK中是否有对应平台的SO文件。</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/680173022">Android.mk解析与使用看这篇就够了 - 知乎</a></p>
-<h2 id="调试时集成so到apk"><a href="#调试时集成so到apk" class="headerlink" title="调试时集成so到apk"></a>调试时集成so到apk</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ronaldHU/p/6800226.html">在Android源码中如何吧so库打包编译进入apk， 集成第三方库（jar和so库）</a></p>
-<p>集成第三方so和jar包</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs makefile"><span class="hljs-keyword">include</span> <span class="hljs-variable">$(CLEAR_VARS)</span><br><br>LOCAL_PREBUILT_STATIC_JAVA_LIBRARIES :=securitysdk:libs/hello.jar<br><br><span class="hljs-keyword">ifeq</span> (arm64, (strip(TARGET_ARCH)))<br><br>  LOCAL_PREBUILT_LIBS := libssl:libs/arm64-v8a/libssl.so<br><br>  LOCAL_PREBUILT_LIBS += libcrypto:libs/arm64-v8a/libcrypto.so<br><br>  LOCAL_PREBUILT_LIBS += libvivosgmain:libs/arm64-v8a/libaa.so<br><br><span class="hljs-keyword">else</span>                 <br><br>  LOCAL_PREBUILT_LIBS := libssl:libs/armeabi-v7a/libssl.so<br><br>  LOCAL_PREBUILT_LIBS += libcrypto:libs/armeabi-v7a/libcrypto.so<br><br>  LOCAL_PREBUILT_LIBS += libvivosgmain:libs/armeabi-v7a/libtest.so<br><br><span class="hljs-keyword">endif</span>          <br><span class="hljs-keyword">include</span> <span class="hljs-variable">$(BUILD_MULTI_PREBUILT)</span> <br></code></pre></td></tr></table></figure>
-
-<p> 把so库包含进入apk</p>
-<p><code>LOCAL_JNI_SHARED_LIBRARIES := libssl libcrypto libvivosgmain</code> </p>
-<p><code>LOCAL_MODULE_INCLUDE_LIBRARY := true</code></p>
-<p> 后面Android某个源码版本不支持LOCAL_MODULE_INCLUDE_LIBRARY这一处理了，加入下面</p>
-<p><code>LOCAL_MODULE_TAGS := tests</code> </p>
-<p>注意编译后控制台输出的 APK路径</p>
-<p>1）假设so库是已经存在的，不需要重新编译的话。只需要用LOCAL_PREBUILT_JNI_LIBS指定（注意包含so的路径） </p>
-<p>2）假设so需要编译，则需要先用LOCAL_JNI_SHARED_LIBRARIES指定，然后再用LOCAL_MODULE_INCLUDE_LIBRARY :&#x3D; true打包so到apk</p>
-<p>最好还要编写jni下的android.mk</p>
-<p>3）LOCAL_MULTILIB :&#x3D; both  32和64都编译。</p>
+                <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://perfetto.dev/docs/analysis/stdlib-docs">PerfettoSQL standard library - Perfetto Tracing Docs</a></p>
+<p><a target="_blank" rel="noopener" href="https://perfetto.dev/docs/data-sources/cpu-scheduling">CPU Scheduling events - Perfetto Tracing Docs</a></p>
+<p><a target="_blank" rel="noopener" href="https://h89.cn/archives/47.html">Android性能优化–Perfetto用SQL性能分析 - 清霜安卓-博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qrx941017/article/details/131057809">性能分析工具 之 Perfetto中SQL语句_perfetto sql-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/wudexiaoade2008/article/details/143697639">Perfetto中如何使用SQL语句_perfetto sql-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/feelabclihu/article/details/126672666">Perfetto分析进阶-CSDN博客</a></p>
 
                 
               </div>
@@ -385,7 +375,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Android-Build-System/" class="category-chain-item">Android Build System</a>
+  <a href="/categories/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="category-chain-item">Android性能优化</a>
   
   
 
@@ -400,7 +390,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%AE%89%E5%8D%93Makefile/" class="print-no-link">#安卓Makefile</a>
+        <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="print-no-link">#性能优化</a>
+      
+        <a href="/tags/systrace/" class="print-no-link">#systrace</a>
+      
+        <a href="/tags/perfetto/" class="print-no-link">#perfetto</a>
       
     </div>
   
@@ -412,8 +406,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Android.mk基础知识</div>
-      <div>https://iwesley.top/article/eaba12cd/</div>
+      <div>Perfetto使用SQL进行性能分析</div>
+      <div>https://iwesley.top/article/ee4b3a01/</div>
     </div>
     <div class="license-meta">
       
@@ -425,7 +419,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年11月17日</div>
+          <div>2025年7月20日</div>
         </div>
       
       
@@ -452,29 +446,6 @@
 
 
 
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/article/73728aea/" title="咪咕视频DLNA投屏跳集问题分析">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">咪咕视频DLNA投屏跳集问题分析</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/article/b1dcee32/" title="Android APP drawable不同文件夹的用法">
-                        <span class="hidden-mobile">Android APP drawable不同文件夹的用法</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
               
             </div>
 
