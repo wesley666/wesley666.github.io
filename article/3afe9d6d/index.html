@@ -27,7 +27,7 @@
 <meta property="og:description" content="前段时间有测试反馈在安卓14 上面某系统应用恢复出厂设置后没有自启动，究竟是什么原因呢？ 回顾Android 从3.1开始，会将新安装并且从未被启动的应用置为“STOPPED”状态，或者被force stop的应用，这种状态下的应用是无法接收到广播的。但发送方可以通过添加FLAG_INCLUDE_STOPPED_PACKAGES 来豁免，但一般情况下，系统会默认添加FLAG_EXCLUDE_STO">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-08-17T07:35:08.000Z">
-<meta property="article:modified_time" content="2025-08-17T10:08:33.569Z">
+<meta property="article:modified_time" content="2025-08-17T10:10:56.878Z">
 <meta property="article:author" content="Wesley">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="PackageManagerService">
@@ -613,6 +613,21 @@
 
   
 
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
 
 
 
