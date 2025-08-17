@@ -1,0 +1,857 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/myAvatar.png">
+  <link rel="icon" href="/img/myAvatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="前段时间有测试反馈在安卓14 上面某系统应用恢复出厂设置后没有自启动，究竟是什么原因呢？ 回顾Android 从3.1开始，会将新安装并且从未被启动的应用置为“STOPPED”状态，或者被force stop的应用，这种状态下的应用是无法接收到广播的。但发送方可以通过添加FLAG_INCLUDE_STOPPED_PACKAGES 来豁免，但一般情况下，系统会默认添加FLAG_EXCLUDE_STO">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓14系统应用收不到开机广播">
+<meta property="og:url" content="https://iwesley.top/article/3afe9d6d/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="前段时间有测试反馈在安卓14 上面某系统应用恢复出厂设置后没有自启动，究竟是什么原因呢？ 回顾Android 从3.1开始，会将新安装并且从未被启动的应用置为“STOPPED”状态，或者被force stop的应用，这种状态下的应用是无法接收到广播的。但发送方可以通过添加FLAG_INCLUDE_STOPPED_PACKAGES 来豁免，但一般情况下，系统会默认添加FLAG_EXCLUDE_STO">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-17T07:35:08.000Z">
+<meta property="article:modified_time" content="2025-08-17T10:08:33.569Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="PackageManagerService">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>安卓14系统应用收不到开机广播 - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_4814891_uhrho08g34.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":"https://leancloud.iwesley.top","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Wesley's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="安卓14系统应用收不到开机广播"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-17 15:35" pubdate>
+          2025年8月17日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          10 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">安卓14系统应用收不到开机广播</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于：2025年8月17日 晚上
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>前段时间有测试反馈在安卓14 上面某系统应用恢复出厂设置后没有自启动，究竟是什么原因呢？</p>
+<h2 id="回顾"><a href="#回顾" class="headerlink" title="回顾"></a>回顾</h2><p>Android 从3.1开始，会将新安装并且从未被启动的应用置为“STOPPED”状态，或者被force stop的应用，这种状态下的应用是无法接收到广播的。但发送方可以通过添加<code>FLAG_INCLUDE_STOPPED_PACKAGES</code> 来豁免，但一般情况下，系统会默认添加<code>FLAG_EXCLUDE_STOPPED_PACKAGES</code> flag。</p>
+<p><a target="_blank" rel="noopener" href="http://xrefandroid.com/android-16.0.0_r2/s?refs=FLAG_EXCLUDE_STOPPED_PACKAGES&project=frameworks">http://xrefandroid.com/android-16.0.0_r2/s?refs=FLAG_EXCLUDE_STOPPED_PACKAGES&amp;project=frameworks</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * If set, this intent will not match any components in packages that</span><br><span class="hljs-comment"> * are currently</span><br><span class="hljs-comment"> * &#123;<span class="hljs-doctag">@linkplain</span> android.content.pm.ApplicationInfo#FLAG_STOPPED stopped&#125;.</span><br><span class="hljs-comment"> * If this is not set, then the default behavior is to include such</span><br><span class="hljs-comment"> * applications in the result.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">FLAG_EXCLUDE_STOPPED_PACKAGES</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x00000010</span>;<br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * If set, this intent will always match any components in packages that</span><br><span class="hljs-comment"> * are currently</span><br><span class="hljs-comment"> * &#123;<span class="hljs-doctag">@linkplain</span> android.content.pm.ApplicationInfo#FLAG_STOPPED stopped&#125;.</span><br><span class="hljs-comment"> * This is the default behavior when</span><br><span class="hljs-comment"> * &#123;<span class="hljs-doctag">@link</span> #FLAG_EXCLUDE_STOPPED_PACKAGES&#125; is not set.  If both of these</span><br><span class="hljs-comment"> * flags are set, this one wins (it allows overriding of exclude for</span><br><span class="hljs-comment"> * places where the framework may automatically set the exclude flag,</span><br><span class="hljs-comment"> * such as broadcasts).</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">FLAG_INCLUDE_STOPPED_PACKAGES</span> <span class="hljs-operator">=</span> <span class="hljs-number">0x00000020</span>;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="豁免"><a href="#豁免" class="headerlink" title="豁免"></a>豁免</h3><p><a target="_blank" rel="noopener" href="http://xrefandroid.com/android-13.0.0_r83/xref/frameworks/base/services/core/java/com/android/server/IntentResolver.java#808">IntentResolver.java - OpenGrok cross reference for &#x2F;frameworks&#x2F;base&#x2F;services&#x2F;core&#x2F;java&#x2F;com&#x2F;android&#x2F;server&#x2F;IntentResolver.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">buildResolveList</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Computer computer, Intent intent,</span><br><span class="hljs-params">            FastImmutableArraySet&lt;String&gt; categories, <span class="hljs-type">boolean</span> debug, <span class="hljs-type">boolean</span> defaultOnly,</span><br><span class="hljs-params">            String resolvedType, String scheme, F[] src, List&lt;R&gt; dest, <span class="hljs-type">int</span> userId,</span><br><span class="hljs-params">            <span class="hljs-type">long</span> customFlags)</span> &#123; <br>           ...........<br>           <span class="hljs-keyword">if</span> (excludingStopped &amp;&amp; isFilterStopped(computer.getPackageStateInternal(packageName),<br>                    userId)) &#123;<br>                <span class="hljs-keyword">if</span> (debug) &#123;<br>                    Slog.v(TAG, <span class="hljs-string">&quot;  Filter&#x27;s target is stopped; skipping&quot;</span>);<br>                &#125;<br>                <span class="hljs-keyword">continue</span>;<br>            &#125;<br>          ..................<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="http://xrefandroid.com/android-13.0.0_r83/xref/frameworks/base/services/core/java/com/android/server/pm/resolution/ComponentResolver.java">ComponentResolver.java - OpenGrok cross reference for &#x2F;frameworks&#x2F;base&#x2F;services&#x2F;core&#x2F;java&#x2F;com&#x2F;android&#x2F;server&#x2F;pm&#x2F;resolution&#x2F;ComponentResolver.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">protected</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isFilterStopped</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> PackageStateInternal packageState,</span><br><span class="hljs-params">        <span class="hljs-meta">@UserIdInt</span> <span class="hljs-type">int</span> userId)</span> &#123;<br>    <span class="hljs-keyword">if</span> (!mUserManager.exists(userId)) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (packageState == <span class="hljs-literal">null</span> || packageState.getPkg() == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// System apps are never considered stopped for purposes of</span><br>    <span class="hljs-comment">// filtering, because there may be no way for the user to</span><br>    <span class="hljs-comment">// actually re-launch them.</span><br>    <span class="hljs-keyword">return</span> !packageState.isSystem()<br>            &amp;&amp; packageState.getUserStateOrDefault(userId).isStopped();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>安卓 14 之前的代码表明系统应用（系统标记为<code>ApplicationInfo.FLAG_SYSTEM</code> 的应用）是可以豁免的。</p>
+<blockquote>
+<p>注意： 直接安装在 data 分区的 system uid 应用是不会被标记为ApplicationInfo.FLAG_SYSTEM 的。但更新在 data 分区的系统应用依然有效。</p>
+</blockquote>
+<h2 id="安卓-14-的变化"><a href="#安卓-14-的变化" class="headerlink" title="安卓 14 的变化"></a>安卓 14 的变化</h2><p><a target="_blank" rel="noopener" href="http://xrefandroid.com/android-14.0.0_r21/xref/frameworks/base/services/core/java/com/android/server/pm/resolution/ComponentResolver.java">ComponentResolver.java - OpenGrok cross reference for &#x2F;frameworks&#x2F;base&#x2F;services&#x2F;core&#x2F;java&#x2F;com&#x2F;android&#x2F;server&#x2F;pm&#x2F;resolution&#x2F;ComponentResolver.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">protected</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isFilterStopped</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Computer computer, F filter,</span><br><span class="hljs-params">        <span class="hljs-meta">@UserIdInt</span> <span class="hljs-type">int</span> userId)</span> &#123;<br>    <span class="hljs-keyword">if</span> (!mUserManager.exists(userId)) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">PackageStateInternal</span> <span class="hljs-variable">packageState</span> <span class="hljs-operator">=</span> computer.getPackageStateInternal(<br>            filter.first.getPackageName());<br>    <span class="hljs-keyword">if</span> (packageState == <span class="hljs-literal">null</span> || packageState.getPkg() == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">return</span> packageState.getUserStateOrDefault(userId).isStopped();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>系统应用不能豁免了，一刀切了。🤣 当然，这里可以打补丁让原来的修改有效。</p>
+<h2 id="安卓-15-峰回路转"><a href="#安卓-15-峰回路转" class="headerlink" title="安卓 15 峰回路转"></a>安卓 15 峰回路转</h2><p><a target="_blank" rel="noopener" href="http://xrefandroid.com/android-15.0.0_r1/xref/frameworks/base/services/core/java/com/android/server/pm/resolution/ComponentResolver.java">ComponentResolver.java - OpenGrok cross reference for &#x2F;frameworks&#x2F;base&#x2F;services&#x2F;core&#x2F;java&#x2F;com&#x2F;android&#x2F;server&#x2F;pm&#x2F;resolution&#x2F;ComponentResolver.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java">    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isFilterStopped</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> Computer computer, F filter,</span><br><span class="hljs-params">            <span class="hljs-meta">@UserIdInt</span> <span class="hljs-type">int</span> userId)</span> &#123;<br>        <span class="hljs-keyword">if</span> (!mUserManager.exists(userId)) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">PackageStateInternal</span> <span class="hljs-variable">packageState</span> <span class="hljs-operator">=</span> computer.getPackageStateInternal(<br>                filter.first.getPackageName());<br>        <span class="hljs-keyword">if</span> (packageState == <span class="hljs-literal">null</span> || packageState.getPkg() == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (packageState.isSystem()) &#123;<br>            <span class="hljs-comment">// A system app can be considered in the stopped state only if it was originally</span><br>            <span class="hljs-comment">// scanned in the stopped state.</span><br>            <span class="hljs-keyword">return</span> packageState.isScannedAsStoppedSystemApp() &amp;&amp;<br>                packageState.getUserStateOrDefault(userId).isStopped();<br>        &#125;<br>        <span class="hljs-keyword">return</span> packageState.getUserStateOrDefault(userId).isStopped();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>安卓 15 开始，又把系统应用的豁免加回来了，但有了更加精细化的控制。不仅需要满足是系统应用，同时也要满足不是被第一次开机标记为停止状态的系统应用。</p>
+<p> <code>isScannedAsStoppedSystemApp()</code> 是用来检查一个系统应用在系统首次启动时，是否被自动置于“强制停止”（stopped）状态。</p>
+<p>那么这个状态是怎么标记的呢？</p>
+<h3 id="哪些应用会被标记？"><a href="#哪些应用会被标记？" class="headerlink" title="哪些应用会被标记？"></a>哪些应用会被标记？</h3><p>adb可以通过 <code>dumpsys package 包名 | grep isScannedAsStoppedSystemApp</code>来查看</p>
+<p>主要看<code>PackageSetting</code> 的<code>setScannedAsStoppedSystemApp</code> 的调用关系</p>
+<pre><code class=" mermaid">classDiagram
+    direction BT
+    
+    %% 定义接口
+    class PackageState &#123;
+        &lt;&lt;interface&gt;&gt;
+    &#125;
+    class PackageStateInternal &#123;
+        &lt;&lt;interface&gt;&gt;
+    &#125;
+    
+    %% 定义类
+    class SettingBase
+    class PackageSetting
+
+    %% 描述关系
+    PackageState &lt;|-- PackageStateInternal  
+    SettingBase &lt;|-- PackageSetting
+    PackageStateInternal &lt;|.. PackageSetting
+</code></pre>
+
+<p>最后确认为扫描系统 apk 时添加了<code>SCAN_AS_STOPPED_SYSTEM_APP</code> 的扫描标志位的应用会标记为停止状态。</p>
+<p><a target="_blank" rel="noopener" href="http://xrefandroid.com/android-15.0.0_r1/xref/frameworks/base/services/core/java/com/android/server/pm/InstallPackageHelper.java">InstallPackageHelper.java - OpenGrok cross reference for &#x2F;frameworks&#x2F;base&#x2F;services&#x2F;core&#x2F;java&#x2F;com&#x2F;android&#x2F;server&#x2F;pm&#x2F;InstallPackageHelper.java</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> Pair&lt;ScanResult, Boolean&gt; <span class="hljs-title function_">scanSystemPackageLI</span><span class="hljs-params">(ParsedPackage parsedPackage,</span><br><span class="hljs-params">            <span class="hljs-meta">@ParsingPackageUtils</span>.ParseFlags <span class="hljs-type">int</span> parseFlags,</span><br><span class="hljs-params">            <span class="hljs-meta">@PackageManagerService</span>.ScanFlags <span class="hljs-type">int</span> scanFlags,</span><br><span class="hljs-params">            <span class="hljs-meta">@Nullable</span> UserHandle user)</span> <span class="hljs-keyword">throws</span> PackageManagerException &#123; <br>  <br>        <span class="hljs-comment">// A new application appeared on /system, and we are seeing it for the first time.</span><br>        <span class="hljs-comment">// Its also not updated as we don&#x27;t have a copy of it on /data. So, scan it in a</span><br>        <span class="hljs-comment">// STOPPED state.</span><br>        <span class="hljs-comment">// We&#x27;ll skip this step under the following conditions:</span><br>        <span class="hljs-comment">//   - It&#x27;s &quot;android&quot;</span><br>        <span class="hljs-comment">//   - It&#x27;s an APEX or overlay package since stopped state does not affect them.</span><br>        <span class="hljs-comment">//   - It is enumerated with a &lt;initial-package-state&gt; tag having the stopped attribute</span><br>        <span class="hljs-comment">//     set to false</span><br>        <span class="hljs-comment">//   - It doesn&#x27;t have an enabled and exported launcher activity, which means the user</span><br>        <span class="hljs-comment">//     wouldn&#x27;t have a way to un-stop it</span><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">boolean</span> <span class="hljs-variable">isApexPkg</span> <span class="hljs-operator">=</span> (scanFlags &amp; SCAN_AS_APEX) != <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">if</span> (mPm.mShouldStopSystemPackagesByDefault<br>                &amp;&amp; scanSystemPartition<br>                &amp;&amp; !pkgAlreadyExists<br>                &amp;&amp; !isApexPkg<br>                &amp;&amp; !parsedPackage.isOverlayIsStatic()<br>        ) &#123;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">packageName</span> <span class="hljs-operator">=</span> parsedPackage.getPackageName();<br>            <span class="hljs-keyword">if</span> (!<span class="hljs-string">&quot;android&quot;</span>.contentEquals(packageName)<br>                    &amp;&amp; !mPm.mInitialNonStoppedSystemPackages.contains(packageName)<br>                    &amp;&amp; hasLauncherEntry(parsedPackage)) &#123;<br>                scanFlags |= SCAN_AS_STOPPED_SYSTEM_APP;<br>            &#125;<br>        &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>根据函数的注释，一个应用会被标记为“停止的系统应用”（Scanned As Stopped System App）需要满足以下<strong>所有条件</strong>：</p>
+<ol>
+<li><p><strong>是系统应用</strong>：即系统标记为<code>ApplicationInfo.FLAG_SYSTEM</code> 的应用。</p>
+</li>
+<li><p>在core&#x2F;res&#x2F;res&#x2F;values&#x2F;config.xml 配置config_stopSystemPackagesByDefault为 true，默认启用。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-comment">&lt;!-- Whether system apps should be scanned in the stopped state during initial boot.</span><br><span class="hljs-comment">    Packages can be added by OEMs in an allowlist, to prevent them from being scanned as</span><br><span class="hljs-comment">    &quot;stopped&quot; during initial boot of a device, or after an OTA update. Stopped state of</span><br><span class="hljs-comment">    an app is not changed during subsequent reboots.  --&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">bool</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;config_stopSystemPackagesByDefault&quot;</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>应用不存在</p>
+</li>
+<li><p>不是 system_server（包名为 android ）</p>
+</li>
+<li><p>不是 APEX 包和静态资源覆盖包（Overlay）</p>
+</li>
+<li><p>有启动入口 (Launcher Entry)。</p>
+</li>
+<li><p>没有在<code>initial-package-stopped-states.xml</code> 配置中被豁免。</p>
+</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="http://xrefandroid.com/android-15.0.0_r1/xref/frameworks/base/data/etc/initial-package-stopped-states.xml">initial-package-stopped-states.xml - OpenGrok cross reference for &#x2F;frameworks&#x2F;base&#x2F;data&#x2F;etc&#x2F;initial-package-stopped-states.xml</a></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;utf-8&quot;</span>?&gt;</span><br><span class="hljs-comment">&lt;!--</span><br><span class="hljs-comment">This XML defines an allowlist for packages that should not be scanned in a &quot;stopped&quot; state.</span><br><span class="hljs-comment">When this feature is turned on (indicated by the config config_stopSystemPackagesByDefault in</span><br><span class="hljs-comment">core/res/res/values/config.xml) packages on the system partition that are encountered by</span><br><span class="hljs-comment">the PackageManagerService for the first time are scanned in the &quot;stopped&quot; state. This allowlist</span><br><span class="hljs-comment">is also considered while creating new users on the device. Stopped state is not set during</span><br><span class="hljs-comment">subsequent reboots.</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">Example usage</span><br><span class="hljs-comment">    1. &lt;initial-package-state package=&quot;com.example.app&quot; stopped=&quot;false&quot;/&gt;</span><br><span class="hljs-comment">        Indicates that a system package - com.example.app&#x27;s initial stopped state should not be set</span><br><span class="hljs-comment">        by the Package Manager. By default, system apps are marked as stopped.</span><br><span class="hljs-comment">    2. &lt;initial-package-state package=&quot;com.example.app&quot; stopped=&quot;true&quot;/&gt;</span><br><span class="hljs-comment">        Indicates that a system package - com.example.app&#x27;s initial state should be set by the</span><br><span class="hljs-comment">        Package Manager to &quot;stopped=true&quot;. It will have the same effect on the</span><br><span class="hljs-comment">        package&#x27;s stopped state even if this package was not included in the allow list.</span><br><span class="hljs-comment">    3. &lt;initial-package-state package=&quot;com.example.app&quot;/&gt;</span><br><span class="hljs-comment">        Invalid usage.</span><br><span class="hljs-comment">--&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">config</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">config</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/li_5033/article/details/131706447">stop应用无法收到广播问题_应用未启动接收广播-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://droidyue.com/blog/2014/07/14/look-inside-android-package-stop-state-since-honeycomb-mr1/">关于Android中App的停止状态 - 技术小黑屋</a></p>
+<p>[PMS 第 4 篇 - PMS_DATA_SCAN_START 阶段 | Coolqi&#96;s Blog](<a target="_blank" rel="noopener" href="https://lishuaiqi.top/2018/02/17/PMS4-PMS_DATA_SCAN_START/#1-3-PMS-scanPackageDirtyLI">https://lishuaiqi.top/2018/02/17/PMS4-PMS_DATA_SCAN_START/#1-3-PMS-scanPackageDirtyLI</a>)</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/AndroidFrameworkFeature/" class="category-chain-item">AndroidFrameworkFeature</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Android/" class="print-no-link">#Android</a>
+      
+        <a href="/tags/PackageManagerService/" class="print-no-link">#PackageManagerService</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>安卓14系统应用收不到开机广播</div>
+      <div>https://iwesley.top/article/3afe9d6d/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年8月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/b6477895/" title="句子里的花园:来自微博用户吹牛大王孟豪森">
+                        <span class="hidden-mobile">句子里的花园:来自微博用户吹牛大王孟豪森</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://lib.baomitu.com/waline/2.15.8/waline.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/waline/2.15.8/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline.iwesley.top","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10,"locale":{"placeholder":"欢迎交流(作者审核后显示)"},"reaction":["https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_clap.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_sad.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_confused.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_pick_nose.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_doge.png"]},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-rss"></i> <a href="https://iwesley.top/atom.xml" target="_blank" rel="nofollow noopener"><span>RSS</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <div style="font-size: 0.85rem"> <script defer src="https://cn.vercount.one/js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/stars.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
