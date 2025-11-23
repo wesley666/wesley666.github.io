@@ -1,0 +1,804 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/myAvatar.png">
+  <link rel="icon" href="/img/myAvatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="安卓日志来源一般有自身 app 或者第三方 SDK，自己的比较容易归一化处理，优秀的 SDK 也会提供日志策略接口，但有一些喜欢直接用安卓的标准日志接口或者不能设置日志策略，这种就比较讨厌了，处理起来也比较麻烦。有两种办法：混淆时全部去掉或者 hook 系统日志接口。 编译期“阉割”：混淆处理编译期“阉割”：配置R8&#x2F;Proguard 日志优化规则，直接把日志方法当空气处理： 12345">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓如何收敛自身以及第三方sdk日志">
+<meta property="og:url" content="https://iwesley.top/article/62681a5f/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="安卓日志来源一般有自身 app 或者第三方 SDK，自己的比较容易归一化处理，优秀的 SDK 也会提供日志策略接口，但有一些喜欢直接用安卓的标准日志接口或者不能设置日志策略，这种就比较讨厌了，处理起来也比较麻烦。有两种办法：混淆时全部去掉或者 hook 系统日志接口。 编译期“阉割”：混淆处理编译期“阉割”：配置R8&#x2F;Proguard 日志优化规则，直接把日志方法当空气处理： 12345">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-11-22T12:28:55.000Z">
+<meta property="article:modified_time" content="2025-11-23T09:42:14.880Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="AndroidUtils">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>安卓如何收敛自身以及第三方sdk日志 - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_4814891_uhrho08g34.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":"https://leancloud.iwesley.top","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Wesley's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="安卓如何收敛自身以及第三方sdk日志"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-11-22 20:28" pubdate>
+          2025年11月22日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          801 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          7 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">安卓如何收敛自身以及第三方sdk日志</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于：2025年11月23日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>安卓日志来源一般有自身 app 或者第三方 SDK，自己的比较容易归一化处理，优秀的 SDK 也会提供日志策略接口，但有一些喜欢直接用安卓的标准日志接口或者不能设置日志策略，这种就比较讨厌了，处理起来也比较麻烦。有两种办法：混淆时全部去掉或者 hook 系统日志接口。</p>
+<h2 id="编译期“阉割”：混淆处理"><a href="#编译期“阉割”：混淆处理" class="headerlink" title="编译期“阉割”：混淆处理"></a>编译期“阉割”：混淆处理</h2><p>编译期“阉割”：配置R8&#x2F;Proguard 日志优化规则，直接把日志方法当空气处理：</p>
+<figure class="highlight axapta"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs axapta"><span class="hljs-meta"># 要全局去掉-dontoptimize</span><br><span class="hljs-meta"># 去掉 SDK 的 debug/info 日志</span><br>-assumenosideeffects <span class="hljs-keyword">class</span> <span class="hljs-title class_">com</span>.xxx.sdk.<span class="hljs-keyword">internal</span>.SdkLog &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> d(...);<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">int</span> i(...);<br>     <span class="hljs-meta"># 不写 e(...)，保留错误日志</span><br>&#125;<br><br><span class="hljs-meta"># 去除全部log</span><br>-assumenosideeffects <span class="hljs-keyword">class</span> <span class="hljs-title class_">android</span>.util.Log &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> *** d(...);<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> *** v(...);<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> *** i(...);<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> *** e(...);<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> *** w(...);<br>&#125;<br><br><span class="hljs-meta"># 去除System.out.println();</span><br>-assumenosideeffects <span class="hljs-keyword">class</span> <span class="hljs-title class_">java</span>.io.PrintStream &#123; <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> println(...); <br>&#125; <br><br></code></pre></td></tr></table></figure>
+
+<p>这样的打击范围太大，出现问题时无法收集日志。</p>
+<h2 id="hook系统日志打印接口"><a href="#hook系统日志打印接口" class="headerlink" title="hook系统日志打印接口"></a>hook系统日志打印接口</h2><p>下面介绍使用字节跳动的bhook和腾讯的xlog来处理日志：前者用来hook日志接口，后者用来储存日志。</p>
+<h3 id="日志打印原理："><a href="#日志打印原理：" class="headerlink" title="日志打印原理："></a>日志打印原理：</h3><p>Android app层或framework层，通过调用Log&#x2F;Slog&#x2F;Rlog中的方法打印日志，接着通过JNI会调用到native层android_util_Log_println_native接口，最终通过liblog的__android_log_buf_write方法进行日志打印。</p>
+<figure class="highlight livescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs livescript">__android_log_buf_write<br><br>  --&gt;__android_log_write_log_message<br><br>     --&gt;get_logger_function<span class="hljs-function"><span class="hljs-params">()</span></span><br><span class="hljs-function"></span><br><span class="hljs-function">        --&gt;</span>__android_log_logd_logger<br><br>           --&gt;write_to_log<br><br>              --&gt;LogdWrite<br></code></pre></td></tr></table></figure>
+
+<p>如果只需要拦截app层或framework层，只需要拦截android_util_Log_println_native 所在的libandroid_runtime.so 即可，android_util_Log_println_native 调用了__android_log_buf_write 方法。</p>
+<h3 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h3><p>参考：<a target="_blank" rel="noopener" href="https://github.com/bytedance/bhook/blob/main/doc/quickstart.zh-CN.md">bhook&#x2F;doc&#x2F;quickstart.zh-CN.md at main · bytedance&#x2F;bhook</a></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;jni.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string&gt;</span></span><br><span class="hljs-comment">//#include &lt;android/log.h&gt;</span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;bytehook.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;xlogger/android_xlog.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> TAG <span class="hljs-string">&quot;wesley-jni&quot;</span></span><br><span class="hljs-comment">//#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, TAG,  __VA_ARGS__);</span><br><span class="hljs-comment">//#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG,  __VA_ARGS__);</span><br><span class="hljs-comment">//#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG,  __VA_ARGS__);</span><br><br><span class="hljs-type">static</span> <span class="hljs-type">bool</span> g_consoleLogOpen = <span class="hljs-literal">false</span>;<br><span class="hljs-type">static</span> <span class="hljs-type">bool</span> g_saveToFile = <span class="hljs-literal">false</span>;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">android_log_buf_write_proxy</span><span class="hljs-params">(<span class="hljs-type">int</span> bufID, <span class="hljs-type">int</span> prio, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *tag, <span class="hljs-type">const</span> <span class="hljs-type">char</span> *text)</span> </span>&#123;<br>    <span class="hljs-built_in">BYTEHOOK_STACK_SCOPE</span>();<br>    <span class="hljs-comment">//LOGE(&quot;hook  log&quot;)</span><br>    <span class="hljs-type">int</span> ret = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">char</span> tag_buffer[<span class="hljs-number">50</span>];<br>    <span class="hljs-keyword">if</span> (g_consoleLogOpen) &#123;<br>        <span class="hljs-built_in">snprintf</span>(tag_buffer, <span class="hljs-built_in">sizeof</span>(tag_buffer), <span class="hljs-string">&quot;wesley-%s&quot;</span>, tag);<br>        ret = <span class="hljs-built_in">BYTEHOOK_CALL_PREV</span>(android_log_buf_write_proxy, bufID, prio, tag_buffer, text);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (g_saveToFile) &#123;<br>        <span class="hljs-keyword">if</span> (prio &gt;= ANDROID_LOG_ERROR) &#123;<br>            <span class="hljs-built_in">XLOGE</span>(tag, <span class="hljs-string">&quot;%s&quot;</span>, text);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-built_in">XLOGI</span>(tag, <span class="hljs-string">&quot;%s&quot;</span>, text);<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> ret;<br>&#125;<br><br><span class="hljs-comment">// 过滤器函数。返回 true 表示需要 hook 这个 so；返回 false 表示不需要 hook 这个 so。</span><br><span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">hook_log_allow_filter</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *caller_path_name, <span class="hljs-type">void</span> *arg)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">//if(nullptr != strstr(caller_path_name, &quot;liblog.so&quot;)) return true;</span><br><br>    <span class="hljs-comment">//android_util_Log_println_native 所在so</span><br>    <span class="hljs-keyword">if</span>(<span class="hljs-literal">nullptr</span> != <span class="hljs-built_in">strstr</span>(caller_path_name, <span class="hljs-string">&quot;libandroid_runtime.so&quot;</span>)) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>&#125;<br><br><span class="hljs-type">bytehook_stub_t</span> stub_of_android_log_buf_write = <span class="hljs-literal">nullptr</span>; <span class="hljs-comment">// hook 的存根，用于后续 unhook</span><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">hook_logcat</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">//__android_log_write</span><br>    <span class="hljs-comment">//bytehook_hook_all(nullptr, &quot;android_log_print_proxy&quot;, (void *) (my_log_print), nullptr,</span><br>     <span class="hljs-comment">//                 nullptr);</span><br><span class="hljs-comment">//    stub_of_android_log_buf_write = bytehook_hook_all(nullptr,</span><br><span class="hljs-comment">//                                                      &quot;__android_log_buf_write&quot;,</span><br><span class="hljs-comment">//                                                      (void *) (android_log_buf_write_proxy),</span><br><span class="hljs-comment">//                                                      nullptr,</span><br><span class="hljs-comment">//                                                      nullptr);</span><br>    stub_of_android_log_buf_write = <span class="hljs-built_in">bytehook_hook_partial</span>(<br>            hook_log_allow_filter,<br>            <span class="hljs-literal">nullptr</span>,<br>            <span class="hljs-literal">nullptr</span>,<br>            <span class="hljs-string">&quot;__android_log_buf_write&quot;</span>,<br>            <span class="hljs-built_in">reinterpret_cast</span>&lt;<span class="hljs-type">void</span> *&gt;(android_log_buf_write_proxy),<br>            <span class="hljs-literal">nullptr</span>,<br>            <span class="hljs-literal">nullptr</span>);<br>    <span class="hljs-keyword">if</span> (stub_of_android_log_buf_write == <span class="hljs-literal">nullptr</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">unhook_logcat</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (stub_of_android_log_buf_write != <span class="hljs-literal">nullptr</span>) &#123;<br>        <span class="hljs-built_in">bytehook_unhook</span>(stub_of_android_log_buf_write);<br>        stub_of_android_log_buf_write = <span class="hljs-literal">nullptr</span>;<br>    &#125;<br>&#125;<br><br><br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span><br><span class="hljs-function">JNIEXPORT <span class="hljs-type">void</span> JNICALL</span><br><span class="hljs-function"><span class="hljs-title">Java_com_wesley_android_c_toolkit_NativeHelper_00024Companion_unhookLogcat</span><span class="hljs-params">(JNIEnv *env,</span></span><br><span class="hljs-params"><span class="hljs-function">                                                                         jobject thiz)</span> </span>&#123;<br>    <span class="hljs-built_in">XLOGE</span>(TAG, <span class="hljs-string">&quot;unhook_logcat&quot;</span>);<br>    <span class="hljs-built_in">unhook_logcat</span>();<br>&#125;<br><br><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span><br><span class="hljs-function">JNIEXPORT jboolean JNICALL</span><br><span class="hljs-function"><span class="hljs-title">Java_com_wesley_android_c_toolkit_NativeHelper_00024Companion_hookLogcat</span><span class="hljs-params">(JNIEnv *env, jobject thiz,</span></span><br><span class="hljs-params"><span class="hljs-function">                                                                       jboolean console_log_open, jboolean save_to_file)</span> </span>&#123;<br>    <span class="hljs-built_in">XLOGE</span>(TAG,<span class="hljs-string">&quot;hook_logcat&quot;</span>);<br>    g_consoleLogOpen = (console_log_open == JNI_TRUE);<br>    g_saveToFile = (save_to_file == JNI_TRUE);<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">hook_logcat</span>() == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> JNI_TRUE;<br>    &#125;<br>    <span class="hljs-keyword">return</span> JNI_FALSE;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>app 层</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">package</span> com.wesley.android.c.toolkit<br><br><span class="hljs-keyword">import</span> android.util.Log<br><span class="hljs-keyword">import</span> com.bytedance.android.bytehook.ByteHook<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">NativeHelper</span> &#123;<br><br>    <span class="hljs-keyword">companion</span> <span class="hljs-keyword">object</span> &#123;<br>        <span class="hljs-keyword">init</span> &#123;<br>            <span class="hljs-keyword">val</span> ret = ByteHook.<span class="hljs-keyword">init</span>()<br>            Log.e(<span class="hljs-string">&quot;ByteHook&quot;</span>, <span class="hljs-string">&quot;init ret: <span class="hljs-variable">$ret</span>&quot;</span>)<br>            System.loadLibrary(<span class="hljs-string">&quot;toolkit&quot;</span>)<br>        &#125;<br>        <span class="hljs-keyword">external</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">hookLogcat</span><span class="hljs-params">(consoleLogOpen: <span class="hljs-type">Boolean</span> = <span class="hljs-literal">true</span>, saveToFile: <span class="hljs-type">Boolean</span> = <span class="hljs-literal">true</span>)</span></span>: <span class="hljs-built_in">Boolean</span><br>        <span class="hljs-keyword">external</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">unhookLogcat</span><span class="hljs-params">()</span></span><br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>完整代码参考：<a target="_blank" rel="noopener" href="https://github.com/wesley666/AndroidToolkit">wesley666&#x2F;AndroidToolkit: AndroidToolkit</a></p>
+<p>运行 app 后可以看到日志 tag 加上了前缀 wesley，测试环境：小米 13，安卓 15。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/feelabclihu/article/details/134213379">Android logd日志简介及典型案例分析</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6905368512001556487">深入理解安卓日志系统（logcat &#x2F; liblog &#x2F; logd</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7311167216728424463">Android帝国之日志系统–logd、logcat</a></p>
+<p><a target="_blank" rel="noopener" href="https://gityuan.com/2018/01/27/android-log/">Android logd日志原理 - Gityuan博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7393746524473901119">Android日志是如何输出的：Log.d经历了什么</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Android/" class="print-no-link">#Android</a>
+      
+        <a href="/tags/AndroidUtils/" class="print-no-link">#AndroidUtils</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>安卓如何收敛自身以及第三方sdk日志</div>
+      <div>https://iwesley.top/article/62681a5f/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年11月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/ae07f8e0/" title="安卓如何每次重启开机后只执行一次代码">
+                        <span class="hidden-mobile">安卓如何每次重启开机后只执行一次代码</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://lib.baomitu.com/waline/2.15.8/waline.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/waline/2.15.8/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline.iwesley.top","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10,"locale":{"placeholder":"欢迎交流(作者审核后显示)"},"reaction":["https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_clap.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_sad.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_confused.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_pick_nose.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_doge.png"]},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-rss"></i> <a href="https://iwesley.top/atom.xml" target="_blank" rel="nofollow noopener"><span>RSS</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <div style="font-size: 0.85rem"> <script defer src="https://cn.vercount.one/js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/stars.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
