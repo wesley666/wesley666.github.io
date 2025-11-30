@@ -6,7 +6,7 @@
   <link href="https://iwesley.top/atom.xml" rel="self"/>
   
   <link href="https://iwesley.top/"/>
-  <updated>2025-11-26T12:53:59.884Z</updated>
+  <updated>2025-11-30T14:41:33.938Z</updated>
   <id>https://iwesley.top/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>愿者上钩：再安全的手机也可能抵不过人性的考验</title>
+    <link href="https://iwesley.top/article/1fbaaada/"/>
+    <id>https://iwesley.top/article/1fbaaada/</id>
+    <published>2025-11-30T11:31:18.000Z</published>
+    <updated>2025-11-30T14:41:33.938Z</updated>
+    
+    <content type="html"><![CDATA[<p>我记得刚上大学那一会，在火车站，有一个陌生人说没钱坐车了，叫我给她10 块钱，我准备给的时候，她说其实是二十块，我说怎么又变成 20 了，她说我听错了，我突然感觉这是一个骗局就赶快走了。</p><p>多年以后，面对一个博主分享他妈妈被诈骗的故事，我会回想起来 2020 年那个遥远的夏天，即将走上工作岗位的我，遇到了来自“好友”的诈骗。</p><h3 id="“在吗”"><a href="#“在吗”" class="headerlink" title="“在吗”"></a>“在吗”</h3><p>大学毕业后，我在广州的同学那里住了几天。7 月 4 日那天下午，阳光灿烂，我独自出门拍身份证照片，在路上突然收到一位 QQ 好友发来的信息，“在吗？”。我也没多想，就回了一句，啥事。然后她开始讲自己“出事”了： 我微信登不上了，想把钱先转到你银行卡里，你用微信帮我把钱转给我表姐可以吗？</p><p>我感觉这个做法很奇怪，问为啥登不上？</p><p>说着说着，她突然给我发来了一个视频邀请。</p><p>我就点了接通。</p><p>视频那头画面出来了几秒不到，我朋友的脸闪了一下，然后视频就“嗖”一下断了。</p><p>这时候我开始警惕起来了。</p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20251130223716665.png" alt="IMG_20250813_124537" style="zoom:25%;" /><h3 id="语气不对的人"><a href="#语气不对的人" class="headerlink" title="语气不对的人"></a>语气不对的人</h3><p>这个朋友是我初中同学，虽然没有好到那种一起出去玩的程度，但一直以来都有联系，平时说话属于比较温柔和客气，相互尊敬。</p><p>结果那天她发过来的，有这种对话：</p><ul><li>“你在干嘛呢”</li><li>“我不知道啊”</li></ul><p>这种语气在这种对话场景我读起来就感觉很不耐烦，很不舒服，让我感觉不像她。</p><p>再加上那个“一闪而过”的视频，露脸时间短得离谱，像是拿着一张照片糊弄，让我确认是本人后就赶紧挂断了。</p><p>这些细节加在一起，整件事就越来越像一个骗局：照片是真的，就人不是那个人，是来骗钱的。</p><p>后来她对我的追问也没有回复，基本上可以确定她被盗号了。于是我赶紧放下 QQ，打开微信，给真正的好友发消息确认身份。很快就了解清楚她 QQ 被盗了，但不幸的是，她高中同桌最后还是被骗了一万，没有逃过骗子利用熟人情感作案的骗钱陷阱。</p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20251130222957455.jpg" alt="IMG_20250813_125152" style="zoom: 25%;" /><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20251130223106250.jpg" alt="IMG_20250813_125212" style="zoom: 25%;" /><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20251130223157339.jpg" alt="IMG_20250813_125232" style="zoom:25%;" /><h3 id="手机虽安全，但与人有关"><a href="#手机虽安全，但与人有关" class="headerlink" title="手机虽安全，但与人有关"></a>手机虽安全，但与人有关</h3><p>以安卓手机为例，它的安全其实挺全面的：</p><ul><li>每个 App 沙箱隔离，各住各的“号房”</li><li>运行时权限，读通讯录、看短信、开相机，都要弹个框问你一声</li><li>后面还有SELinux 在后面卡着各种访问，“该干啥干啥，不该干别想”</li></ul><p>但我同学的整个诈骗过程，貌似跟这些东西几乎一点关系都没有。</p><p>对方不需要：</p><ul><li>不需要提权</li><li>不需要越过沙箱</li><li>不需要突破 SELinux</li><li>不需要读我的短信、偷我的银行卡密码</li></ul><p>他只需要：</p><ul><li>一个盗来的 QQ 号</li><li>几张我朋友的照片</li><li>一段准备好的话术</li><li>再加上对这个头像背后的人天然的信任</li></ul><p>就足够了。</p><p>说明白点就是，即使现在的手机已经足够安全了，但最终还是要受控于人的，要看人性是否经得起考验。诈骗分子就是利用心理战术，玩人和人的游戏，利用熟人之间的情感羁绊，突破了人的边界防线，一步步将人引入陷阱，最后套取金钱，远走高飞。</p><h3 id="我为什么没有上当"><a href="#我为什么没有上当" class="headerlink" title="我为什么没有上当"></a>我为什么没有上当</h3><p>大概有这么几个点：</p><ol><li>作为一个理科生和经常网上冲浪的我来说，对这种网上钱财交易会事先保持多一份警惕。</li><li>我对这个朋友平时说话方式的记忆，她语气不对，乱用语气助词。</li><li>视频聊天那一下太刻意，闪一下真脸就挂断。</li><li>通过微信去核实，就是这么简单的一步换个渠道问一下本人，直接把骗局拆穿。</li></ol><p>而被骗的那位同学，很可能在那一刻：</p><ul><li>更相信照片和那几秒的视频</li><li>更相信“是同桌，她不会害我”</li><li>没有意识到自己可以换个渠道核实</li></ul><p>就这样，钱被骗走了，很可惜。</p><h3 id="尾声"><a href="#尾声" class="headerlink" title="尾声"></a>尾声</h3><p>再安全的手机也可能抵不过人性的考验，骗子很狡猾，洞悉人性的弱点，需要我们提高警惕，识别骗人套路。</p><p>骗局一般有两大类：</p><p><strong>陌生人骗局</strong>：主要打的是「钱袋子 + 对权威&#x2F;规则的恐惧」</p><p><strong>熟人骗局</strong>：主要打的是「人情 + 自我认同（我是个讲义气的人）」</p><p>前者靠的是话术和脚本，后者靠的是真实的头像、聊天记录，再加一点点愿意相信的部分。</p><p>来看一下 ChatGPT 的总结：</p><table><thead><tr><th>维度</th><th>陌生人骗局</th><th>熟人骗局（比如 QQ 好友那种）</th><th>背后心理学机制</th><th>大白话</th></tr></thead><tbody><tr><td><strong>初始警惕度</strong></td><td>默认当「不明链接」「骚扰电话」，警惕值偏高</td><td>默认当「自己人」，警惕值直接打折</td><td>内群体偏好、启发式判断</td><td>大脑偷懒：熟悉&#x3D;安全，不熟&#x3D;先防着点</td></tr><tr><td><strong>信任来源</strong></td><td>靠「官方身份」「权威」「福利诱惑」：客服、公检法、快递、中奖</td><td>靠「头像 + 昵称 + 聊天记录 + 共同回忆」</td><td>权威效应 vs 内群体偏好</td><td>陌生人要扮权威，熟人直接借壳你的朋友形象</td></tr><tr><td><strong>主要情绪按钮</strong></td><td>贪（优惠、返利、中奖）、怕（冻结、立案、罚款）</td><td>义气（朋友有难要帮）、愧疚（不帮是不是太绝）、怕伤感情</td><td>损失厌恶、互惠、社会角色期待</td><td>陌生人这边是「钱和安全」，熟人这边是「感情和人情」</td></tr><tr><td><strong>质疑成本</strong></td><td>质疑一句「你是不是骗子」，没啥心理包袱</td><td>质疑一句会觉得「我是不是太不信任他」「会不会伤人」</td><td>面子 &#x2F; 关系损失厌恶</td><td>钱和尴尬对打，很多人宁愿钱出问题，也不想当场翻脸</td></tr><tr><td><strong>大脑工作模式</strong></td><td>一开始还能稍微分析一下，常见套路会被识别</td><td>很容易直接切到情绪模式：朋友喊一声「救命」就先信了</td><td>系统一 &#x2F; 系统二（快思考 vs 慢思考）</td><td>陌生人会启动“慢一点想想”，熟人容易直接凭感觉拍板</td></tr><tr><td><strong>典型说服路径</strong></td><td>先立「权威&#x2F;规则」，再甩风险和好处</td><td>先立「关系」，再说「只有你能帮我」「我不敢找别人」</td><td>服从权威 vs 关系导向</td><td>一个靠「我是系统」，一个靠「我是你的人」</td></tr><tr><td><strong>是否愿意多验证一步</strong></td><td>挂电话 &#x2F; 打官方电话 &#x2F; 上网搜一下的概率相对高</td><td>换渠道去问本人、要语音&#x2F;视频的意愿明显更低</td><td>信息隔离、羞耻感</td><td>越熟越不好意思抽身去求证，感觉像是在“试探朋友”</td></tr><tr><td><strong>小请求→大请求</strong></td><td>直接开口要钱的多，被拒绝几率也高</td><td>先聊近况→讲惨状→情绪铺垫→再借钱，连续点头后更难说不</td><td>登门槛效应（foot-in-the-door）</td><td>你前面一直在扮“愿意帮忙的人”，最后关头很难突然变脸拒绝</td></tr><tr><td><strong>自我形象牵扯</strong></td><td>「我有没有被骗」为主</td><td>「我是不是个够义气的朋友」+「我怎么这么蠢」双重打击</td><td>自我认同、认知失调</td><td>为了维持“我是好朋友”的人设，你会给对方、也给自己各种理由</td></tr><tr><td><strong>上钩后感受</strong></td><td>多是愤怒 + 委屈：「骗子真坏」</td><td>背叛感 + 自责：「我看错人」「我是不是傻」「我不配有朋友」</td><td>内归因偏差</td><td>熟人局更伤，容易把问题全归到自己身上，创伤更深</td></tr><tr><td><strong>事后防御反应</strong></td><td>提防「某类电话&#x2F;链接」</td><td>容易演变成「谁借钱我都不信」「人都不可靠」</td><td>防御性悲观、过度泛化</td><td>陌生人骗局让你防套路，熟人骗局容易让你防所有人</td></tr></tbody></table><p>要对付陌生人骗局，重点是<strong>识别套路</strong>；<br>要对付熟人骗局，重点是<strong>给自己一点“核实的权利”</strong>。</p><p>首先要保障手机的安全，不要乱听陌生电话的指引，打开手机的电话识别功能，骚扰、诈骗等电话一律不接，开启运营商的高频骚扰电话拦截等等；不要乱下载软件，特别不要从非官方渠道下载软件，父母的手机要关闭非官方渠道下载安装功能，苹果这个做的比较好，要验证密码；不要随意打开短信里面的链接；设置好手机和 SIM 卡 PIN 密码；安卓手机不要交出电话、短信等读取权限，特别是无障碍权限，这相当于给诈骗分子掌握了控制手机的能力。</p><p>不过最重要的还是要回到我们自己身上，手机只是工具，我们才是手机的主人：</p><ol><li>所有熟人借钱，一律二次渠道确认：QQ 来的，就去微信；微信来的，就打电话。</li><li>能语音就不要只看文字，能视频就不要只看头像，如果对方死活不语音不视频，只打字还一直催，那危险系数直接拉满。</li><li>任何别告诉别人的，一律优先告诉别人，不管是别跟家人说、别跟同事说，这种话本身就很不对劲，骗子惯用伎俩。</li><li>再不转就来不及的钱，先拖一拖。能被“催一催”催走的，多半不是好事。</li><li>与钱有关的，都要事先提高警惕，默认是骗局，多和家人、朋友沟通。</li></ol><p>就这些小延迟、二次确认、沟通，可能比一堆看不见的安全设置，更能帮我们少掉几次坑，特别是要做好父母的工作，防止他们被骗。</p><p>希望在这个人与人的游戏中，没有愿者上钩的人。</p>]]></content>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;我记得刚上大学那一会，在火车站，有一个陌生人说没钱坐车了，叫我给她10 块钱，我准备给的时候，她说其实是二十块，我说怎么又变成 20 了，她说我听错了，我突然感觉这是一个骗局就赶快走了。&lt;/p&gt;
+&lt;p&gt;多年以后，面对一个博主分享他妈妈被诈骗的故事，我会回想起来 2020</summary>
+        
+      
+    
+    
+    
+    <category term="随笔" scheme="https://iwesley.top/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+    <category term="随笔" scheme="https://iwesley.top/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
   
   <entry>
     <title>怎么在Apple Music听南京市民和升哥的歌</title>
@@ -596,41 +624,6 @@
     
     
     <category term="音视频" scheme="https://iwesley.top/tags/%E9%9F%B3%E8%A7%86%E9%A2%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>安卓屏保调试</title>
-    <link href="https://iwesley.top/article/98c55340/"/>
-    <id>https://iwesley.top/article/98c55340/</id>
-    <published>2025-03-15T06:37:37.000Z</published>
-    <updated>2025-03-16T09:34:10.864Z</updated>
-    
-    <content type="html"><![CDATA[<p>先看一下在设置点击屏保预览后的调用链（Android 14）</p><pre><code class=" mermaid">sequenceDiagram    participant User    participant MaterialButton    participant View    participant DreamSettings    participant DreamBackend    User-&gt;&gt;MaterialButton: 点击按钮（ performClick()）    MaterialButton-&gt;&gt;View: performClick()    View-&gt;&gt;DreamSettings: 触发 onClick() (lambda 表达式)    DreamSettings-&gt;&gt;DreamBackend: 调用 preview()</code></pre><p>DreamController的打印信息</p><blockquote><p>Starting dream: name&#x3D;ComponentInfo{com.google.android.apps.tv.dreamx&#x2F;com.google.android.apps.tv.dreamx.service.Backdrop}, <strong>isPreviewMode&#x3D;true</strong>, canDoze&#x3D;false, userId&#x3D;0, reason&#x3D;’test dream’</p></blockquote><p>DreamActivity是一个不需要注册的Activity，运行在各个屏保进程。</p><p>屏保应用实现DreamService即可。</p><p>屏保状态时，后台起应用会进入 onStop 状态（该例子 onStop 里面调用了 finish）</p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803024.png" alt="img"></p><h2 id="退出屏保的方法"><a href="#退出屏保的方法" class="headerlink" title="退出屏保的方法"></a>退出屏保的方法</h2><h3 id="1、有触摸或者按键输入"><a href="#1、有触摸或者按键输入" class="headerlink" title="1、有触摸或者按键输入"></a>1、有触摸或者按键输入</h3><h3 id="2、配置config-dismissDreamOnActivityStart-为-true-则会在新-activity-起来后退出屏保"><a href="#2、配置config-dismissDreamOnActivityStart-为-true-则会在新-activity-起来后退出屏保" class="headerlink" title="2、配置config_dismissDreamOnActivityStart 为 true 则会在新 activity 起来后退出屏保"></a>2、配置config_dismissDreamOnActivityStart 为 true 则会在新 activity 起来后退出屏保</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"> <span class="hljs-comment">&lt;!-- Whether to dismiss the active dream when an activity is started. Doesn&#x27;t apply to</span><br><span class="hljs-comment"></span><br><span class="hljs-comment">          assistant activities (ACTIVITY_TYPE_ASSISTANT) --&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">bool</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;config_dismissDreamOnActivityStart&quot;</span>&gt;</span>false<span class="hljs-tag">&lt;/<span class="hljs-name">bool</span>&gt;</span><br></code></pre></td></tr></table></figure><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803153.png" alt="img"></p><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250315143803189.png" alt="img"></p><h3 id="3、跨进程调用DreamManagerService-的awaken（需要系统签名）"><a href="#3、跨进程调用DreamManagerService-的awaken（需要系统签名）" class="headerlink" title="3、跨进程调用DreamManagerService 的awaken（需要系统签名）"></a>3、跨进程调用DreamManagerService 的awaken（需要系统签名）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> android.os.IBinder<br><span class="hljs-keyword">import</span> androidx.annotation.RequiresPermission<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DreamManager</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">val</span> <span class="hljs-variable">TAG</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;DreamManager&quot;</span><br>    <span class="hljs-comment">//private var mDreamManager: Any? = context.getSystemService(&quot;dream&quot;)</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> mDreamManager: Any? = <span class="hljs-literal">null</span><br><br>    init &#123;<br>        mDreamManager = <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">val</span> <span class="hljs-variable">dream</span> <span class="hljs-operator">=</span> Reflector.on(<span class="hljs-string">&quot;android.os.ServiceManager&quot;</span>).method(<span class="hljs-string">&quot;getService&quot;</span>, String::class.java).call&lt;Any&gt;(<span class="hljs-string">&quot;dreams&quot;</span>)<br>            Reflector.on(<span class="hljs-string">&quot;android.service.dreams.IDreamManager\$Stub&quot;</span>).method(<span class="hljs-string">&quot;asInterface&quot;</span>, IBinder::class.java).call&lt;Any&gt;(dream)<br>        &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>            <span class="hljs-literal">null</span><br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@RequiresPermission(&quot;android.permission.READ_DREAM_STATE&quot;)</span><br>    fun <span class="hljs-title function_">isDreaming</span><span class="hljs-params">()</span>: Boolean &#123;<br>        <span class="hljs-keyword">if</span> (mDreamManager == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">try</span> &#123;<br>            Reflector.with(mDreamManager!!).method(<span class="hljs-string">&quot;isDreaming&quot;</span>).call()<br>        &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>            <span class="hljs-literal">false</span><br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@RequiresPermission(&quot;android.permission.WRITE_DREAM_STATE&quot;)</span><br>    fun <span class="hljs-title function_">stopDream</span><span class="hljs-params">()</span> &#123;<br>        mDreamManager?.let &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                Reflector.with(it).method(<span class="hljs-string">&quot;awaken&quot;</span>).call&lt;Unit&gt;()<br>            &#125; <span class="hljs-keyword">catch</span> (e: Exception) &#123;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><h2 id="屏保调试命令：cmd-dreams"><a href="#屏保调试命令：cmd-dreams" class="headerlink" title="屏保调试命令：cmd dreams"></a>屏保调试命令：cmd dreams</h2><blockquote><p>roc_rk3588s_pc:&#x2F; # cmd dreams -h</p><p>Dream manager (dreams) commands:</p><p>  help</p><p>​      Print this help text.</p><p>  start-dreaming</p><p>​      Start the currently configured dream.</p><p>  stop-dreaming</p><p>​      Stops any active dream</p></blockquote><p>cmd dreams start-dreaming</p><p>cmd dreams stop-dreaming</p>]]></content>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;先看一下在设置点击屏保预览后的调用链（Android 14）&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot; mermaid&quot;&gt;sequenceDiagram
-    participant User
-    participant MaterialButton
-   </summary>
-        
-      
-    
-    
-    
-    <category term="AndroidFrameworkFeature" scheme="https://iwesley.top/categories/AndroidFrameworkFeature/"/>
-    
-    
-    <category term="DreamManagerService" scheme="https://iwesley.top/tags/DreamManagerService/"/>
-    
-    <category term="Framework" scheme="https://iwesley.top/tags/Framework/"/>
-    
-    <category term="屏保" scheme="https://iwesley.top/tags/%E5%B1%8F%E4%BF%9D/"/>
     
   </entry>
   
