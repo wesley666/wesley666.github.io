@@ -19,27 +19,28 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+    <meta name="description" content="最近在写一个广告频控的功能，用 vibe coding 很快就开发完了，工具类引用了java.time.*，为了兼容旧安卓版本，需要启用脱糖，否则 IDE 会提示 api 的兼容性问题。项目的 AGP 版本是 8.0+，一开始运行没问题，但后面因为客户的工程是 AGP 4.0+，不愿意升级，所以要考虑兼容。由于在 agp 8.0+开发，要兼容好低版本，必须考虑第三方 SDK 的compileSdk">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露">
-<meta property="og:url" content="https://iwesley.top/article/f148a913/index.html">
+<meta property="og:title" content="脱糖魔法：为什么 java.time 在 Android 上还是会翻车？">
+<meta property="og:url" content="https://iwesley.top/article/f9617ce3/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+<meta property="og:description" content="最近在写一个广告频控的功能，用 vibe coding 很快就开发完了，工具类引用了java.time.*，为了兼容旧安卓版本，需要启用脱糖，否则 IDE 会提示 api 的兼容性问题。项目的 AGP 版本是 8.0+，一开始运行没问题，但后面因为客户的工程是 AGP 4.0+，不愿意升级，所以要考虑兼容。由于在 agp 8.0+开发，要兼容好低版本，必须考虑第三方 SDK 的compileSdk">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
-<meta property="article:published_time" content="2025-03-04T13:10:58.000Z">
-<meta property="article:modified_time" content="2025-03-04T13:40:23.876Z">
+<meta property="og:image" content="https://developer.android.com/static/studio/images/write/desugar_diagram.png?hl=zh-cn">
+<meta property="article:published_time" content="2026-01-21T14:25:05.000Z">
+<meta property="article:modified_time" content="2026-01-21T16:13:27.955Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="内存">
-<meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="gradle">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
+<meta name="twitter:image" content="https://developer.android.com/static/studio/images/write/desugar_diagram.png?hl=zh-cn">
   
   
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露 - Wesley&#39;s Blog</title>
+  <title>脱糖魔法：为什么 java.time 在 Android 上还是会翻车？ - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -263,7 +264,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露"></span>
+            <span id="subtitle" data-typed-text="脱糖魔法：为什么 java.time 在 Android 上还是会翻车？"></span>
           
         </div>
 
@@ -279,8 +280,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-04 21:10" pubdate>
-          2025年3月4日 晚上
+        <time datetime="2026-01-21 22:25" pubdate>
+          2026年1月21日 晚上
         </time>
       </span>
     
@@ -291,7 +292,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          555 字
+          1k 字
         
       </span>
     
@@ -302,7 +303,7 @@
         
         
         
-          5 分钟
+          9 分钟
         
       </span>
     
@@ -339,12 +340,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</h1>
+            <h1 id="seo-header">脱糖魔法：为什么 java.time 在 Android 上还是会翻车？</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年3月4日 晚上
+                    本文最后更新于：2026年1月22日 凌晨
                   
                 
               </p>
@@ -352,81 +353,49 @@
             
               <div class="markdown-body">
                 
-                <p>今天用着安卓 14 的板子的时候突然系统卡死。</p>
-<p>查看日志发现launcher都被干掉了</p>
-<blockquote>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service</p>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: com.android.launcher3&#x2F;com.android.quickstep.TouchInteractionService&lt;&#x3D;Proc{8077:com.android.systemui&#x2F;u0a70}</p>
-<p>03-04 06:13:36.155 277 277 I lowmemorykiller: Kill ‘com.android.launcher3’ (8407), uid 10071, oom_score_adj 100 to free 39504kB rss, 46224kB swap; reason: device is low on swap (91200kB &lt; 199552kB) and thrashing (200%)</p>
-</blockquote>
-<p>看<code>dumpsys meminfo</code>发现DMA-BUF占了3G多（4G设备），应用free ram基本没了。</p>
-<p>刚开始以为是scrcpy的问题。后来经调查发现是android studio的屏幕镜像问题。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>开机一段时间后</p>
-<blockquote>
-<p>Total RAM: 3,991,080K (status normal)</p>
-<p>Free RAM: 1,166,810K (  124,454K cached pss +   623,088K cached kernel +   419,268K free)</p>
-<p><strong>DMA-BUF: 1,477,628K (      876K mapped + 1,476,752K unmapped)</strong></p>
-<p>DMA-BUF Heaps: 1,477,628K</p>
-<p>DMA-BUF Heaps pool:   249,088K</p>
-<p>​      GPU:   202,320K</p>
-<p> Used RAM: 2,763,593K (1,036,373K used pss + 1,727,220K kernel)</p>
-<p> Lost RAM:   195,490K</p>
-<p>​     ZRAM:    72,700K physical used for   215,296K in swap (1,995,536K total swap)</p>
-<p>   Tuning: 192 (large 512), oom   322,560K, restore limit   107,520K (high-end-gfx)</p>
-</blockquote>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size</code>，发现有好多483328字节的 inode</p>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size  | grep 483328 | wc -l</code></p>
-<p>有2957个，计算：2957*483328&#x3D;1429200896&#x3D;1.4G，和上面的结果差不多。</p>
-<p>随便查看一个inode</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # lsof | grep -w 7248</p>
-<p><a href="mailto:&#99;&#50;&#x40;&#x31;&#x2e;&#49;&#45;&#115;&#x65;&#x72;&#118;&#105;&#x63;&#x65;">&#99;&#50;&#x40;&#x31;&#x2e;&#49;&#45;&#115;&#x65;&#x72;&#118;&#105;&#x63;&#x65;</a>   543 mediacodec 2553u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5088u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5089u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-</blockquote>
-<p><code>lsof | grep &quot;4146&quot; | grep dmabuf  | wc -l</code></p>
-<p>有2958条这样的条目</p>
-<p><code>main       4146       root 5973u     0000                0,8       0t0       7690 /dmabuf:system</code></p>
-<p>和上面的数目一一对应</p>
-<p>查看是哪一个程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;543&#x2F;cmdline</p>
-<p>&#x2F;vendor&#x2F;bin&#x2F;hw&#x2F;<a href="mailto:&#97;&#110;&#100;&#x72;&#111;&#x69;&#100;&#x2e;&#104;&#97;&#114;&#100;&#119;&#97;&#x72;&#101;&#46;&#109;&#101;&#100;&#x69;&#x61;&#46;&#99;&#x32;&#64;&#x31;&#x2e;&#49;&#45;&#x73;&#x65;&#x72;&#x76;&#x69;&#99;&#x65;">&#97;&#110;&#100;&#x72;&#111;&#x69;&#100;&#x2e;&#104;&#97;&#114;&#100;&#119;&#97;&#x72;&#101;&#46;&#109;&#101;&#100;&#x69;&#x61;&#46;&#99;&#x32;&#64;&#x31;&#x2e;&#49;&#45;&#x73;&#x65;&#x72;&#x76;&#x69;&#99;&#x65;</a></p>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;4146&#x2F;cmdline</p>
-<p>app_process&#x2F;data&#x2F;local&#x2F;tmp&#x2F;.studiocom.android.tools.screensharing.Main–socket&#x3D;screen-sharing-agent-8055–flags&#x3D;16</p>
-</blockquote>
-<p>发现是android studio镜像导致的：应该是因为一直黑屏导致反复申请内存导致DMA-BUF泄露。</p>
-<p>关闭Android Studio的Device Mirroring功能后，后面使用设备就正常了。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<h2 id="dmabuf-dump"><a href="#dmabuf-dump" class="headerlink" title="dmabuf_dump"></a>dmabuf_dump</h2><p>通过dmabuf_dump命令可以更快地查看异常程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump -h</p>
-<p>Usage: dmabuf_dump [-abh] [per-process&#x2F;per-buffer stats]</p>
-<p>-a       show all dma buffers (ion) in big table, [buffer x process] grid</p>
-<p>-b       show DMA-BUF per-buffer, per-exporter and per-device statistics</p>
-<p>-h       show this help</p>
-<p>​         If PID is supplied, the dmabuf information for that process is shown.</p>
-<p>​         Per-buffer DMA-BUF stats do not take an argument.</p>
-</blockquote>
-<p>通过<code>dmabuf_dump</code>就可以查看各个程序DMA-BUF的占用情况（包含程序名字、pid、inode等等）或者加其他参数输出不同结果。</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump 4146</p>
-<p>​            main:4146</p>
-<p>​                  Name              Rss              Pss         nr_procs            Inode</p>
-<p>​                system           472 kB           472 kB                1             4735</p>
-<p>​                system           472 kB           472 kB                1             4736</p>
-<p>​                system           472 kB           472 kB                1             4737</p>
-<p>​               </p>
-<p>​               ——————（省略几千行）—————-</p>
-<p>​          </p>
-<p>​                system           472 kB           472 kB                1             7688</p>
-<p>​                system           472 kB           472 kB                1             7689</p>
-<p>​                system           472 kB           472 kB                1             7690</p>
-<p>​         PROCESS TOTAL       1395232 kB       1395232 kB</p>
-<p>-———————</p>
-<p>dmabuf total: 1477628 kB kernel_rss: 82396 kB userspace_rss: 1395232 kB userspace_pss: 1395232 kB</p>
-</blockquote>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://source.android.com/docs/core/graphics/implement-dma-buf-gpu-mem">Implement DMABUF and GPU memory accounting in Android 12  |  Android Open Source Project</a></p>
+                <p>最近在写一个广告频控的功能，用 vibe coding 很快就开发完了，工具类引用了<code>java.time.*</code>，为了兼容旧安卓版本，需要启用脱糖，否则 IDE 会提示 api 的兼容性问题。项目的 AGP 版本是 8.0+，一开始运行没问题，但后面因为客户的工程是 AGP 4.0+，不愿意升级，所以要考虑兼容。由于在 agp 8.0+开发，要兼容好低版本，必须考虑第三方 SDK 的compileSdk、kotlin 和 AGP的版本要求，现在 maven 仓库居然不能直接查看 aar 的元数据，不能快速知晓这几个版本的要求，只能叫 AI 写个 gradle 版本 解析一下。坑都踩完后，发布 sdk 给客户，但客户 app 依赖sdk后，运行报错:<code>java.Lang.NoSuchMethodError: No static method ofInstant（Lj$/time/Instant;Lj$/time/ZoneId；）Lj$/time/LocalDate；in class Lj$/time/LocalDate</code>。究竟是为什么呢？分析之前先回顾一下语法糖和脱糖的知识点。</p>
+<h2 id="语法糖和脱糖"><a href="#语法糖和脱糖" class="headerlink" title="语法糖和脱糖"></a>语法糖和脱糖</h2><p><strong>语法糖 &#x3D; 让我们写代码有更爽的写法</strong>，本质上不增加能力，只是更加优雅地写代码。</p>
+<p>比如：</p>
+<ul>
+<li><code>lambda</code></li>
+<li><code>forEach &#123; &#125;</code></li>
+<li><code>接口默认方法</code></li>
+<li><code>try-with-resources</code></li>
+<li>Kotlin 的很多写法（<code>data class</code>、<code>when</code>、<code>?.let</code>）等等</li>
+</ul>
+<p><strong>脱糖（desugar）&#x3D; 把这些糖衣写法，改写成更基础、更原始的形式。</strong></p>
+<h3 id="Android-里脱糖分两大类"><a href="#Android-里脱糖分两大类" class="headerlink" title="Android 里脱糖分两大类"></a>Android 里脱糖分两大类</h3><p>A. 语言特性脱糖（Language Desugaring）</p>
+<p>让 <strong>“新语法特性”</strong> 在旧 Android 版本上也能跑。</p>
+<p>比如：<code>lambda</code>写法。</p>
+<p>B. Java 标准库 API 脱糖（Core Library Desugaring &#x2F; Library Desugaring）</p>
+<p>旧 Android 系统里根本没有这些 API，或者缺很多方法，需要补上。</p>
+<p>Android 的做法分为两步： </p>
+<p><strong>步骤 1：打包一份“补齐的库”进 APK（desugar_jdk_libs）</strong> </p>
+<p><strong>步骤 2：D8&#x2F;R8 把调用点路由到这份库上</strong><br> 也就是把对 <code>java.time.*</code> 的调用改写到 <code>j$.time.*</code>（内部替身包名） </p>
+<img src="https://developer.android.com/static/studio/images/write/desugar_diagram.png?hl=zh-cn" srcset="/img/loading.gif" lazyload alt="使用“desugar”字节码转换实现 Java 8 语言功能支持 " style="zoom:50%;" />
+
+<p>也就是打包 sdk 这一步是不会发生脱糖的，脱糖发生在 apk 编译。另外<code>sourceCompatibility</code>只能阻止新语法特性，不能阻止新 api 引入，这也能理解，因为新 api 是跟随安卓版本走的，虽然你用了 java 8 编写，但只要高版本系统支持，就可以引入。</p>
+<p>对于 java 8 特性，需要 1.0+版本的库，对于 java 9+ 特性需要 2.0+的库。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs groovy">android &#123;<br>    compileOptions &#123;<br>        <span class="hljs-comment">// Flag to enable support for the new language APIs</span><br><br>        <span class="hljs-comment">// For AGP 4.1+</span><br>        isCoreLibraryDesugaringEnabled = <span class="hljs-literal">true</span><br>        <span class="hljs-comment">// For AGP 4.0</span><br>        <span class="hljs-comment">// coreLibraryDesugaringEnabled = true</span><br><br>        <span class="hljs-comment">// Sets Java compatibility to Java 8</span><br>        sourceCompatibility = JavaVersion.VERSION_1_8<br>        targetCompatibility = JavaVersion.VERSION_1_8<br>    &#125;<br>&#125;<br><br>dependencies &#123;<br>    <span class="hljs-comment">// For AGP 7.4+</span><br>    coreLibraryDesugaring(<span class="hljs-string">&quot;com.android.tools:desugar_jdk_libs:2.0.3&quot;</span>)<br>    <span class="hljs-comment">// For AGP 7.3</span><br>    <span class="hljs-comment">// coreLibraryDesugaring(&quot;com.android.tools:desugar_jdk_libs:1.2.3&quot;)</span><br>    <span class="hljs-comment">// For AGP 4.0 to 7.2</span><br>    <span class="hljs-comment">// coreLibraryDesugaring(&quot;com.android.tools:desugar_jdk_libs:1.1.9&quot;)</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>频控代码里面有这么一句，显示 java 9 引入。</p>
+<p><code>LocalDate.ofInstant(Instant.ofEpochMilli(nowMillis), zoneId)</code></p>
+<p>参考 <a target="_blank" rel="noopener" href="https://developer.android.com/studio/write/java8-support-table?hl=zh-cn">通过脱糖获得 Java 8 及更高版本 API  |  Android Studio  |  Android Developers</a> 里面可知，1.0 +的库是没有<code>LocalDate.ofInstant</code> 这个方法的，需要 2.0+的库才支持 java 9+ 特性： <a target="_blank" rel="noopener" href="https://developer.android.com/studio/write/java11-nio-support-table?hl=zh-cn">通过脱糖提供的满足 Nio 规格要求的 Java 11 及更高版本 API  |  Android Studio  |  Android Developers</a>。所以客户的 agp 4.0+，不能正确脱糖导致没有生成<code>ofInstant</code>方法，运行报错：<code>java.Lang.NoSuchMethodError: No static method ofInstant（Lj$/time/Instant;Lj$/time/ZoneId；）Lj$/time/LocalDate；in class Lj$/time/LocalDate</code>。</p>
+<p>这里注意，虽然脱糖不成功，但是里面的<code>LocalDate.ofInstant</code> 已经路由到新包名了，所以下面的写法也是被禁止的，即使安卓 14 支持，但是由于脱糖，无论成不成功，都会路由到新包名，所以在安卓 14 也会崩溃。但是你直接 run debug 版本的时候，会根据你的安卓设备不进行脱糖处理，看起来好像没问题，所以必须单独编译 apk 进行验证。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">return</span> <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) &#123;<br>    LocalDate.ofInstant(Instant.ofEpochMilli(nowMillis), zoneId)<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>    ZonedDateTime<br>        .ofInstant(Instant.ofEpochMilli(nowMillis), zoneId)<br>        .toLocalDate()<br>&#125; <br></code></pre></td></tr></table></figure>
+
+<p>最后的修复方法是，按照 1.0 脱糖库的要求，不要使用 java 9+ api。</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs groovy">ZonedDateTime.ofInstant(Instant.ofEpochMilli(nowMillis), zoneId).toLocalDate()<br></code></pre></td></tr></table></figure>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/write/java8-support?hl=zh-cn#library-desugaring">使用 Java 8 语言功能和 API  |  Android Studio  |  Android Developers</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/write/java8-support-table?hl=zh-cn">通过脱糖获得 Java 8 及更高版本 API  |  Android Studio  |  Android Developers</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/write/java11-minimal-support-table?hl=zh-cn">通过脱糖提供的满足最低规格要求的 Java 11 及更高版本 API  |  Android Studio  |  Android Developers</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/studio/write/java11-nio-support-table?hl=zh-cn">通过脱糖提供的满足 Nio 规格要求的 Java 11 及更高版本 API  |  Android Studio  |  Android Developers</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/build/kotlin-support?hl=zh-cn">Kotlin 版本所需的 AGP、D8 和 R8 版本  |  Android Studio  |  Android Developers</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/build/tool-and-library-dependencies?hl=zh-cn">工具和库的相互依存关系  |  Android Studio  |  Android Developers</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/build/jdks?hl=zh-cn">Android build 中的 Java 版本  |  Android Studio  |  Android Developers</a></p>
 
                 
               </div>
@@ -445,7 +414,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="category-chain-item">Android性能优化</a>
+  <a href="/categories/AppBuild/" class="category-chain-item">AppBuild</a>
   
   
 
@@ -460,9 +429,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%86%85%E5%AD%98/" class="print-no-link">#内存</a>
+        <a href="/tags/Android/" class="print-no-link">#Android</a>
       
-        <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="print-no-link">#性能优化</a>
+        <a href="/tags/gradle/" class="print-no-link">#gradle</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   
@@ -474,8 +445,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</div>
-      <div>https://iwesley.top/article/f148a913/</div>
+      <div>脱糖魔法：为什么 java.time 在 Android 上还是会翻车？</div>
+      <div>https://iwesley.top/article/f9617ce3/</div>
     </div>
     <div class="license-meta">
       
@@ -487,7 +458,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月4日</div>
+          <div>2026年1月21日</div>
         </div>
       
       
@@ -519,18 +490,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/article/98c55340/" title="安卓屏保调试">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">安卓屏保调试</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/article/67ca89d4/" title="安卓组件化之动态依赖功能模块">
-                        <span class="hidden-mobile">安卓组件化之动态依赖功能模块</span>
+                      <a href="/article/29834ee6/" title="豆包手机:戴着镣铐跳舞">
+                        <span class="hidden-mobile">豆包手机:戴着镣铐跳舞</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
