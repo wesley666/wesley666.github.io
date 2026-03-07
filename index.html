@@ -459,6 +459,134 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/article/89c7a079/" target="_self">
+          远程服务器运行Android Studio开发aosp源码
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/article/89c7a079/" target="_self">
+        <div>
+          好像很多人不知道服务器也可以轻松使用as和clion，还在使用si或者vscode ssh。特意写一篇教程。  2019年去HW实习的时候，我发现他们工程师在用source insight开发aosp。2020年去另外一家公司上班的时候，发现用的也是source insight，但我感觉并不好用，特别是跳转和自动补全，优点可能就是Samba导入时不怎么卡。 然后开始尝试Android Studi
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2026-03-07 22:55" pubdate>
+              2026-03-07
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android-Build-System/" class="category-chain-item">Android Build System</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Android/">#Android</a>
+            
+              <a href="/tags/aosp%E7%BC%96%E8%AF%91/">#aosp编译</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/article/812f630/" target="_self">
+          withContext跨线程返回值为什么不需要volatile
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/article/812f630/" target="_self">
+        <div>
+          我们平常写协程代码时，如下所示，不需要什么volatile，就能获取正确的结果，那么协程是怎么保证我们的跨线程传递变量是安全的？需要从 happens-before 讲起。 12345678910111213141516171819lifecycle.coroutineScope.launch &#123;  var a = 50  val result = withContext(Dispatc
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2026-01-25 17:02" pubdate>
+              2026-01-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9F%BA%E7%A1%80/" class="category-chain-item">计算机基础</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Android/">#Android</a>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/Kotlin/">#Kotlin</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/article/f9617ce3/" target="_self">
           脱糖魔法：为什么 java.time 在 Android 上还是会翻车？
         </a>
@@ -759,132 +887,6 @@
               <a href="/tags/Android/">#Android</a>
             
               <a href="/tags/AndroidUtils/">#AndroidUtils</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/article/ae07f8e0/" target="_self">
-          安卓如何每次重启开机后只执行一次代码
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/article/ae07f8e0/" target="_self">
-        <div>
-          安卓如何每次重启开机后只执行一次代码： 方法一、开机广播 比较普遍的一个方法，但可能接收延迟或者被禁止接收。 方法二、设置一个非 persist 属性作为标记，重启后系统自动清除 受 selinux 管控，第三方应用无权限执行。 方法三、使用&#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;random&#x2F;boot_id 作为标记 相当于内核准备的一张 「本次开机身
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-11-09 19:06" pubdate>
-              2025-11-09
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Android/" class="category-chain-item">Android</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Android/">#Android</a>
-            
-              <a href="/tags/AndroidUtils/">#AndroidUtils</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/article/f037b587/" target="_self">
-          基于Binder的4种RPC调用
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/article/f037b587/" target="_self">
-        <div>
-          基于Binder的4种RPC调用一般有AIDL、Messenger、借助 intent 传递 messenger 和 基于 contentprovider 的 call AIDL 和Messenger 比较常见了，可以参考：绑定服务概览  |  Background work  |  Android Developers 这里只讨论后面两种情况，代码链接：https://github.com/we
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-10-03 21:50" pubdate>
-              2025-10-03
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Android-IPC/" class="category-chain-item">Android IPC</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/android-ipc/">#android ipc</a>
-            
-              <a href="/tags/android-rpc/">#android rpc</a>
             
           </div>
         

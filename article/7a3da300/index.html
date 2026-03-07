@@ -19,27 +19,26 @@
   <meta name="author" content="Wesley">
   <meta name="keywords" content="Android">
   
-    <meta name="description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+    <meta name="description" content="一般拿到机器，我们统计开机时间，主要看如下几个时间段分布：  开机按键时间、亮屏时间  uboot 启动时间 内核启动后到 bootanim 退出时间  Init会记录一些启动时间信息到属性（部分如下）： ro.boottime.init Time after boot in ns (via the CLOCK_BOOTTIME clock) at which the first stage of">
 <meta property="og:type" content="article">
-<meta property="og:title" content="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露">
-<meta property="og:url" content="https://iwesley.top/article/f148a913/index.html">
+<meta property="og:title" content="安卓开机速度分析方法">
+<meta property="og:url" content="https://iwesley.top/article/7a3da300/index.html">
 <meta property="og:site_name" content="Wesley&#39;s Blog">
-<meta property="og:description" content="今天用着安卓 14 的板子的时候突然系统卡死。 查看日志发现launcher都被干掉了  03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service 03-04 06:13:35.544 7872 8479 I ActivityManager: co">
+<meta property="og:description" content="一般拿到机器，我们统计开机时间，主要看如下几个时间段分布：  开机按键时间、亮屏时间  uboot 启动时间 内核启动后到 bootanim 退出时间  Init会记录一些启动时间信息到属性（部分如下）： ro.boottime.init Time after boot in ns (via the CLOCK_BOOTTIME clock) at which the first stage of">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
-<meta property="article:published_time" content="2025-03-04T13:10:58.000Z">
-<meta property="article:modified_time" content="2025-03-04T13:40:23.876Z">
+<meta property="article:published_time" content="2026-03-04T11:50:26.000Z">
+<meta property="article:modified_time" content="2026-03-07T14:56:06.897Z">
 <meta property="article:author" content="Wesley">
-<meta property="article:tag" content="内存">
 <meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="systrace">
+<meta property="article:tag" content="perfetto">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png">
   
   
   
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
   
-  <title>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露 - Wesley&#39;s Blog</title>
+  <title>安卓开机速度分析方法 - Wesley&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -263,7 +262,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露"></span>
+            <span id="subtitle" data-typed-text="安卓开机速度分析方法"></span>
           
         </div>
 
@@ -279,8 +278,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-03-04 21:10" pubdate>
-          2025年3月4日 晚上
+        <time datetime="2026-03-04 19:50" pubdate>
+          2026年3月4日 晚上
         </time>
       </span>
     
@@ -291,7 +290,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          555 字
+          1.2k 字
         
       </span>
     
@@ -302,7 +301,7 @@
         
         
         
-          5 分钟
+          10 分钟
         
       </span>
     
@@ -339,12 +338,12 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</h1>
+            <h1 id="seo-header">安卓开机速度分析方法</h1>
             
               <p id="updated-time" class="note note-info" style="">
                 
                   
-                    本文最后更新于：2025年3月4日 晚上
+                    本文最后更新于：2026年3月7日 晚上
                   
                 
               </p>
@@ -352,81 +351,77 @@
             
               <div class="markdown-body">
                 
-                <p>今天用着安卓 14 的板子的时候突然系统卡死。</p>
-<p>查看日志发现launcher都被干掉了</p>
-<blockquote>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: vis BFGS 18740: com.android.launcher3 (pid 8407) service</p>
-<p>03-04 06:13:35.544 7872 8479 I ActivityManager: com.android.launcher3&#x2F;com.android.quickstep.TouchInteractionService&lt;&#x3D;Proc{8077:com.android.systemui&#x2F;u0a70}</p>
-<p>03-04 06:13:36.155 277 277 I lowmemorykiller: Kill ‘com.android.launcher3’ (8407), uid 10071, oom_score_adj 100 to free 39504kB rss, 46224kB swap; reason: device is low on swap (91200kB &lt; 199552kB) and thrashing (200%)</p>
-</blockquote>
-<p>看<code>dumpsys meminfo</code>发现DMA-BUF占了3G多（4G设备），应用free ram基本没了。</p>
-<p>刚开始以为是scrcpy的问题。后来经调查发现是android studio的屏幕镜像问题。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>开机一段时间后</p>
-<blockquote>
-<p>Total RAM: 3,991,080K (status normal)</p>
-<p>Free RAM: 1,166,810K (  124,454K cached pss +   623,088K cached kernel +   419,268K free)</p>
-<p><strong>DMA-BUF: 1,477,628K (      876K mapped + 1,476,752K unmapped)</strong></p>
-<p>DMA-BUF Heaps: 1,477,628K</p>
-<p>DMA-BUF Heaps pool:   249,088K</p>
-<p>​      GPU:   202,320K</p>
-<p> Used RAM: 2,763,593K (1,036,373K used pss + 1,727,220K kernel)</p>
-<p> Lost RAM:   195,490K</p>
-<p>​     ZRAM:    72,700K physical used for   215,296K in swap (1,995,536K total swap)</p>
-<p>   Tuning: 192 (large 512), oom   322,560K, restore limit   107,520K (high-end-gfx)</p>
-</blockquote>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size</code>，发现有好多483328字节的 inode</p>
-<p><code>cat /sys/kernel/dmabuf/buffers/*/size  | grep 483328 | wc -l</code></p>
-<p>有2957个，计算：2957*483328&#x3D;1429200896&#x3D;1.4G，和上面的结果差不多。</p>
-<p>随便查看一个inode</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # lsof | grep -w 7248</p>
-<p><a href="mailto:&#x63;&#50;&#x40;&#x31;&#x2e;&#49;&#x2d;&#x73;&#101;&#x72;&#118;&#x69;&#99;&#101;">&#x63;&#50;&#x40;&#x31;&#x2e;&#49;&#x2d;&#x73;&#101;&#x72;&#118;&#x69;&#99;&#101;</a>   543 mediacodec 2553u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5088u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-<p>main       4146       root 5089u     0000                0,8       0t0       7248 &#x2F;dmabuf:system</p>
-</blockquote>
-<p><code>lsof | grep &quot;4146&quot; | grep dmabuf  | wc -l</code></p>
-<p>有2958条这样的条目</p>
-<p><code>main       4146       root 5973u     0000                0,8       0t0       7690 /dmabuf:system</code></p>
-<p>和上面的数目一一对应</p>
-<p>查看是哪一个程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;543&#x2F;cmdline</p>
-<p>&#x2F;vendor&#x2F;bin&#x2F;hw&#x2F;<a href="mailto:&#x61;&#110;&#100;&#114;&#x6f;&#105;&#x64;&#x2e;&#x68;&#x61;&#114;&#100;&#119;&#97;&#114;&#x65;&#x2e;&#x6d;&#101;&#x64;&#105;&#97;&#46;&#99;&#x32;&#64;&#x31;&#x2e;&#x31;&#x2d;&#115;&#x65;&#114;&#x76;&#105;&#x63;&#x65;">&#x61;&#110;&#100;&#114;&#x6f;&#105;&#x64;&#x2e;&#x68;&#x61;&#114;&#100;&#119;&#97;&#114;&#x65;&#x2e;&#x6d;&#101;&#x64;&#105;&#97;&#46;&#99;&#x32;&#64;&#x31;&#x2e;&#x31;&#x2d;&#115;&#x65;&#114;&#x76;&#105;&#x63;&#x65;</a></p>
-<p>roc_rk3588s_pc:&#x2F; # cat &#x2F;proc&#x2F;4146&#x2F;cmdline</p>
-<p>app_process&#x2F;data&#x2F;local&#x2F;tmp&#x2F;.studiocom.android.tools.screensharing.Main–socket&#x3D;screen-sharing-agent-8055–flags&#x3D;16</p>
-</blockquote>
-<p>发现是android studio镜像导致的：应该是因为一直黑屏导致反复申请内存导致DMA-BUF泄露。</p>
-<p>关闭Android Studio的Device Mirroring功能后，后面使用设备就正常了。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20250304211421729.png" srcset="/img/loading.gif" lazyload alt="img"></p>
-<h2 id="dmabuf-dump"><a href="#dmabuf-dump" class="headerlink" title="dmabuf_dump"></a>dmabuf_dump</h2><p>通过dmabuf_dump命令可以更快地查看异常程序</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump -h</p>
-<p>Usage: dmabuf_dump [-abh] [per-process&#x2F;per-buffer stats]</p>
-<p>-a       show all dma buffers (ion) in big table, [buffer x process] grid</p>
-<p>-b       show DMA-BUF per-buffer, per-exporter and per-device statistics</p>
-<p>-h       show this help</p>
-<p>​         If PID is supplied, the dmabuf information for that process is shown.</p>
-<p>​         Per-buffer DMA-BUF stats do not take an argument.</p>
-</blockquote>
-<p>通过<code>dmabuf_dump</code>就可以查看各个程序DMA-BUF的占用情况（包含程序名字、pid、inode等等）或者加其他参数输出不同结果。</p>
-<blockquote>
-<p>roc_rk3588s_pc:&#x2F; # dmabuf_dump 4146</p>
-<p>​            main:4146</p>
-<p>​                  Name              Rss              Pss         nr_procs            Inode</p>
-<p>​                system           472 kB           472 kB                1             4735</p>
-<p>​                system           472 kB           472 kB                1             4736</p>
-<p>​                system           472 kB           472 kB                1             4737</p>
-<p>​               </p>
-<p>​               ——————（省略几千行）—————-</p>
-<p>​          </p>
-<p>​                system           472 kB           472 kB                1             7688</p>
-<p>​                system           472 kB           472 kB                1             7689</p>
-<p>​                system           472 kB           472 kB                1             7690</p>
-<p>​         PROCESS TOTAL       1395232 kB       1395232 kB</p>
-<p>-———————</p>
-<p>dmabuf total: 1477628 kB kernel_rss: 82396 kB userspace_rss: 1395232 kB userspace_pss: 1395232 kB</p>
-</blockquote>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a target="_blank" rel="noopener" href="https://source.android.com/docs/core/graphics/implement-dma-buf-gpu-mem">Implement DMABUF and GPU memory accounting in Android 12  |  Android Open Source Project</a></p>
+                <p>一般拿到机器，我们统计开机时间，主要看如下几个时间段分布：</p>
+<ol>
+<li>开机按键时间、亮屏时间 </li>
+<li>uboot 启动时间</li>
+<li>内核启动后到 bootanim 退出时间</li>
+</ol>
+<p>Init会记录一些启动时间信息到属性（部分如下）：</p>
+<p>ro.boottime.init</p>
+<p>Time after boot in ns (via the CLOCK_BOOTTIME clock) at which the first stage of init started.</p>
+<p>ro.boottime.<service-name></p>
+<p>Time after boot in ns (via the CLOCK_BOOTTIME clock) that the service was first started.</p>
+<h2 id="bootchart分析方法"><a href="#bootchart分析方法" class="headerlink" title="bootchart分析方法"></a>bootchart分析方法</h2><p>bootchart 是通过采集 &#x2F; proc 中的数据，将系统启动过程记录下来，通过 host 端工具将其解析为可视化图表的工具；</p>
+<p>会收集如下信息：</p>
+<ol>
+<li>CPU 负载：&#x2F;proc&#x2F;stat</li>
+<li>磁盘吞吐：&#x2F;proc&#x2F;diskstats</li>
+<li>各个进程的启动过程：&#x2F;proc&#x2F;$pid&#x2F;stat 需要注意，上述 bootchart 开始录制是在 init.rc 所以主要分析的是 android 启动阶段（对于 linux 来讲则是 init 进程后的信息）；</li>
+</ol>
+<p>在存在 enabled 文件的情况下，在 init.rc 启动时开始，bootcomplete 时结束：</p>
+<h3 id="抓取流程"><a href="#抓取流程" class="headerlink" title="抓取流程"></a>抓取流程</h3><p>1、adb shell touch &#x2F;data&#x2F;bootchart&#x2F;enabled 2、adb shell reboot</p>
+<p>3、 进入&#x2F;data&#x2F;bootchart执行 tar -zcf bootchart.tgz *</p>
+<p>4、使用adb pull 命令将文件拷贝出来</p>
+<p>注意：不需要抓取时，记得把enabled标志删除</p>
+<p>linux分析数据（没有服务器也可以使用wsl2来分析）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Shell">sudo apt-get install bootchart<br>sudo apt-get install pybootchartgui<br>//生成图表 <br>bootchart bootchart.tgz<br></code></pre></td></tr></table></figure>
+
+<h3 id="对比两个-bootchart-图"><a href="#对比两个-bootchart-图" class="headerlink" title="对比两个 bootchart 图"></a><strong>对比两个 bootchart 图</strong></h3><p><strong>android 7.0 代码还添加了新功能，执行 compare-bootcharts.py 脚本可以对比获取的两个 bootchart 的进程启动结束时间点，</strong>从而得到对应进程之间的耗时差距。</p>
+<p>将所要比较的两个 bootchart 的压缩包放在两个不同的目录 base_bootchart_dir,</p>
+<p>exp_bootchart_dir. 执行如下命令:</p>
+<p>system&#x2F;core&#x2F;init&#x2F;compare-bootcharts.py base_bootchart_dir exp_bootchart_dir</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs Shell">process: baseline experiment (delta) - Unit is ms (a jiffy is 10 ms on the system)<br>------------------------------------<br>/init: 50 40 (-10)<br>/system/bin/surfaceflinger: 4320 4470 (+150)<br>/system/bin/bootanimation: 6980 6990 (+10)<br>zygote64: 10410 10640 (+230)<br>zygote: 10410 10640 (+230)<br>system_server: 15350 15150 (-200)<br>bootanimation ends at: 33790 31230 (-2560)<br></code></pre></td></tr></table></figure>
+
+<h3 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h3><ol>
+<li>android 全部版本都支持么？ 在 androidM 之前此工具需要重新 build 打开才能使用，在之后变成现在的样子；</li>
+<li>以前有使用过可以添加参数的 bootchart，主要是设置 timeout 时间，现在不行了？ 从 code 实现来看，android高版本中内置的工具是不支持时间配置的，不过可以做个简单的处理，可以修改init.rc 中的 属性值，改为手动停止。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs Shell">on property:sys.boot_completed=1<br>   bootchart stop<br>   <br>   例如把sys.boot_completed改成sys.boot_completedd,然后需要停止的时候再设置这个属性<br></code></pre></td></tr></table></figure>
+
+<h2 id="systrace分析方法"><a href="#systrace分析方法" class="headerlink" title="systrace分析方法"></a>systrace分析方法</h2><p>由于selinux的限制，仅在userdebug or eng builds使用</p>
+<p>可以参考官方的内容：</p>
+<p><a target="_blank" rel="noopener" href="https://source.android.com/devices/tech/perf/boot-times#systrace">优化启动时间  |  Android 开源项目  |  Android Open Source Project</a></p>
+<p>我们采取另外一种方法来抓取</p>
+<p><a target="_blank" rel="noopener" href="http://www.aospxref.com/android-12.0.0_r3/xref/frameworks/native/cmds/atrace/atrace.rc">atrace.rc - OpenGrok cross reference for &#x2F;frameworks&#x2F;native&#x2F;cmds&#x2F;atrace&#x2F;atrace.rc</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs Shell">on property:persist.debug.atrace.boottrace=1<br>    start boottrace<br><span class="hljs-meta prompt_"># </span><span class="language-bash">Run atrace with the categories written <span class="hljs-keyword">in</span> a file</span><br>service boottrace /system/bin/atrace --async_start -f /data/misc/boottrace/categories346     <br>   disabled<br>   oneshot<br></code></pre></td></tr></table></figure>
+
+<p>除了设置属性外，我们可以改造boottrace的参数，例如指定buffer大小（建议在安卓9后使用），或者把-f换成具体的tag。<strong>这里不再赘述，取决于具体的机器。</strong></p>
+<p>在init.rc增加以下内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs undefined">on property:sys.boot_completed=1          // This stops tracing on boot complete<br>write /d/tracing/tracing_on 0<br>write /d/tracing/events/ext4/enable 0<br>write /d/tracing/events/f2fs/enable 0<br>write /d/tracing/events/block/enable 0<br></code></pre></td></tr></table></figure>
+
+<p><strong>d可能为kernel&#x2F;debug或者kernel，取决于你的机器</strong></p>
+<p>最后</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs Shell">adb root &amp;&amp; adb shell atrace --async_stop -z -c -o /data/local/tmp/boot_trace<br>adb pull /data/local/tmp/boot_trace<br><span class="hljs-meta prompt_">$</span><span class="language-bash">ANDROID_BUILD_TOP/external/chromium-trace/systrace.py --from-file=boot_trace</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="FAQ-1"><a href="#FAQ-1" class="headerlink" title="FAQ"></a>FAQ</h3><p>1、在搭载 API 级别 27 及更低级别的设备和模拟器上，如果没有足够的可用内存或内存过于碎片化，您将收到以下消息：Atrace could not allocate enough memory to record a trace。如果发生这种情况，并且您没有捕获到完整的数据集，请关闭后台进程或重新启动设备或模拟器。</p>
+<p>2、设置了persist.debug.atrace.boottrace开机启动boottrace服务的话，要及时停止，否则可能影响perfetto执行</p>
+<p>3、限制：记录跟踪事件是在加载persist属性之后开始的，因此不会记录之前发出的跟踪事件。一些服务（如vold、surfaceflinger和servicemanager）受此限制的影响，因为它们是在加载persist属性之前启动的。Zygote初始化和从Zygote fork的进程不受影响。</p>
+<h2 id="perfetto分析方法（安卓13开始）"><a href="#perfetto分析方法（安卓13开始）" class="headerlink" title="perfetto分析方法（安卓13开始）"></a>perfetto分析方法（安卓13开始）</h2><p>1、从以下网站生成配置文件</p>
+<p><a target="_blank" rel="noopener" href="https://ui.perfetto.dev/#!/record">Perfetto UI</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs undefined"># One buffer allocated within the central tracing binary for the entire trace,<br># shared by the two data sources below.<br>buffers &#123;<br>  size_kb: 32768<br>  fill_policy: DISCARD<br>&#125;<br><br># Ftrace data from the kernel, mainly the process scheduling events.<br>data_sources &#123;<br>  config &#123;<br>    name: &quot;linux.ftrace&quot;<br>    target_buffer: 0<br>    ftrace_config &#123;<br>      ftrace_events: &quot;sched_switch&quot;<br>      ftrace_events: &quot;sched_waking&quot;<br>      ftrace_events: &quot;sched_wakeup_new&quot;<br><br>      ftrace_events: &quot;task_newtask&quot;<br>      ftrace_events: &quot;task_rename&quot;<br><br>      ftrace_events: &quot;sched_process_exec&quot;<br>      ftrace_events: &quot;sched_process_exit&quot;<br>      ftrace_events: &quot;sched_process_fork&quot;<br>      ftrace_events: &quot;sched_process_free&quot;<br>      ftrace_events: &quot;sched_process_hang&quot;<br>      ftrace_events: &quot;sched_process_wait&quot;<br>    &#125;<br>  &#125;<br>&#125;<br><br># Resolve process commandlines and parent/child relationships, to better<br># interpret the ftrace events, which are in terms of pids.<br>data_sources &#123;<br>  config &#123;<br>    name: &quot;linux.process_stats&quot;<br>    target_buffer: 0<br>  &#125;<br>&#125;<br><br># 10s trace, but can be stopped prematurely via `adb shell pkill -u perfetto`.<br>duration_ms: 10000<br></code></pre></td></tr></table></figure>
+
+<p>2、把配置文件push到 <code>/data/misc/perfetto-configs/boottrace.pbtxt</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Shell">adb push &lt;yourfile&gt; /data/misc/perfetto-configs/boottrace.pbtxt<br></code></pre></td></tr></table></figure>
+
+<p>3、启用perfetto_trace_on_boot服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Shell">adb shell setprop persist.debug.perfetto.boottrace 1<br></code></pre></td></tr></table></figure>
+
+<p>注意：这个属性会在下一次开机时重置，如果要在下下次继续抓取trace，需要重新设置。</p>
+<p>4、结果会生成在&#x2F;data&#x2F;misc&#x2F;perfetto-traces&#x2F;boottrace.perfetto-trace</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Shell">adb pull /data/misc/perfetto-traces/boottrace.perfetto-trace<br></code></pre></td></tr></table></figure>
+
+<p>注意：新的trace会覆盖旧的。</p>
 
                 
               </div>
@@ -460,9 +455,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%86%85%E5%AD%98/" class="print-no-link">#内存</a>
-      
         <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" class="print-no-link">#性能优化</a>
+      
+        <a href="/tags/systrace/" class="print-no-link">#systrace</a>
+      
+        <a href="/tags/perfetto/" class="print-no-link">#perfetto</a>
       
     </div>
   
@@ -474,8 +471,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>安卓内存泄露之DMA-BUF异常增长:Android Studio镜像引起DMA内存泄露</div>
-      <div>https://iwesley.top/article/f148a913/</div>
+      <div>安卓开机速度分析方法</div>
+      <div>https://iwesley.top/article/7a3da300/</div>
     </div>
     <div class="license-meta">
       
@@ -487,7 +484,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年3月4日</div>
+          <div>2026年3月4日</div>
         </div>
       
       
@@ -514,29 +511,6 @@
 
 
 
-              
-                <div class="post-prevnext my-3">
-                  <article class="post-prev col-6">
-                    
-                    
-                      <a href="/article/98c55340/" title="安卓屏保调试">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">安卓屏保调试</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
-                  </article>
-                  <article class="post-next col-6">
-                    
-                    
-                      <a href="/article/67ca89d4/" title="安卓组件化之动态依赖功能模块">
-                        <span class="hidden-mobile">安卓组件化之动态依赖功能模块</span>
-                        <span class="visible-mobile">下一篇</span>
-                        <i class="iconfont icon-arrowright"></i>
-                      </a>
-                    
-                  </article>
-                </div>
               
             </div>
 
