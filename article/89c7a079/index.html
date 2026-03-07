@@ -26,18 +26,17 @@
 <meta property="og:site_name" content="Wesley&#39;s Blog">
 <meta property="og:description" content="好像很多人不知道服务器也可以轻松使用as和clion，还在使用si或者vscode ssh。特意写一篇教程。  2019年去HW实习的时候，我发现他们工程师在用source insight开发aosp。2020年去另外一家公司上班的时候，发现用的也是source insight，但我感觉并不好用，特别是跳转和自动补全，优点可能就是Samba导入时不怎么卡。 然后开始尝试Android Studi">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/544184/1772893858287-872a9e05-ad25-4aa9-aa2a-0d46a76f22e6.png?x-oss-process=image%2Fformat%2Cwebp">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/544184/1772893858287-872a9e05-ad25-4aa9-aa2a-0d46a76f22e6.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/544184/1772894050575-d1db3b03-2396-4d93-82ef-f6c2931c174d.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/544184/1772892929060-a1aea750-31b3-4925-8b6e-a10b51a1016e.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2026/png/544184/1772892125872-36cfff97-8b67-4c72-9ff1-3abd133cb39c.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260307231533749.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260307231618459.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260307231630134.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260307231638077.png">
 <meta property="article:published_time" content="2026-03-07T14:55:45.000Z">
-<meta property="article:modified_time" content="2026-03-07T15:09:29.700Z">
+<meta property="article:modified_time" content="2026-03-07T15:17:10.609Z">
 <meta property="article:author" content="Wesley">
 <meta property="article:tag" content="Android">
 <meta property="article:tag" content="aosp编译">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2026/png/544184/1772893858287-872a9e05-ad25-4aa9-aa2a-0d46a76f22e6.png?x-oss-process=image%2Fformat%2Cwebp">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260307231533749.png">
   
   
   
@@ -363,23 +362,21 @@
 <p>然后开始尝试Android Studio，用idegen.sh生成 android.ipr，但通过Samba导入还是很慢，即使在android.iml删除了很多模块。公司的有线最高支持1000Mbps，慢也可能与这个有关，不知道10G网口连接服务器会不会好一些。</p>
 <p>后来，我发现Linux远程服务器利用x11协议也可以跑gui，然后我就开始在上面安装了Android Studio(便携版)，开发变得方便多了，跳转和补全都很方便。</p>
 <p>服务器内存大、磁盘访问没有损耗，可以直接打开android.ipr，但由于工程庞大，第一次还可能慢，所以这时候可以利用exclude功能把不需要的模块排除，可以加快速度。Project Strucure那里也可以管理，或者编辑android.iml。</p>
-<img src="https://cdn.nlark.com/yuque/0/2026/png/544184/1772893858287-872a9e05-ad25-4aa9-aa2a-0d46a76f22e6.png?x-oss-process=image%2Fformat%2Cwebp" srcset="/img/loading.gif" lazyload alt="image.png" style="zoom:50%;" />
-
-<img src="https://cdn.nlark.com/yuque/0/2026/png/544184/1772893858287-872a9e05-ad25-4aa9-aa2a-0d46a76f22e6.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260307231533749.png" srcset="/img/loading.gif" lazyload alt="image.png" style="zoom:50%;" />
 
 <p>有时候可能刚打开git没法识别，导致没法追踪变更，可以自己配置。</p>
 <h2 id="aidegen"><a href="#aidegen" class="headerlink" title="aidegen"></a>aidegen</h2><p>安卓10开始有aidegen了，更加方便了，开箱即用，配合as和clion直接打开对应的模块，比如打开设置，命令具体用法可以自己搜索。</p>
 <p><code>aidegen Settings -i s -p  ~/android-studio -s</code></p>
 <h2 id="调试system-server"><a href="#调试system-server" class="headerlink" title="调试system_server"></a>调试system_server</h2><p>服务器和安卓机器保持同一个网络，连接adb后可以直接打点调试。</p>
-<img src="https://cdn.nlark.com/yuque/0/2026/png/544184/1772894050575-d1db3b03-2396-4d93-82ef-f6c2931c174d.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260307231618459.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
 
 <h2 id="界面模糊问题"><a href="#界面模糊问题" class="headerlink" title="界面模糊问题"></a>界面模糊问题</h2><p>x11里面也有一个dpi设置，但貌似没什么效果，还是保持auto吧。</p>
-<img src="https://cdn.nlark.com/yuque/0/2026/png/544184/1772892929060-a1aea750-31b3-4925-8b6e-a10b51a1016e.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260307231630134.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom:50%;" />
 
 
 
 <p>打开替代高dpi缩放行为，设置后重启应用，Android studio界面的外观和字体可以到Android studio设置里面按需调整，此时会变得清晰很多。</p>
-<img src="https://cdn.nlark.com/yuque/0/2026/png/544184/1772892125872-36cfff97-8b67-4c72-9ff1-3abd133cb39c.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom: 67%;" />
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260307231638077.png" srcset="/img/loading.gif" lazyload alt="img" style="zoom: 67%;" />
 
 
 
