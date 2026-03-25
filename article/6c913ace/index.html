@@ -27,7 +27,7 @@
 <meta property="og:description" content="上一年为了研究屏保过程投屏，写了一篇文章：安卓屏保调试 - Wesley’s Blog 今年为了做屏保广告又跟屏保打上交道了。 起初发现一台机器 dream 时间到了之后怎么也出不了屏保，直接把 dumpsys power 结果喂给 gpt，一下子就解决了，记录一下。 dumpsys power | grep -i mStayOnWhilePluggedInSetting 这个结果显示 3，改成">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-25T10:28:33.000Z">
-<meta property="article:modified_time" content="2026-03-25T13:23:23.254Z">
+<meta property="article:modified_time" content="2026-03-25T13:25:23.052Z">
 <meta property="article:author" content="Wesley">
 <meta property="article:tag" content="DreamManagerService">
 <meta property="article:tag" content="Framework">
@@ -358,11 +358,11 @@
 <h2 id="stay-on-while-plugged-in"><a href="#stay-on-while-plugged-in" class="headerlink" title="stay_on_while_plugged_in"></a>stay_on_while_plugged_in</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">         * Whether we keep the device on while the device is plugged in.</span><br><span class="hljs-comment">         * Supported values are:</span><br><span class="hljs-comment">         * &lt;ul&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@code</span> 0&#125; to never stay on while plugged in&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@link</span> BatteryManager#BATTERY_PLUGGED_AC&#125; to stay on for AC charger&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@link</span> BatteryManager#BATTERY_PLUGGED_USB&#125; to stay on for USB charger&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@link</span> BatteryManager#BATTERY_PLUGGED_WIRELESS&#125; to stay on for wireless charger&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@link</span> BatteryManager#BATTERY_PLUGGED_DOCK&#125; to stay on for dock charger&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;/ul&gt;</span><br><span class="hljs-comment">         * These values can be OR-ed together.</span><br><span class="hljs-comment">         */</span><br><span class="hljs-meta">@Readable</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">STAY_ON_WHILE_PLUGGED_IN</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;stay_on_while_plugged_in&quot;</span>;<br></code></pre></td></tr></table></figure>
 
 <h3 id="基础单值（对应特定的供电方式）"><a href="#基础单值（对应特定的供电方式）" class="headerlink" title="基础单值（对应特定的供电方式）"></a>基础单值（对应特定的供电方式）</h3><ul>
-<li><strong>0</strong>：<strong>关闭状态</strong>（默认值）。无论连接什么电源，设备都会遵循常规的休眠和屏保倒计时。</li>
-<li><strong>1</strong>：**交流电 (AC)**。只有在使用电源适配器（插在墙上）充电时，屏幕才保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_AC</code>。</li>
-<li><strong>2</strong>：<strong>USB</strong>。只有在连接到电脑或其他 USB 端口充电时，屏幕才保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_USB</code>。</li>
-<li><strong>4</strong>：**无线充电 (Wireless)**。只有在使用无线充电器时，屏幕才保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_WIRELESS</code>。</li>
-<li><strong>8</strong>：**底座 (Dock)**。插在专用底座上时保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_DOCK</code>。</li>
+<li><strong>0</strong>：关闭状态（默认值）。无论连接什么电源，设备都会遵循常规的休眠和屏保倒计时。</li>
+<li><strong>1</strong>：交流电 (AC)。只有在使用电源适配器（插在墙上）充电时，屏幕才保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_AC</code>。</li>
+<li><strong>2</strong>：USB。只有在连接到电脑或其他 USB 端口充电时，屏幕才保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_USB</code>。</li>
+<li><strong>4</strong>：无线充电 (Wireless)。只有在使用无线充电器时，屏幕才保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_WIRELESS</code>。</li>
+<li><strong>8</strong>：底座 (Dock)。插在专用底座上时保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_DOCK</code>。</li>
 </ul>
 <p>由于采用了位掩码设计，可以将上述基础值相加（按位或操作 <code>|</code>），以同时支持多种情况：</p>
 <ul>
