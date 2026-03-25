@@ -6,7 +6,7 @@
   <link href="https://iwesley.top/atom.xml" rel="self"/>
   
   <link href="https://iwesley.top/"/>
-  <updated>2026-03-24T14:04:06.860Z</updated>
+  <updated>2026-03-25T13:23:23.254Z</updated>
   <id>https://iwesley.top/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>安卓屏保调试2</title>
+    <link href="https://iwesley.top/article/6c913ace/"/>
+    <id>https://iwesley.top/article/6c913ace/</id>
+    <published>2026-03-25T10:28:33.000Z</published>
+    <updated>2026-03-25T13:23:23.254Z</updated>
+    
+    <content type="html"><![CDATA[<p>上一年为了研究屏保过程投屏，写了一篇文章：<a href="https://iwesley.top/article/98c55340/">安卓屏保调试 - Wesley’s Blog</a></p><p>今年为了做屏保广告又跟屏保打上交道了。</p><p>起初发现一台机器 dream 时间到了之后怎么也出不了屏保，直接把 <code>dumpsys power</code> 结果喂给 gpt，一下子就解决了，记录一下。</p><p><code>dumpsys power | grep -i mStayOnWhilePluggedInSetting</code> 这个结果显示 3，改成 0 就可以了。</p><h2 id="stay-on-while-plugged-in"><a href="#stay-on-while-plugged-in" class="headerlink" title="stay_on_while_plugged_in"></a>stay_on_while_plugged_in</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment">         * Whether we keep the device on while the device is plugged in.</span><br><span class="hljs-comment">         * Supported values are:</span><br><span class="hljs-comment">         * &lt;ul&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@code</span> 0&#125; to never stay on while plugged in&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@link</span> BatteryManager#BATTERY_PLUGGED_AC&#125; to stay on for AC charger&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@link</span> BatteryManager#BATTERY_PLUGGED_USB&#125; to stay on for USB charger&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@link</span> BatteryManager#BATTERY_PLUGGED_WIRELESS&#125; to stay on for wireless charger&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;li&gt;&#123;<span class="hljs-doctag">@link</span> BatteryManager#BATTERY_PLUGGED_DOCK&#125; to stay on for dock charger&lt;/li&gt;</span><br><span class="hljs-comment">         * &lt;/ul&gt;</span><br><span class="hljs-comment">         * These values can be OR-ed together.</span><br><span class="hljs-comment">         */</span><br><span class="hljs-meta">@Readable</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">STAY_ON_WHILE_PLUGGED_IN</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;stay_on_while_plugged_in&quot;</span>;<br></code></pre></td></tr></table></figure><h3 id="基础单值（对应特定的供电方式）"><a href="#基础单值（对应特定的供电方式）" class="headerlink" title="基础单值（对应特定的供电方式）"></a>基础单值（对应特定的供电方式）</h3><ul><li><strong>0</strong>：<strong>关闭状态</strong>（默认值）。无论连接什么电源，设备都会遵循常规的休眠和屏保倒计时。</li><li><strong>1</strong>：**交流电 (AC)**。只有在使用电源适配器（插在墙上）充电时，屏幕才保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_AC</code>。</li><li><strong>2</strong>：<strong>USB</strong>。只有在连接到电脑或其他 USB 端口充电时，屏幕才保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_USB</code>。</li><li><strong>4</strong>：**无线充电 (Wireless)**。只有在使用无线充电器时，屏幕才保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_WIRELESS</code>。</li><li><strong>8</strong>：**底座 (Dock)**。插在专用底座上时保持常亮。对应底层常量 <code>BatteryManager.BATTERY_PLUGGED_DOCK</code>。</li></ul><p>由于采用了位掩码设计，可以将上述基础值相加（按位或操作 <code>|</code>），以同时支持多种情况：</p><ul><li><strong>3</strong> (<code>1 + 2</code>)：只要插着<strong>交流电或 USB</strong>，就不休眠。（最常见的组合值）</li><li><strong>7</strong> (<code>1 + 2 + 4</code>)：只要连着<strong>交流电、USB 或 无线充电</strong>中的任意一种，就不休眠。（通常被开发者用来表示“只要通电就不休眠”）</li></ul><p> 对于 Android TV 来说，由于它没有电池，通常被系统视为始终处于“AC 供电”状态。所以只要这个值包含了 <code>1</code>（比如设成了 <code>1</code>, <code>3</code> 或 <code>7</code>），TV 就永远不会进入 Dream 屏保了。  我碰到的就是这种情况。</p><h2 id="另外一些情况"><a href="#另外一些情况" class="headerlink" title="另外一些情况"></a>另外一些情况</h2><p>如果上面的值设置为 0 了，还是不行的话，可以继续排查：</p><p><code>dumpsys power | grep -E &quot;mWakefulness|Wake Locks|SCREEN_BRIGHT|FULL_WAKE|WindowManager&quot;</code></p><p>看Wake Locks size是不是 0：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs shell">YYT:/ #<br>YYT:/ # dumpsys power | grep -E &quot;mWakefulness|Wake Locks|SCREEN_BRIGHT|FULL_WAKE|WindowManager&quot;<br>  mWakefulness=Awake<br>  mWakefulnessChanging=false<br>  mScreenBrightnessOverrideFromWindowManager=NaN<br>  mUserActivityTimeoutOverrideFromWindowManager=-1<br>  mUserInactiveOverrideFromWindowManager=false<br>Wake Locks: size=0<br>  03-25 14:38:33.335 - 1000 - ACQ WindowManager/displayId:0 (screen-bright,on-after-release)<br>  03-25 14:38:35.528 - 1000 - REL WindowManager/displayId:0<br></code></pre></td></tr></table></figure><h3 id="UndimDetectorWakeLock"><a href="#UndimDetectorWakeLock" class="headerlink" title="UndimDetectorWakeLock"></a>UndimDetectorWakeLock</h3><p>在Android T版本中，系统新增了SCREEN_BRIGHT_WAKE_LOCK（UndimDetectorWakeLock）机制。当设备处于低亮度（dim）状态时，用户两次打断屏幕熄灭操作就会触发系统保持屏幕常亮10分钟。</p><p>比如：</p><ul><li><code>mKeepScreenOnEnabled = true</code></li><li><code>mKeepScreenOnForMillis = 10min</code></li><li><code>mUndimsRequired = 2</code></li><li><code>mMaxDurationBetweenUndimsMillis = 5min</code></li></ul><p>那就等于：</p><ol><li>屏幕先变暗一次。 </li><li>把它点亮，记第 1 次 undim。 </li><li>如果 <strong>5 分钟内</strong>又发生了第 2 次 undim，系统就判断“用户明显还在用”，于是<strong>额外保持亮屏 10 分钟</strong>。 </li><li>如果第 2 次发生在 5 分钟之后，那前面的计数作废，重新从 1 次开始算。</li></ol><p>这时候 screen_off_timeout 就会变得不准确了，以 <code>UndimDetectorWakeLock</code> 计时为准。</p><h2 id="调试命令"><a href="#调试命令" class="headerlink" title="调试命令"></a>调试命令</h2><p>查看屏保是否启用：</p><p><code>settings get secure screensaver_enabled</code></p><p>查看进入的屏保的时间：</p><p><code>settings get system screen_off_timeout</code></p><p>查看进入休眠的时间：</p><p><code>settings get secure sleep_timeout</code></p><p><code>sleep_timeout</code> 通常应比 <code>screen_off_timeout</code> 更长，不然设备会直接休眠而不是进屏保。</p><p> <code>dumpsys dreams</code>  </p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs shell">YYT:/ # dumpsys dreams<br>DREAM MANAGER (dumpsys dreams)<br><br>mCurrentDream=null<br>mForceAmbientDisplayEnabled=false<br>mDreamsOnlyEnabledForDockUser=false<br>mDreamsEnabledSetting=true<br>mDreamsActivatedOnDockByDefault=true<br>mDreamsActivatedOnChargeByDefault=true<br>mIsDocked=false<br>mIsCharging=true<br>mWhenToDream=3<br>mKeepDreamingWhenUnpluggingDefault=false<br>getDozeComponent()=null<br><br>Dreamland:<br>  mCurrentDream: null<br>  mSentStartBroadcast=false<br></code></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">YYT:/ # settings list secure | grep screensaver<br>screensaver_activate_on_dock=1<br>screensaver_activate_on_sleep=1<br>screensaver_components=com.media.system.ad.custom/com.media.system.ad.ScreensaverService<br>screensaver_default_component=com.google.android.apps.tv.dreamx/.service.Backdrop<br>screensaver_enabled=1<br>YYT:/ #<br>YYT:/ #<br>YYT:/ # settings list system | grep screen<br>dim_screen=1<br>lockscreen_sounds_enabled=1<br>screen_brightness=102<br>screen_brightness_mode=0<br>screen_off_timeout=30000<br></code></pre></td></tr></table></figure><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://juejin.cn/post/7561264740879138870">Android14 用户两次打断息屏操作后，屏幕将会在10分钟内无法熄灭并持续点亮(关闭Android13新增的dim功能) - 掘金</a></p><p><a href="https://developer.android.com/develop/background-work/background-tasks/awake/screen-on?hl=zh-cn">使屏幕保持开启状态  | Background work  | Android Developers</a></p>]]></content>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;上一年为了研究屏保过程投屏，写了一篇文章：&lt;a href=&quot;https://iwesley.top/article/98c55340/&quot;&gt;安卓屏保调试 - Wesley’s</summary>
+        
+      
+    
+    
+    
+    <category term="AndroidFrameworkFeature" scheme="https://iwesley.top/categories/AndroidFrameworkFeature/"/>
+    
+    
+    <category term="DreamManagerService" scheme="https://iwesley.top/tags/DreamManagerService/"/>
+    
+    <category term="Framework" scheme="https://iwesley.top/tags/Framework/"/>
+    
+    <category term="屏保" scheme="https://iwesley.top/tags/%E5%B1%8F%E4%BF%9D/"/>
+    
+  </entry>
   
   <entry>
     <title>Windows怎么方便查看AOSP代码</title>
@@ -580,39 +611,6 @@
     <category term="安卓权限" scheme="https://iwesley.top/tags/%E5%AE%89%E5%8D%93%E6%9D%83%E9%99%90/"/>
     
     <category term="安卓安全" scheme="https://iwesley.top/tags/%E5%AE%89%E5%8D%93%E5%AE%89%E5%85%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>好用软件推荐</title>
-    <link href="https://iwesley.top/article/9e5c606d/"/>
-    <id>https://iwesley.top/article/9e5c606d/</id>
-    <published>2025-05-03T08:23:55.000Z</published>
-    <updated>2025-07-20T14:42:45.856Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="移动端"><a href="#移动端" class="headerlink" title="移动端"></a>移动端</h2><ul><li>锤子便签：最美便签</li><li>微信读书：最好用的电子书软件，设计用心，涵盖书籍多，随时随地阅读。</li><li>纸间书摘：方便回顾曾经记录的书摘，支持微信读书、电子书等</li><li>Share：最好用的第三方微博客户端</li><li>Cellular-Z：看 WiFi 信号、干扰等</li><li>DevCheck：查看手机硬件信息</li><li>手机性能排行：方便比较不同手机的硬件差异</li><li>LibChecker：方便查看 app 信息，依赖的库等。</li><li>Keepass2Android：记录银行卡密码等，数据自己掌握。</li><li>flomo浮墨笔记：记录新想法，怀念 Smartisan 的闪念胶囊。</li><li>酷安：数码爱好者社区</li><li>李跳跳：跳过软件开屏广告等，目前为止我遇到的交互提示最有爱、得意的软件。</li><li>微信输入法：干净、简洁，多端复制同步方便，发微信表情包方便。可惜目前不支持光标快速选择、复制。</li><li>星空视频壁纸：纯粹好用的视频壁纸 APP</li><li>Shazam：音乐识别，比网易云识别正确率高。</li></ul><h2 id="Universal"><a href="#Universal" class="headerlink" title="Universal"></a>Universal</h2><h3 id="日常"><a href="#日常" class="headerlink" title="日常"></a>日常</h3><ul><li><p>截图：<a href="https://zh.snipaste.com/#">Snipaste - 截图 + 贴图</a></p></li><li><p>NAS 视频播放器：<a href="https://bmh.163.com/">网易爆米花（原网易Filmly） - 智能媒体库&amp;全能播放器</a></p></li><li><p>NAS 音乐播放器：音流，<a href="https://github.com/gitbobobo/StreamMusic">gitbobobo&#x2F;StreamMusic: 支持 Android、iOS、macOS、Windows 平台的 Subsonic&#x2F;Navidrome&#x2F;Jellyfin&#x2F;Emby&#x2F;AudioStation 客户端。</a></p></li><li><p>录屏或者直播：<a href="https://obsproject.com/">Open Broadcaster Software | OBS</a></p></li></ul><h3 id="开发"><a href="#开发" class="headerlink" title="开发"></a>开发</h3><ul><li><p>klogg：日志查看工具，之前在 Windows 一直用notepad++，它可以高亮标记选中的字符串。但在 Mac 上面，我试了好几个类似的软件都没有该功能，后来，我发现了 klogg，基本满足了我的需求。</p><p>地址：<a href="https://github.com/variar/klogg">variar&#x2F;klogg: Really fast log explorer based on glogg project</a></p></li><li><p>NotepadNext：<a href="https://github.com/dail8859/NotepadNext">dail8859&#x2F;NotepadNext: A cross-platform, reimplementation of Notepad++</a>（V0.12 已经支持高亮了，我提的 issue 如下：<a href="https://github.com/dail8859/NotepadNext/issues/748">hightlight the select text with different color · Issue #748 · dail8859&#x2F;NotepadNext</a>）</p></li><li><p>语雀：高中的时候用有道笔记记录知识点和错题，大学的时候用 OneNote 来记录读书笔记，工作后刚开始用的是印象笔记，后面就转向语雀了。主要用来记录安卓相关的知识点。</p><p>地址：<a href="https://www.yuque.com/">语雀，为每一个人提供优秀的文档和知识库工具</a></p></li><li><p>反编译工具：<a href="https://github.com/skylot/jadx/releases">Releases · skylot&#x2F;jadx</a></p></li></ul><h2 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h2><h3 id="开发-1"><a href="#开发-1" class="headerlink" title="开发"></a>开发</h3><ul><li>MobaXterm：命令行工具，支持远程服务器图形界面，比如Android Studio、Clion等，方便开发系统功能。</li></ul><h3 id="日常-1"><a href="#日常-1" class="headerlink" title="日常"></a>日常</h3><ul><li>windirstat磁盘文件占用分析，方便找出哪些文件占用空间多：<a href="https://github.com/windirstat/windirstat">windirstat&#x2F;windirstat: WinDirStat is a disk usage statistics viewer and cleanup tool for Microsoft Windows</a></li></ul><h2 id="Mac"><a href="#Mac" class="headerlink" title="Mac"></a>Mac</h2><h3 id="日常-2"><a href="#日常-2" class="headerlink" title="日常"></a>日常</h3><ul><li><p>视频播放：<a href="https://github.com/iina/iina">iina&#x2F;iina: The modern video player for macOS.</a></p></li><li><p>性能监控：<a href="https://github.com/exelban/stats">exelban&#x2F;stats: macOS system monitor in your menu bar</a></p></li><li><p>鼠标控制：自定义滚轮方向和自定义按键功能 <a href="https://github.com/noah-nuebling/mac-mouse-fix/">noah-nuebling&#x2F;mac-mouse-fix: Mac Mouse Fix - Make Your $10 Mouse Better Than an Apple Trackpad!</a></p></li><li><p>显示器控制：<a href="https://github.com/waydabber/BetterDisplay">waydabber&#x2F;BetterDisplay: Unlock your displays on your Mac! Flexible HiDPI scaling, XDR&#x2F;HDR extra brightness, virtual screens, DDC control, extra dimming, PIP&#x2F;streaming, EDID override and lots more!</a></p></li><li><p>moonlight：方便局域网控制 windows 电脑 <a href="https://github.com/moonlight-stream/moonlight-qt">moonlight-stream&#x2F;moonlight-qt: GameStream client for PCs (Windows, Mac, Linux, and Steam Link)</a></p></li></ul><h3 id="开发-2"><a href="#开发-2" class="headerlink" title="开发"></a>开发</h3><ul><li>iTerm：命令行终端工具 <a href="https://iterm2.com/">iTerm2 - macOS Terminal Replacement</a></li></ul><h2 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h2><h3 id="开发-3"><a href="#开发-3" class="headerlink" title="开发"></a>开发</h3>]]></content>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;移动端&quot;&gt;&lt;a href=&quot;#移动端&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="非技术" scheme="https://iwesley.top/categories/%E9%9D%9E%E6%8A%80%E6%9C%AF/"/>
-    
-    
-    <category term="软件" scheme="https://iwesley.top/tags/%E8%BD%AF%E4%BB%B6/"/>
-    
-    <category term="Mac" scheme="https://iwesley.top/tags/Mac/"/>
-    
-    <category term="Windows" scheme="https://iwesley.top/tags/Windows/"/>
-    
-    <category term="Linux" scheme="https://iwesley.top/tags/Linux/"/>
     
   </entry>
   
