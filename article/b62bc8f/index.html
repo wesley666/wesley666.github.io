@@ -1,0 +1,864 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/myAvatar.png">
+  <link rel="icon" href="/img/myAvatar.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Wesley">
+  <meta name="keywords" content="Android">
+  
+    <meta name="description" content="开源一个跨平台音乐播放器 LynMusic LynMusic 能力再进化：适配电视、车机与投屏 计算机先驱艾伦·凯说过“真正认真对待软件的人应该制造自己的硬件（People who are really serious about software should make their own hardware）。” 乔布斯也曾经在发布会引用过这句话。硬件其实还是很难自己一个人设计并制造的，但在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 KMP 实现一个跨平台音乐播放器">
+<meta property="og:url" content="https://iwesley.top/article/b62bc8f/index.html">
+<meta property="og:site_name" content="Wesley&#39;s Blog">
+<meta property="og:description" content="开源一个跨平台音乐播放器 LynMusic LynMusic 能力再进化：适配电视、车机与投屏 计算机先驱艾伦·凯说过“真正认真对待软件的人应该制造自己的硬件（People who are really serious about software should make their own hardware）。” 乔布斯也曾经在发布会引用过这句话。硬件其实还是很难自己一个人设计并制造的，但在">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508220635732.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508234744153.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235537305.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235641439.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235706269.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235729372.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235745349.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235802127.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235827984.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235914807.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235934936.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235955453.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000018804.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000907727.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000135712.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000254821.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000311531.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000350791.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000418032.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000449621.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000510389.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000534696.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000550795.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000605427.png">
+<meta property="article:published_time" content="2026-04-11T14:02:25.000Z">
+<meta property="article:modified_time" content="2026-05-08T16:13:20.107Z">
+<meta property="article:author" content="Wesley">
+<meta property="article:tag" content="随笔">
+<meta property="article:tag" content="数字生活指南">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508220635732.png">
+  
+  
+  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap" rel="stylesheet">
+  
+  <title>基于 KMP 实现一个跨平台音乐播放器 - Wesley&#39;s Blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="/css/font.css">
+<link rel="stylesheet" href="/css/shuoshuo/iconfont.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_4814891_uhrho08g34.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iwesley.top","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":false,"baidu":null,"google":{"measurement_id":"G-7J4349MJJN"},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"nU3rn8pNIjhhvbP7up8LFmJJ-MdYXbMMI","app_key":"Ci9VrgOcbts1HQqhQg6jpT4b","server_url":"https://leancloud.iwesley.top","path":"window.location.pathname","ignore_local":true},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+    <!-- Google tag (gtag.js) -->
+    <script async>
+      if (!Fluid.ctx.dnt) {
+        Fluid.utils.createScript("https://www.googletagmanager.com/gtag/js?id=G-7J4349MJJN", function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag('js', new Date());
+          gtag('config', 'G-7J4349MJJN');
+        });
+      }
+    </script>
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<!-- hexo injector head_end start --><script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js?id=K3KAzgc5PGaepl3q&ck=K3KAzgc5PGaepl3q"></script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Wesley's Blog" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>锋风Fengfeng</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/artitalk/" target="_self">
+                <i class="iconfont icon-notebook"></i>
+                <span>说说</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/bg.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="基于 KMP 实现一个跨平台音乐播放器"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        Wesley
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-11 22:02" pubdate>
+          2026年4月11日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          927 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">基于 KMP 实现一个跨平台音乐播放器</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于：2026年5月9日 凌晨
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508220635732.png" srcset="/img/loading.gif" lazyload alt="ig_090a64adea1992790169fde46338f8819186c55dabc269e1da" style="zoom:50%;" />
+
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qWoGIy7gtmNdAmJiV4S0Ig">开源一个跨平台音乐播放器 LynMusic</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/DGohuAOSEOk09MK-bhzdjA">LynMusic 能力再进化：适配电视、车机与投屏</a></p>
+<p>计算机先驱艾伦·凯说过“真正认真对待软件的人应该制造自己的硬件（People who are really serious about software should make their own hardware）。” 乔布斯也曾经在发布会引用过这句话。硬件其实还是很难自己一个人设计并制造的，但在 AI 时代，自己设计并开发完成一款软件，难度已经大大下降了。作为一个安卓开发者，我全程使用 codex 完成了这个多端播放器的开发。</p>
+<h2 id="为什么做这个播放器"><a href="#为什么做这个播放器" class="headerlink" title="为什么做这个播放器"></a>为什么做这个播放器</h2><p>第一，虽然市面上已经有很多音乐播放器了，但搜索歌词太难用了，有些歌还不一定能搜到；第二，想学习一下 KMP；第三，因为有了 codex 这样的编程工具，实现难度大大下降；第四，可以自主决策功能和界面。</p>
+<h2 id="LynMusic-聆听音乐"><a href="#LynMusic-聆听音乐" class="headerlink" title="LynMusic 聆听音乐"></a>LynMusic 聆听音乐</h2><p>跨平台，支持安卓(含车机、电视)、iOS、macOS，Windows，Linux。（ps：由于苹果需要付费的开发者账号，目前ios不支持在 App Store 下载，只能自己编译使用）。</p>
+<p>采用 kotlin compose 进行开发，不同于一些音乐软件采用web跨平台方案，kmp 在安卓和 ios 能获得更加好的原生性能体验。</p>
+<p>支持导入本地文件夹、Samba、WebDAV、Navidrome 里面的音乐。一些支持 WebDav 的云盘也可以，比如 pCloud、坚果云、阿里云等。强大的歌词搜索功能，支持自己引入几乎市面上存在的 api 源。</p>
+<p>歌词分享功能，可以自定义分享字体。</p>
+<p>支持定时播放、投屏等。TV 端还可以作为 render，接收音乐和视频投屏。</p>
+<p>支持离线下载。如果在外面不能内网穿透到家中的服务器，还可以把 navidrome 等音乐下载到本地，聆听音乐时支持选择已经下载的音乐。</p>
+<p>音乐标签。可以自己编辑音乐的元数据和封面等。</p>
+<p>自定义功能多，比如是否启动自动播放、navidrome 多档音质选择、显示大小、自定义主题等。还可以在喜欢列表，按歌手、专辑来筛选播放。</p>
+<h2 id="产品图"><a href="#产品图" class="headerlink" title="产品图"></a>产品图</h2><h3 id="手机"><a href="#手机" class="headerlink" title="手机"></a>手机</h3><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508234744153.jpg" srcset="/img/loading.gif" lazyload alt="phone_main_ui" style="zoom: 25%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235537305.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_233705" style="zoom:25%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235641439.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_233811" style="zoom:25%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235706269.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_233842" style="zoom:25%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235729372.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_233854" style="zoom:25%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235745349.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_233923" style="zoom:25%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235802127.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_233941" style="zoom:25%;" />
+
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235827984.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_233959" style="zoom:25%;" />
+
+<h2 id="平板或者桌面端"><a href="#平板或者桌面端" class="headerlink" title="平板或者桌面端"></a>平板或者桌面端</h2><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235914807.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2026-05-08_23-41-55"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235934936.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2026-05-08_23-42-46"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260508235955453.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2026-05-08_23-43-07"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000018804.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2026-05-08_23-43-18"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000907727.png" srcset="/img/loading.gif" lazyload alt="Snipaste_2026-05-09_00-08-31"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000135712.png" srcset="/img/loading.gif" lazyload alt="image-20260509000135644"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000254821.png" srcset="/img/loading.gif" lazyload alt="image-20260509000254752"></p>
+<img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000311531.png" srcset="/img/loading.gif" lazyload alt="唯一-11lyrics-share" style="zoom:25%;" />
+
+<h3 id="车机"><a href="#车机" class="headerlink" title="车机"></a>车机</h3><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000350791.png" srcset="/img/loading.gif" lazyload alt="mmexport1777828602457"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000418032.png" srcset="/img/loading.gif" lazyload alt="mmexport1777828674900"></p>
+<h3 id="TV"><a href="#TV" class="headerlink" title="TV"></a>TV</h3><p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000449621.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_234418"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000510389.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_234440"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000534696.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_234507"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000550795.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_234527"></p>
+<p>作为投屏渲染端，可以自动匹配歌词：<br><img src="https://cdn.jsdelivr.net/gh/wesley666/picgo/img2025/20260509000605427.png" srcset="/img/loading.gif" lazyload alt="Screenshot_20260508_234611"></p>
+<h2 id="开源地址"><a href="#开源地址" class="headerlink" title="开源地址"></a>开源地址</h2><p><a target="_blank" rel="noopener" href="https://github.com/wesley666/LynMusic/">https://github.com/wesley666/LynMusic/</a></p>
+<blockquote>
+<p>桌面版本要先安装 vlc 播放器，LynMusic 使用 vlc 的接口播放音乐。<br>mac 版本需要执行命令才能打开：xattr -dr com.apple.quarantine &#x2F;Applications&#x2F;LynMusic.app。但自己编译的版本不需要。</p>
+</blockquote>
+<p>欢迎使用和提建议。</p>
+<h2 id="Vibe-Coding-的一些心得"><a href="#Vibe-Coding-的一些心得" class="headerlink" title="Vibe Coding 的一些心得"></a>Vibe Coding 的一些心得</h2><p>尽可能采用 sota 模型 和 官方 api，可以节省大量时间，也不用担心中转站的猫腻。</p>
+<p>由于 codex 的 plus 额度缩减，为了满足五一期间的开发 token 需求，我还开通了 100 刀的 pro 会员，目前有 10x 的额度，即使使用 fast 模式也基本用不完。</p>
+<p>尽可能使用 plan 模式来开发和修 bug，除非你能把话说的很清楚，否则需要多轮对话来沟通清楚需求。</p>
+<p>AGENTS.md即使什么都可以没有，也得加上一句：修改代码前要向我二次确认，不要在排查问题阶段擅自改代码。</p>
+<p>AI 的上下文有限，你可能以敏捷开发的方式很快就开发好了一个应用，但如果要变成一个可维护的工程还是需要做好顶层设计的，使用瀑布式开发。</p>
+<p>排查问题要结合日志，不能只靠 AI 逻辑分析。</p>
+<p>AI 有时候是可能降智的，要做好领路人和审计。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%95%B0%E5%AD%97%E7%94%9F%E6%B4%BB%E6%8C%87%E5%8D%97/" class="category-chain-item">数字生活指南</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%9A%8F%E7%AC%94/" class="print-no-link">#随笔</a>
+      
+        <a href="/tags/%E6%95%B0%E5%AD%97%E7%94%9F%E6%B4%BB%E6%8C%87%E5%8D%97/" class="print-no-link">#数字生活指南</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>基于 KMP 实现一个跨平台音乐播放器</div>
+      <div>https://iwesley.top/article/b62bc8f/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Wesley</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年4月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/article/c844aeb9/" title="枪炮、游戏与电视机">
+                        <span class="hidden-mobile">枪炮、游戏与电视机</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://lib.baomitu.com/waline/2.15.8/waline.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/waline/2.15.8/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline.iwesley.top","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10,"locale":{"placeholder":"欢迎交流(作者审核后显示)"},"reaction":["https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_clap.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_sad.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_confused.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_pick_nose.png","https://unpkg.com/@waline/emojis@1.3.0/weibo/weibo_doge.png"]},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <i class="iconfont icon-rss"></i> <a href="https://iwesley.top/atom.xml" target="_blank" rel="nofollow noopener"><span>RSS</span></a> <div style="font-size: 0.85rem"> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> <div style="font-size: 0.85rem"> <script defer src="https://cn.vercount.one/js"></script> </div> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="leancloud-site-pv-container" style="display: none">
+        总访问量 
+        <span id="leancloud-site-pv"></span>
+         次
+      </span>
+    
+    
+      <span id="leancloud-site-uv-container" style="display: none">
+        总访客数 
+        <span id="leancloud-site-uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="/js/stars.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
