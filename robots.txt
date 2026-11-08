@@ -8,9 +8,7 @@ Allow: /article/
 Allow: /links/
 
 Disallow: /vendors/
-Disallow: /js/
-Disallow: /css/
 Disallow: /fonts/
 
 Sitemap: https://iwesley.top/sitemap.xml
-Sitemap: https://iwesley.top/baidu_sitemap.xml
+Sitemap: https://iwesley.top/baidusitemap.xml
