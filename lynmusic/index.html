@@ -26,8 +26,8 @@
 <meta property="og:site_name" content="Wesley&#39;s Blog">
 <meta property="og:description" content="LynMusic 帮你把散落在本地磁盘、NAS 和 Navidrome 上的音乐整理到一个曲库。 下载 App Store · iPhone、iPad、Mac GitHub Releases · 安装包和更新日志  查看源码和使用说明 隐私政策">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-11-08T03:05:56.392Z">
-<meta property="article:modified_time" content="2026-11-08T03:05:56.392Z">
+<meta property="article:published_time" content="2026-11-08T07:41:07.966Z">
+<meta property="article:modified_time" content="2026-11-08T07:41:07.966Z">
 <meta property="article:author" content="Wesley">
 <meta property="article:tag" content="Android">
 <meta name="twitter:card" content="summary_large_image">
@@ -463,6 +463,49 @@
 
 
   
+  
+  
+    <article id="comments" lazyload>
+      
+    <div id="giscus" class="giscus"></div>
+    <script type="text/javascript">
+      Fluid.utils.loadComments('#giscus', function() {
+        var options = {"repo":"wesley666/comment_giscus","repo-id":"R_kgDOHmTI8A","category":"General","category-id":"DIC_kwDOHmTI8M4CQAws","theme-light":"light","theme-dark":"dark","mapping":"pathname","reactions-enabled":1,"emit-metadata":0,"input-position":"top","lang":"zh-CN"};
+        var attributes = {};
+        for (let option in options) {
+          if (!option.startsWith('theme-')) {
+            var key = option.startsWith('data-') ? option : 'data-' + option;
+            attributes[key] = options[option];
+          }
+        }
+        var light = 'light';
+        var dark = 'dark';
+        window.GiscusThemeLight = light;
+        window.GiscusThemeDark = dark;
+        attributes['data-theme'] = document.documentElement.getAttribute('data-user-color-scheme') === 'dark' ? dark : light;
+        for (let attribute in attributes) {
+          var value = attributes[attribute];
+          if (value === undefined || value === null || value === '') {
+            delete attributes[attribute];
+          }
+        }
+        var s = document.createElement('script');
+        s.setAttribute('src', 'https://giscus.app/client.js');
+        s.setAttribute('crossorigin', 'anonymous');
+        for (let attribute in attributes) {
+          s.setAttribute(attribute, attributes[attribute]);
+        }
+        var ss = document.getElementsByTagName('script');
+        var e = ss.length > 0 ? ss[ss.length - 1] : document.head || document.documentElement;
+        e.parentNode.insertBefore(s, e.nextSibling);
+      });
+    </script>
+    <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
 
 </article>
 
