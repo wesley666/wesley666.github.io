@@ -1,0 +1,143 @@
+.shuoshuo {
+  max-width: 44rem;
+  margin-inline: auto;
+}
+
+.shuoshuo > h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+}
+
+.shuoshuo-intro {
+  margin: 0 0 1.5rem;
+  color: var(--sec-text-color);
+}
+
+.shuoshuo-timeline {
+  --timeline-indent: clamp(0.875rem, 4vw, 1.3125rem);
+
+  margin-inline-start: 5px;
+  padding-inline-start: var(--timeline-indent);
+  border-inline-start: 2px solid var(--line-color);
+}
+
+.shuoshuo-timeline > h2 {
+  margin: 1.75rem 0 0.75rem;
+  color: var(--text-color);
+  font-size: 1.25rem;
+  line-height: 1.35;
+}
+
+.shuoshuo-timeline > h2:first-child {
+  margin-top: 0;
+}
+
+.shuoshuo-timeline > h3 {
+  position: relative;
+  margin: 0 0 0.375rem;
+  color: var(--sec-text-color);
+  font-size: 0.875rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+}
+
+.shuoshuo-timeline > h3::before {
+  position: absolute;
+  inset-inline-start: calc(0px - var(--timeline-indent) - 7px);
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  box-sizing: border-box;
+  border: 2px solid var(--board-bg-color);
+  border-radius: 50%;
+  background: var(--link-hover-color);
+  content: "";
+  transform: translateY(-50%);
+}
+
+.shuoshuo-timeline > blockquote {
+  margin: 0 0 1.25rem;
+  padding: 0.75rem clamp(0.75rem, 4vw, 1rem);
+  border: 1px solid var(--line-color);
+  border-radius: 0.5625rem;
+  background: var(--body-bg-color);
+  color: var(--text-color);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+
+.shuoshuo-timeline > blockquote:last-child,
+.shuoshuo-timeline > blockquote > p {
+  margin: 0;
+}
+
+.shuoshuo-timeline > blockquote > p + p {
+  margin-top: 0.75rem;
+}
+
+@supports (color: light-dark(white, black)) and (clip-path: polygon(0 0, 100% 0, 100% 100%)) {
+  .shuoshuo-timeline {
+    color-scheme: light dark;
+  }
+
+  :root[data-user-color-scheme="light"] .shuoshuo-timeline {
+    color-scheme: light;
+  }
+
+  :root[data-user-color-scheme="dark"] .shuoshuo-timeline {
+    color-scheme: dark;
+  }
+
+  .shuoshuo-timeline > blockquote {
+    --note-fold: 18px;
+    --note-paper: light-dark(#fff2c6, #453e2b);
+    --note-shade: light-dark(#715e3e, #12171d);
+    --note-shadow: light-dark(#26374932, #080b0fb3);
+
+    position: relative;
+    padding-inline-end: 1.5rem;
+    border: 0;
+    background: transparent;
+    filter: drop-shadow(0 3px 2px var(--note-shadow));
+  }
+
+  .shuoshuo-timeline > blockquote:nth-of-type(3n + 2) {
+    --note-paper: light-dark(#e7f2df, #2d4038);
+  }
+
+  .shuoshuo-timeline > blockquote:nth-of-type(3n) {
+    --note-paper: light-dark(#f0e8fa, #3a3549);
+  }
+
+  .shuoshuo-timeline > blockquote::before,
+  .shuoshuo-timeline > blockquote::after {
+    position: absolute;
+    pointer-events: none;
+    content: "";
+  }
+
+  .shuoshuo-timeline > blockquote::before {
+    z-index: -1;
+    inset: 0;
+    background: var(--note-paper) linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--note-paper), var(--note-shade) 10%),
+      transparent 10px
+    );
+    clip-path: polygon(0 0, calc(100% - var(--note-fold)) 0, 100% var(--note-fold), 100% 100%, 0 100%);
+  }
+
+  .shuoshuo-timeline > blockquote::after {
+    inset-block-start: 0;
+    inset-inline-end: 0;
+    width: var(--note-fold);
+    height: var(--note-fold);
+    background: var(--note-paper) linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--note-paper), var(--note-shade) 24%),
+      transparent
+    );
+    clip-path: polygon(0 0, 100% 100%, 0 100%);
+  }
+}
